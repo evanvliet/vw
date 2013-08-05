@@ -1,0 +1,32 @@
+#!/bin/bash
+# build bare repository in $HOME/git_root/vw.git
+
+pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
+
+# checkout branches to publish
+git checkout -q user &> /dev/null
+git checkout -q nerd &> /dev/null
+git checkout -q master &> /dev/null
+
+# init bare and copy branches
+mkdir -p ~/git_root
+rm -rf ~/git_root/vw.git
+cp -a .git ~/git_root/vw.git
+cd ~/git_root/vw.git
+git config --bool core.bare true
+cd - > /dev/null
+
+# udpate INSTALL for users
+git clone -q ~/git_root/vw.git user
+cd user
+git checkout -q master &> /dev/null
+mv user.install INSTALL
+git commit -q -a -m user
+git push -q
+cd ..
+rm -rf user
+
+# show connection info for downstream copies
+echo Use following to get downstream clone:
+echo git clone $(id -un)@$(hostname):git_root/vw.git
+popd > /dev/null
