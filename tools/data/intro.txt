@@ -1,0 +1,76 @@
+VW(1)                vi whence configuration for bash                    VW(1)
+
+NAME
+    vw -- vi whence to edit bash configuration
+
+SYNOPSIS
+    vw <variable>
+
+DESCRIPTION
+    Invokes vi on the definition of a variable / function in the
+    config files.
+    
+    With no variable, produces this man page.
+
+IMPLEMENTATION
+    The INSTALL script tweaks .bashrc to source the vw profile, which
+    sources others as per environment.  Has a vw utility that invokes
+    vi on the defintiion of the variable wherever it occurs in the
+    files living in that directory.  Has hostname and os specific
+    config files to facilitate customization.  Uses git to coordinate
+    updates between machines.
+
+FEATURES:
+    Per machine config.
+    Per os config.
+    Core sharing of functions.
+    Simple partitioning of customization.
+    Manageable config files - use vw to edit function definition.
+    Minimal home directory clutter.
+    Stored in $VW_DIR.
+    Bloatware - merge from eric branch to get a bunch of stuff:
+        dev.sh    development functions
+        dtob.sh   conversions dtob, dtoh, etc.
+        ea.sh     convenient shortcuts
+        env.sh    environment
+        pass.sh   encrypted storage for passwords
+        scrap.sh  scrap file
+        sd.sh     set directory via nicknames
+
+NOTES:
+    Basic idea is to store all config files in a directory. For vw, this
+    is VW_DIR, typically ~/vw.
+
+    To use, source the vw profile script in .bahshrc.  This adds the vw
+    config stuff provided there.
+    
+    Subfolders of the vw directory hold config files as follows:
+    + base    used everywhefe
+    + os      os specific customization, e.g. windows, mac, linux
+    + host    machine specific
+
+    The root vw profile sources first base files, then os, finally the
+    host specific config.  A tools folder has supporting scripts and
+    data.
+
+SETUP
+    Run INSTALL on a machine that provides ssh access.  It will print
+    the git clone command line to access.
+
+    Use this clone info to set up bash config on your machines.
+    Typically,
+
+        git clone <user>@<host>:git_root/vw.git
+        bash vw/INSTALL
+        exec bash # gets new settings
+
+TRICKS:
+    Resolve password conficlts with getpass -m.
+
+    Type vw<tab><tab> to see list of all shared items.
+
+    Enforce ordering of config files with 02 type prefixes.
+
+INDEX
+
+

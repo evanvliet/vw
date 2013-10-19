@@ -1,0 +1,8 @@
+intro.txt vw man page intro
+mdf.in    vw output
+mdf.py    reformat arg1 into stdout md format
+phone.nos phone number db
+safe      encrypted storage
+vw.html   recent notes
+vw.md     test out
+vw2.md    test out

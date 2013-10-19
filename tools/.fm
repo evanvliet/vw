@@ -1,0 +1,8 @@
+agent.sh  sample code from web on using ssh-agent - actually not used
+chcount.py counts character occurrences
+data      holds ephemeral vw data
+fm.py     file management goodie
+mk_passwd.py generates random passwords
+pytidy    python source formatter
+replace_edit.sh for google edit process
+shtags.py create tags for functions in shell scripts

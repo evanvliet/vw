@@ -1,5 +1,7 @@
-*
-!.gitignore
-!INSTALL
-!README.md
-!user.install
+tags
+*.pyc
+.buildpath
+.project
+.pydevproject
+.settings
+.DS_Store

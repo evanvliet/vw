@@ -1,0 +1,9 @@
+dev.sh    development functions
+dtob.sh   conversions dtob, dtoh, etc.
+ea.sh     convenient shortcuts
+env.sh    environment
+git.sh    git funcs
+pass.sh   password support
+scrap.sh  scrap file
+sd.sh     set directory via nicknames
+vw.sh     vw and huh
