@@ -72,7 +72,7 @@ a backup in .bashrc.bak.
 #### Notes
 
 ##### Samples
-See [INDEX.md](https://github.com/evanvliet/vw/blob/master/INDEX.md) for descirptions of the included
+See [INDEX.md](../blob/master/INDEX.md) for descirptions of the included
 sample functions.
 
 ##### Usage
