@@ -87,7 +87,7 @@ def make_md(xdefs, fns):
             ti = xdefs[t]
             if ti.fn != fn:
                 fn = ti.fn
-                print '\n###### %s' % fn.fn
+                print '\n###### [%s](master/%s)' % (fn.fn, fn.fn)
                 if fn.description:
                     print '\n'.join(fn.description)
             print '* `%s` ' % t ,

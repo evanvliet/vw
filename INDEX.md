@@ -1,11 +1,11 @@
 
-###### base/dev.sh
+###### [base/dev.sh](master/base/dev.sh)
 Development functions. These are rather old, but serve as
 examples of what might be convenient.
 * `mk`  run make in background.
 * `tm`  cat make.log.
 
-###### base/dtob.sh
+###### [base/dtob.sh](master/base/dtob.sh)
 Conversions, both numbers and file names.
 * `dtob`  decimal to binary.
 * `dtoh`  decimal to hex.
@@ -14,7 +14,7 @@ Conversions, both numbers and file names.
 * `tl`  lowercase file names.
 * `tu`   upper case file names.
 
-###### base/ea.sh
+###### [base/ea.sh](master/base/ea.sh)
 Convenient shortcuts.
 * `..`  cd ..
 * `...`  cd ../..
@@ -49,7 +49,7 @@ that were not shown.
 * `vws`  vi startup.
 * `vwsh`  start sh on isp.
 
-###### base/env.sh
+###### [base/env.sh](master/base/env.sh)
 Exported variables and an environmnet pretty printer.
 * `CDPATH`  include vw in CDPATH.
 * `HISTFILE`  bash history.
@@ -60,7 +60,7 @@ Exported variables and an environmnet pretty printer.
 * `VISUAL`  default editor.
 * `ep`  expand paths.
 
-###### base/git.sh
+###### [base/git.sh](master/base/git.sh)
 A collection of git shortcuts.  Some names influenced by other source
 control systems.  Some encapsulate git opts for convenience.  Others
 collect common seequences.
@@ -72,14 +72,14 @@ collect common seequences.
 * `lastdiff`  last diff for a file.
 * `setconf`  set up a default .gitconfig.
 
-###### base/isp.sh
+###### [base/isp.sh](master/base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good on
 an isp, ergo the name.
 * `isp`  interact with base machine on isp.
 Start an ssh session, setup and retrieve git repositories, copy
 and paste files. See `isp -h` for usage.
 
-###### base/pass.sh
+###### [base/pass.sh](master/base/pass.sh)
 Password storage.
 * `getpass`  use passsword db.
 Do `getpass google` to get your google password.  Depends on
@@ -87,7 +87,7 @@ storing line-oriented password data, *e.g.*, `www.google.com
 userid password`.  The last word of the line is copied into the
 clipboard.  See `getpass -h` for usage.
 
-###### base/scrap.sh
+###### [base/scrap.sh](master/base/scrap.sh)
 Sets up s as a scrap file. For doing stuff like ls > $s and then
 editing with vis, *etc*.
 Note dependence on wcopy and wpaste which are  os dependent and
@@ -98,7 +98,7 @@ set up in os-specific config file.
 * `wcs`  copy clipboard to scrap.
 * `wps`  paste scrap to clipbaord.
 
-###### base/sd.sh
+###### [base/sd.sh](master/base/sd.sh)
 Nicknames for directory navigation.
 * `sd`  set directory via nicknames.
 Use `sd nick` to cd to folder by nickname `nick`. If `nick`
@@ -108,12 +108,12 @@ lists known nicknames.  Options:
   + `-l` tail db, list last added nicknames
   + `-v` expand nick, for use in other scripts
 
-###### base/vw.sh
+###### [base/vw.sh](master/base/vw.sh)
 Definitions and completion routine for vw and huh.
 * `huh`  melange of type typeset alias whence info.
 * `vw`  vi whence.
 
-###### os/Linux.sh
+###### [os/Linux.sh](master/os/Linux.sh)
 For linux.
 * `browse`  web.
 * `gdiff`  gui diff.
