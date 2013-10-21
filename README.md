@@ -72,7 +72,7 @@ a backup in .bashrc.bak.
 #### Notes
 
 ##### Samples
-See [INDEX.md](../blob/master/INDEX.md) for descirptions of the included
+See [INDEX.md](../master/INDEX.md) for descirptions of the included
 sample functions.
 
 ##### Usage
