@@ -13,18 +13,20 @@ files.With no variable, produces index of known functions, aliases,
 exports.
 
 Options:
+  + `--man`       doc + index
+  + `--sync`      commit new stuff, get latest
+
+Internal use:
   + `--HOST`      host config file
   + `--OS`        OS config file
   + `--dot`       sync dot files
   + `--files`     return nanes of config files in order
   + `--make-tags` make tags for vw scripts
-  + `--man`       doc + index
   + `--md`        generate INDEX.md
-  + `--sync`      commit new stuff, get latest
   + `--usage`     print usage
 
 ###### Dependency
-Note that *tools\shtags.py* generates the tags and documentation.
+Note that *tools/shtags.py* generates the tags and documentation.
 To work right, match the regular expression therein. *I.e.*:
 + function() # comment about function
 + VAR=xxx # comment about var
