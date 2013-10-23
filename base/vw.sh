@@ -1,7 +1,7 @@
 #!/bin/bash
-__='
+: << ''
 Definitions and completion routine for vw and huh.
-'
+
 vw() # vi whence
 {
     local VW_TMP=/tmp/vw$$
@@ -22,7 +22,7 @@ vw() # vi whence
         echo os/$(uname | sed -e 's/_.*//').sh
         ;;
     --man) # recap info
-        ( cat $VW_DIR/README.md ; vw --md ) | sed -e 's/^##* /* /'
+        ( cat $VW_DIR/README.md ; vw --md ) | sed -e 's/^##* /* /' -e 's/^*//'
         ;;
     *) # other options need to change dir
         (
@@ -52,7 +52,7 @@ vw() # vi whence
                 cmp -s $VW_DOT/$i $i && continue
                 olddir=. newdir=$VW_DOT
                 test $newdir/$i -nt $olddir/$i && olddir=$VW_DOT newdir=.
-                cp -v $olddir/$i $newdir/$i
+                cp -vi $olddir/$i $newdir/$i
             done
             ;;
         --make-tags) # make tags for vw scripts
@@ -99,7 +99,7 @@ vw() # vi whence
     rm -f $VW_TMP
 }
 
-huh() # melange of type typeset alias whence info
+huh() # melange of type typeset alias info
 {
     local HUH=$(type $1 2> /dev/null)
     case "$HUH" in

@@ -1,7 +1,7 @@
 #!/bin/bash
-__='
+: << ''
 Exported variables and an environmnet pretty printer.
-'
+
 export PS1='\$ ' # prompt
 export PS4='(${BASH_SOURCE##*/}''${LINENO}''${FUNCNAME[0]}' # debug info
 export PS4='${LINENO} ' # debug info

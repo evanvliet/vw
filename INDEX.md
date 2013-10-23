@@ -6,13 +6,13 @@ examples of what might be convenient.
 * `tm`  cat make.log.
 
 ###### [base/dtob.sh](base/dtob.sh)
-Conversions, both numbers and file names.
+Conversions, both numbers and file names. Dates from looking
+at a datascope and dealing with file names on Eunice.
 * `dtob`  decimal to binary.
 * `dtoh`  decimal to hex.
 * `htob`  hex to binary.
 * `htod`  hex to decimal.
-* `tl`  lowercase file names.
-* `tu`   upper case file names.
+* `recase`  upper case file names or use -lower to lower case.
 
 ###### [base/ea.sh](base/ea.sh)
 Convenient shortcuts.
@@ -110,7 +110,7 @@ lists known nicknames.  Options:
 
 ###### [base/vw.sh](base/vw.sh)
 Definitions and completion routine for vw and huh.
-* `huh`  melange of type typeset alias whence info.
+* `huh`  melange of type typeset alias info.
 * `vw`  vi whence.
 
 ###### [os/Linux.sh](os/Linux.sh)

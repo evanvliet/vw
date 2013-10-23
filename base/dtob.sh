@@ -1,48 +1,41 @@
 #!/bin/bash
-__='
-Conversions, both numbers and file names.
-'
-dtob() # decimal to binary
-{
-    echo -n "$1 = "
-    echo "$1 2 o p q" | dc
-}
+: << ''
+Conversions, both numbers and file names. Dates from looking
+at a datascope and dealing with file names on Eunice.
+
+_tu() { echo $1 | tr '[a-z]' '[A-Z]' ; }
+_tl() { echo $1 | tr '[A-Z]' '[a-z]' ; }
 dtoh() # decimal to hex
 {
     printf '%d = 0x%X\n' $1 $1
 }
-htob() # hex to binary
-{
-    local hexval=$(echo $1 | tr "[a-f]" "[A-F]")
-    echo -n "0x$hexval = "
-    echo "16 i F$hexval 2 o p q" | dc | sed -e 's/1111//' -e 's/..../& /g'
-}
 htod() # hex to decimal
 {
-    local hexval=0x$(echo $1 | tr "[a-f]" "[A-F]")
-    printf '%s = %d\n' $hexval $hexval
+    printf '0x%X = %d\n' $((0x$1)) $((0x$1))
 }
-tl() # lowercase file names
+htob() # hex to binary
 {
-    local i I
-    for I in ${*:-*}
-    do
-        i=$(echo $I | tr '[A-Z]' '[a-z]')
-        if test $i != $I && mv $I tmp$$
-        then
-            mv tmp$$ $i
-        fi
-    done
+    local val=$(_tu $1)
+    echo 0x$val = $(echo "16 i F$val 2 o p q" | \
+        dc | sed -e 's/1111//' -e 's/..../& /g')
 }
-tu() #  upper case file names
+dtob() # decimal to binary
 {
-    local i I
+    local i=$(dtoh $1)
+    i=${i#*= }
+    i=$(htob ${i#*x})
+    echo $1 = ${i#*= }
+}
+recase() # upper case file names or use -lower to lower case
+{
+    local tmp=tmp$$ casing=upper
+    test "$1" = -lower && shift && casing=lower
     for i in ${*:-*}
     do
-        I=$(echo $i | tr '[a-z]' '[A-Z]')
-        if test $i != $I && mv $i tmp$$
-        then
-            mv tmp$$ $I
-        fi
+        local I=$(_tu $i)
+        test $casing = lower && I=$(_tl $i)
+        test $i = $I && continue
+        mv $i $tmp
+        mv $tmp $I
     done
 }

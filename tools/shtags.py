@@ -13,8 +13,8 @@ import optparse
 reExport = re.compile(r'^export ([A-Za-z]\w+)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
 reAlias = re.compile(r'^alias ([\.A-Za-z][\-\.\w]+)=.*# (.*)')
-reBlockStart = re.compile(r'^ *__=')
-reBlockEnd = re.compile(r"^ *'")
+reBlockStart = re.compile(r"^ *: *<< *''")
+reBlockEnd = re.compile(r"^$")
 
 class TagInfo: # tag info
     def __init__(self, fn, comment='', re=''):
@@ -31,7 +31,6 @@ def get_defs(f):
     array of strings.
     """
 
-    sBlockEnd = ''
     iBlock = -1
     rv = {}
     deftag=''
@@ -40,6 +39,16 @@ def get_defs(f):
     ti = TagInfo(f)
     for linen in open(f):
         line = linen.rstrip()
+
+        if iBlock >= 0: # in block quote
+            match = reBlockEnd.match(line)
+            if match:
+                iBlock = -1
+            elif deftag:
+                rv[deftag].append(line[iBlock:])
+            else:
+                ti.append(line[iBlock:])
+            continue
 
         match = reAlias.match(line)
         if match:
@@ -61,16 +70,9 @@ def get_defs(f):
 
         match = reBlockStart.match(line)
         if match:
-            iBlock = line.find('__=')
-        elif iBlock >= 0:
-            # in block quote
-            match = reBlockEnd.match(line)
-            if match:
-                iBlock = -1
-            elif deftag:
-                rv[deftag].append(line[iBlock:])
-            else:
-                ti.append(line[iBlock:])
+            # set iBlock to the number of leading spaces
+            iBlock = len(line) - len(line.lstrip(' '))
+
     return rv
 
 def make_tags(xdefs):

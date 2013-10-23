@@ -1,10 +1,10 @@
 #!/bin/bash
-__='
+: << ''
 For linux.
-'
+
 browse() # web
 {
-    ( nohup sensible-browser $* & ) &> /dev/null
+    ( nohup xdg-open $* & ) &> /dev/null
 }
 gdiff() { meld $* 2> /dev/null . ; } # gui diff
 gdir() { nautilus 2> /dev/null . ; } # gui files

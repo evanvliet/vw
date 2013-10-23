@@ -1,17 +1,17 @@
 #!/bin/bash
-__='
+: << ''
 Use base machine, *.i.e.*, machine hosting your configuration.  Good on
 an isp, ergo the name.
-'
+
 isp() # interact with base machine on isp
 {
-    __='
+    : << ''
     Start an ssh session, setup and retrieve git repositories, copy
     and paste files. See `isp -h` for usage.
-    '
+
     local ISP_HOST=$(
         cd $VW_DIR; git config remote.origin.url | sed -e s/:.*//)
-    op=$1
+    local op=$1
     shift
     case $op in
     get)
@@ -19,6 +19,9 @@ isp() # interact with base machine on isp
         ;;
     put)
         scp $* $ISP_HOST:xfer
+        ;;
+    update)
+        ssh $ISP_HOST "cd git_root/$1.git && git fetch"
         ;;
     clone)
         test "$1" && git clone $ISP_HOST:git_root/$1.git && return
@@ -44,6 +47,7 @@ isp() # interact with base machine on isp
                 put - copy file to xfer folder
                 sh - run sh
                 git - create git repository from working directory
+                update - update git_root repo from origin, e.g., github
                 clone - clone from '$ISP_HOST':~/git_root/' |
             sed -e '2,$s/^ */  /'
         ;;

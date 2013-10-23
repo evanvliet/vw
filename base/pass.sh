@@ -1,15 +1,15 @@
 #!/bin/bash
-__='
+: << ''
 Password storage.
-'
+
 getpass() # use passsword db
 {
-    __='
+    : << ''
     Do `getpass google` to get your google password.  Depends on
     storing line-oriented password data, *e.g.*, `www.google.com
     userid password`.  The last word of the line is copied into the
     clipboard.  See `getpass -h` for usage.
-    '
+
     (
         cd "$VW_DIR/tools/data"
         GP_PLAINTEXT='plaintext'

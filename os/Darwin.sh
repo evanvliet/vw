@@ -1,7 +1,7 @@
 #!/bin/bash
-__='
+: << ''
 For mac.  Added a ssh-copy-id goody.
-'
+
 browse() { open -a /Applications/Google\ Chrome.app "$@" ; } # web
 gdiff() { opendiff $* ; } # gui diff
 gdir() { open . ; } # gui dir
