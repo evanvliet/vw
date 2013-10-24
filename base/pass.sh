@@ -1,15 +1,15 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 Password storage.
-
+qp
 getpass() # use passsword db
 {
-    : << ''
+    << 'qp'
     Do `getpass google` to get your google password.  Depends on
     storing line-oriented password data, *e.g.*, `www.google.com
     userid password`.  The last word of the line is copied into the
     clipboard.  See `getpass -h` for usage.
-
+qp
     (
         cd "$VW_DIR/tools/data"
         GP_PLAINTEXT='plaintext'
@@ -87,7 +87,7 @@ getpass() # use passsword db
             # user review
             vi passwords
             read -p 'update to google? ' 
-            echo $REPLY | grep -q '^y' || return
+            grep -q '^y' <<< $REPLY || return
             # push merged version to google
             google docs edit Passwords --editor "../replace_edit.sh"
             # push merged version to safe

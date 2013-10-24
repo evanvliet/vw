@@ -1,7 +1,7 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 For linux.
-
+qp
 browse() # web
 {
     ( nohup xdg-open $* & ) &> /dev/null

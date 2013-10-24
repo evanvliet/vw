@@ -1,8 +1,8 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 Conversions, both numbers and file names. Dates from looking
 at a datascope and dealing with file names on Eunice.
-
+qp
 _tu() { echo $1 | tr '[a-z]' '[A-Z]' ; }
 _tl() { echo $1 | tr '[A-Z]' '[a-z]' ; }
 dtoh() # decimal to hex
@@ -16,13 +16,12 @@ htod() # hex to decimal
 htob() # hex to binary
 {
     local val=$(_tu $1)
-    echo 0x$val = $(echo "16 i F$val 2 o p q" | \
-        dc | sed -e 's/1111//' -e 's/..../& /g')
+    echo 0x$val = $(echo "16 i 1$val 2 o p q" | \
+        dc | sed -e s/1// -e 's/..../& /g')
 }
 dtob() # decimal to binary
 {
     local i=$(dtoh $1)
-    i=${i#*= }
     i=$(htob ${i#*x})
     echo $1 = ${i#*= }
 }
@@ -30,12 +29,12 @@ recase() # upper case file names or use -lower to lower case
 {
     local tmp=tmp$$ casing=upper
     test "$1" = -lower && shift && casing=lower
-    for i in ${*:-*}
+    for i in ${@:-*}
     do
-        local I=$(_tu $i)
-        test $casing = lower && I=$(_tl $i)
-        test $i = $I && continue
-        mv $i $tmp
-        mv $tmp $I
+        local I=$(_tu "$i")
+        test $casing = lower && I=$(_tl "$i")
+        test "$i" = "$I" && continue
+        mv "$i" "$tmp"
+        mv "$tmp" "$I"
     done
 }

@@ -1,17 +1,17 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 Nicknames for directory navigation.
-
+qp
 sd() # set directory via nicknames
 {
-    : << ''
+    << 'qp'
     Use `sd nick` to cd to folder by nickname `nick`. If `nick`
     unknown, save it for the current directory. Without arg, `sd`
     lists known nicknames.  Options:
       + `-e` edit db, using vi
       + `-l` tail db, list last added nicknames
       + `-v` expand nick, for use in other scripts
-
+qp
     local SDTMP
     test -f ~/.sdrc || touch ~/.sdrc
     case "$1" in
@@ -38,9 +38,8 @@ sd() # set directory via nicknames
         SD_TMP=$(sed -n -e "/^$1 /s/.*  //p" ~/.sdrc)
         test -d "$SD_TMP" && cd "$SD_TMP" && pwd || (
             # add new nickname
-            echo -n "add $1 as a shortcut to $PWD? "
-            read ok
-            echo $ok | grep -q y && (
+            read -p "add $1 as a shortcut to $PWD? "
+            grep -q y <<< $REPLY && (
                 # replace existing versions with current one
                 grep -v "^$1 " ~/.sdrc > ~/.sd_tmp
                 mv ~/.sd_tmp ~/.sdrc

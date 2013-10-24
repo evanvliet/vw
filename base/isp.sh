@@ -1,14 +1,14 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 Use base machine, *.i.e.*, machine hosting your configuration.  Good on
 an isp, ergo the name.
-
+qp
 isp() # interact with base machine on isp
 {
-    : << ''
+    << 'qp'
     Start an ssh session, setup and retrieve git repositories, copy
     and paste files. See `isp -h` for usage.
-
+qp
     local ISP_HOST=$(
         cd $VW_DIR; git config remote.origin.url | sed -e s/:.*//)
     local op=$1

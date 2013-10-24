@@ -1,7 +1,7 @@
 #!/bin/bash
-: << ''
+<< 'qp'
 Definitions and completion routine for vw and huh.
-
+qp
 vw() # vi whence
 {
     local VW_TMP=/tmp/vw$$
@@ -69,13 +69,12 @@ vw() # vi whence
             echo $VW_FILES
             ;;
         *) # look up arg and invoke vi or describe
+            grep -q '^\-' <<< $1 && vw --usage && return
             vw --make-tags
             VW_LOC=$(command -v $1 2> /dev/null) # file location
             (
             echo cd $VW_DIR
-            if echo $1 | grep -q '^\-'
-            then echo vw --usage
-            elif grep -q "^$1	" tags
+            if grep -q "^$1	" tags
             then set $(grep "^$1	" tags)
                  echo vi -t $1
                  echo . $2
