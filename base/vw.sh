@@ -74,17 +74,18 @@ vw() # vi whence
             VW_LOC=$(command -v $1 2> /dev/null) # file location
             (
             echo cd $VW_DIR
-            if grep -q "^$1	" tags
-            then set $(grep "^$1	" tags)
-                 echo vi -t $1
-                 echo . $2
-            elif file -L $VW_LOC 2> /dev/null | grep -q text
-            then echo vi $VW_LOC > $VW_TMP
-            elif test "$(ls tools/$1* 2> /dev/null)"
-            then echo vi $(ls tools/$1* | head -1)
-            elif test "$VW_LOC"
-            then echo echo $1 is $VW_LOC
-            else echo echo no match for $1
+            if grep -q "^$1	" tags ; then
+                set $(grep "^$1	" tags)
+                echo vi -t $1
+                echo . $2
+            elif file -L $VW_LOC 2> /dev/null | grep -q text ; then
+                echo vi $VW_LOC > $VW_TMP
+            elif test "$VW_LOC" ; then
+                echo echo $1 is $VW_LOC
+            elif test "$(ls tools/$1* 2> /dev/null)" ; then
+                echo vi $(ls tools/$1* | head -1)
+            else
+                echo echo no match for $1
             fi
             echo 'cd - > /dev/null'
             ) > $VW_TMP

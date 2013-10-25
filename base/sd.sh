@@ -12,45 +12,32 @@ sd() # set directory via nicknames
       + `-l` tail db, list last added nicknames
       + `-v` expand nick, for use in other scripts
 qp
-    local SDTMP
+    local SDTMP=$(sed -n -e "/^$2 /s/.*  //p" ~/.sdrc)
     test -f ~/.sdrc || touch ~/.sdrc
     case "$1" in
-    -e) # edit nickname db
-        vi ~/.sdrc
+    "") sort ~/.sdrc
         ;;
-    "") # print .sdrc sorted
-        sort ~/.sdrc
+    -e) vi ~/.sdrc
         ;;
-    -l) # tail .sdrc to get latest
-        tail ~/.sdrc
+    -l) tail ~/.sdrc
         ;;
-    -v) # print what full path of nickname is
-        SD_TMP=$(sed -n -e "/^$2 /s/.*  //p" ~/.sdrc)
-        test "$SD_TMP" && echo $SD_TMP
+    -v) test "$SD_TMP" && echo $SD_TMP
         ;;
-    -h) # print usage
-        echo 'sd [<nick> | -e | -l | -v]
+    -h) sed 's/^  */   /' <<< 'sd [<nick> | -e | -l | -v]
             -e edit db
             -l tail db
-            -v expand nick' | sed 's/^  */   /'
+            -v expand nick'
         ;;
-    *)  # cd to nicknamed folder
-        SD_TMP=$(sed -n -e "/^$1 /s/.*  //p" ~/.sdrc)
-        test -d "$SD_TMP" && cd "$SD_TMP" && pwd || (
-            # add new nickname
-            read -p "add $1 as a shortcut to $PWD? "
-            grep -q y <<< $REPLY && (
-                # replace existing versions with current one
-                grep -v "^$1 " ~/.sdrc > ~/.sd_tmp
-                mv ~/.sd_tmp ~/.sdrc
-                printf "%-9s  %s\n" $1 "$PWD" | tee -a ~/.sdrc
-            )
-        )
+    *)  test -d "$SD_TMP" && cd "$SD_TMP" && pwd && return
+        # add new nickname
+        read -p "add $1 as a shortcut to $PWD? "
+        grep -q y <<< $REPLY || return
+        # replace existing versions with current one
+        grep -v "^$1 " ~/.sdrc > ~/.sd_tmp
+        mv ~/.sd_tmp ~/.sdrc
+        printf "%-9s  %s\n" $1 "$PWD" | tee -a ~/.sdrc
         ;;
     esac
 }
-_sd_complete()
-{
-    COMPREPLY=($(sed -n -e "/^$2/s/  .*//p" ~/.sdrc))
-}
+_sd_complete() { COMPREPLY=($(sed -n -e "/^$2/s/ .*//p" ~/.sdrc)) ; }
 complete -F _sd_complete sd

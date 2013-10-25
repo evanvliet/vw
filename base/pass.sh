@@ -9,6 +9,13 @@ getpass() # use passsword db
     storing line-oriented password data, *e.g.*, `www.google.com
     userid password`.  The last word of the line is copied into the
     clipboard.  See `getpass -h` for usage.
+
+    Note that you can encrypt this data for added security, using
+    the `-k` option to set the key.  The key is cached, using
+    `vw_key` to encrypt to foil decryption by just copying files
+    to another machine.  If you do encrypt the password data, you will
+    have to enter the key once on each machine to access the password
+    data.
 qp
     (
         cd "$VW_DIR/tools/data"
@@ -16,15 +23,14 @@ qp
         GP_PAD='f86199d83fa58cc8988c7aea9a88be19d7a69f0'
         case ${1:--h} in
         --usage) # show help text
-            echo 'getpass word | option 
-                    Search for word in password db. Options:
-                    -e edit password db
-                    -g sync with google drive
-                    -i initialize
-                    -m merge conflicts
-                    -k encode with key
-                    -p make [big|small] password' |
-                sed 's/^  */  /'
+            sed 's/^  */  /' <<< 'getpass word | option 
+                Search for word in password db. Options:
+                -e edit password db
+                -g sync with google drive
+                -i initialize
+                -m merge conflicts
+                -k encode with key
+                -p make [big|small] password'
             ;;
         --key)  # get / set key to safe
             if test "$2" ; then # set key
@@ -80,19 +86,16 @@ qp
                 echo no change &&
                 return
             # merge two versions
-            diff passwords pass.ref | \
-                sed -n '/^> /s//(restored) /p' > pass.restored
+            diff passwords pass.ref | sed -n '/^> /s//+ /p' > pass.restored
             cat pass.restored passwords > pass.txt
             mv pass.txt passwords
             # user review
             vi passwords
             read -p 'update to google? ' 
             grep -q '^y' <<< $REPLY || return
-            # push merged version to google
+            # save merged version on google and locally
             google docs edit Passwords --editor "../replace_edit.sh"
-            # push merged version to safe
             getpass --encrypt
-            # set +xv
             ;;
         -i) # init db
             rm -f key safe
@@ -104,17 +107,14 @@ qp
             mv passwords pass.ref
             git co --theirs safe
             getpass --decrypt
-            diff pass.ref passwords |
-                sed -n '/^> /s//(restored) /p' > safe
+            diff pass.ref passwords | sed -n '/^> /s//+ /p' > safe
             cat safe pass.ref > passwords
             getpass --encrypt
             ;;
         -n) # encrypt with new key
             getpass --decrypt
-            # get new key and cache it
-            echo -n 'key: '
-            read GP_NEW_KEY
-            getpass --key "$GP_NEW_KEY"
+            read -p 'key: '
+            getpass --key "$REPLY"
             # save in passwords file, deleting former entry
             grep -v ^getpass < passwords > pass.ref
             echo getpass \""$GP_NEW_KEY"\" >> pass.ref

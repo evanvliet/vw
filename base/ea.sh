@@ -16,17 +16,16 @@ trace () # trace execution of bash script or function
 }
 chcount() { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
 cpo() { cp $* "$OLDPWD" ; } # copy to $OLDPWD
-don() # do something a number of time
+don() # do something a number of times
 { 
     << 'qp'
     For example, use `don 3 echo a` to `echo a` 3 times.
 qp
     local n=3
-    test $1 -gt 0 2> /dev/null && n=$1 && shift
-    while test $n -gt 0
+    ((1$1 > 10)) &> /dev/null && n=$1 && shift
+    for i in $(seq $n)
     do
         $*
-        let n=n-1
     done
 }
 ea() # echo all
@@ -40,11 +39,11 @@ qp
     local EACOLS EATMP
     let EACOLS=$(tput cols)-6
     EATMP=/tmp/ea.$$
-    ls -d ${*:-*} > $EATMP
+    ls -d ${@:-*} > $EATMP
     head -c $EACOLS $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && rm $EATMP* && return
     sed -e '$d' $EATMP.1 > $EATMP.2
-    echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l | sed 's/ //g')
+    echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
     rm -f $EATMP*
 }
 findext() { find . -name "*.$1" -print ; } # find by extension
