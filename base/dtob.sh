@@ -1,8 +1,8 @@
 #!/bin/bash
-<< 'qp'
-Conversions, both numbers and file names. Dates from looking
-at a datascope and dealing with file names on Eunice.
-qp
+# +
+# Conversions, both numbers and file names. Dates from looking
+# at a datascope and dealing with file names on Eunice.
+# -
 _tu() { echo $1 | tr '[a-z]' '[A-Z]' ; }
 _tl() { echo $1 | tr '[A-Z]' '[a-z]' ; }
 dtoh() # decimal to hex
@@ -15,9 +15,8 @@ htod() # hex to decimal
 }
 htob() # hex to binary
 {
-    local val=$(_tu $1)
-    echo 0x$val = $(echo "16 i 1$val 2 o p q" | \
-        dc | sed -e s/1// -e 's/..../& /g')
+    local bin=$(dc <<< "16 i 1$1 2 o p q")
+    echo 0x$(_tu $1) = $(sed -e 's/..../& /g' <<< ${bin#1})
 }
 dtob() # decimal to binary
 {

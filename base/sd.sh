@@ -1,17 +1,17 @@
 #!/bin/bash
-<< 'qp'
-Nicknames for directory navigation.
-qp
+# +
+# Nicknames for directory navigation.
+# -
 sd() # set directory via nicknames
 {
-    << 'qp'
-    Use `sd nick` to cd to folder by nickname `nick`. If `nick`
-    unknown, save it for the current directory. Without arg, `sd`
-    lists known nicknames.  Options:
-      + `-e` edit db, using vi
-      + `-l` tail db, list last added nicknames
-      + `-v` expand nick, for use in other scripts
-qp
+    # +
+    # Use `sd nick` to cd to folder by nickname `nick`. If `nick`
+    # unknown, save it for the current directory. Without arg, `sd`
+    # lists known nicknames.  Options:
+    #   + `-e` edit db, using vi
+    #   + `-l` tail db, list last added nicknames
+    #   + `-v` expand nick, for use in other scripts
+    # -
     local SD_LIST=~/.sdrc
     local SD_DIR
     test -f $SD_LIST || touch $SD_LIST

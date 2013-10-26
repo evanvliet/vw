@@ -1,9 +1,9 @@
 #!/bin/bash
-<< 'qp'
-A collection of git shortcuts.  Some names influenced by other source
-control systems.  Some encapsulate git opts for convenience.  Others
-collect common seequences.
-qp
+# +
+# A collection of git shortcuts.  Some names influenced by other source
+# control systems.  Some encapsulate git opts for convenience.  Others
+# collect common seequences.
+# -
 gist()  # root folder, remote url, and current status
 {
     gitroot="$(git rev-parse --show-toplevel 2> /dev/null)"

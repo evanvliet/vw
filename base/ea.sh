@@ -1,7 +1,7 @@
 #!/bin/bash
-<< 'qp'
-Convenient shortcuts.
-qp
+# +
+# Convenient shortcuts.
+# -
 alias ..='cd ..; pwd'  # cd ..
 alias ...='cd ../..; pwd' # cd ../..
 trace () # trace execution of bash script or function
@@ -18,9 +18,9 @@ chcount() { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
 cpo() { cp $* "$OLDPWD" ; } # copy to $OLDPWD
 don() # do something a number of times
 { 
-    << 'qp'
-    For example, use `don 3 echo a` to `echo a` 3 times.
-qp
+    # +
+    # For example, use `don 3 echo a` to `echo a` 3 times.
+    # -
     local n=3
     ((1$1 > 10)) &> /dev/null && n=$1 && shift
     for i in $(seq $n)
@@ -30,12 +30,12 @@ qp
 }
 ea() # echo all
 {
-    << 'qp'
-    Actually echoes just as many file names as will fit on one line.
-    Good for getting a quick idea of the file population of a folder
-    without spamming your screen.  Prints `+nn` to show more files
-    that were not shown.
-qp
+    # +
+    # Actually echoes just as many file names as will fit on one line.
+    # Good for getting a quick idea of the file population of a folder
+    # without spamming your screen.  Prints `+nn` to show more files
+    # that were not shown.
+    # -
     local EACOLS EATMP
     let EACOLS=$(tput cols)-6
     EATMP=/tmp/ea.$$

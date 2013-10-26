@@ -1,7 +1,7 @@
 #!/bin/bash
-<< 'qp'
-Definitions and completion routine for vw and huh.
-qp
+# +
+# Definitions and completion routine for vw and huh.
+# -
 vw() # vi whence
 {
     case "$1" in

@@ -1,7 +1,7 @@
 #!/bin/bash
-<< 'qp'
-For windows cygwin. Nice of cygwin to provide /dev/clipboard.
-qp
+# +
+# For windows cygwin. Nice of cygwin to provide /dev/clipboard.
+# -
 browse() { cmd /c start iexplore.exe "$@" ; } # web
 gdiff() { wmerge $1 $2 & } # gui diff
 gdir() { cmd /c start . ; } # gui dir

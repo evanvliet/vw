@@ -13,8 +13,8 @@ import optparse
 reExport = re.compile(r'^export ([A-Za-z]\w+)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
 reAlias = re.compile(r'^alias ([\.A-Za-z][\-\.\w]+)=.*# (.*)')
-reBlockStart = re.compile(r"^ *<< 'qp'")
-reBlockEnd = re.compile(r"^qp$")
+reBlockStart = re.compile(r"^ *# \+")
+reBlockEnd = re.compile(r"^ *# \-")
 
 class TagInfo: # tag info
     def __init__(self, fn, comment='', re=''):
@@ -70,8 +70,8 @@ def get_defs(f):
 
         match = reBlockStart.match(line)
         if match:
-            # set iBlock to the number of leading spaces
-            iBlock = len(line) - len(line.lstrip(' '))
+            # set iBlock to the number of leading spaces + 2
+            iBlock = 2 +len(line) - len(line.lstrip(' '))
 
     return rv
 

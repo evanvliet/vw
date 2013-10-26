@@ -1,21 +1,21 @@
 #!/bin/bash
-<< 'qp'
-Password storage.
-
-Note that you can encrypt the data for added security, using the `-n`
-option to set the key.  It caches this key, encrpyting with `vw_key`
-to foil decryption by just copying files to another machine.  If you
-do encrypt the password data, you will have to enter the key once on
-each machine.
-qp
+# +
+# Password storage.
+# 
+# Note that you can encrypt the data for added security, using the `-n`
+# option to set the key.  It caches this key, encrpyting with `vw_key`
+# to foil decryption by just copying files to another machine.  If you
+# do encrypt the password data, you will have to enter the key once on
+# each machine.
+# -
 getpass() # use passsword db
 {
-    << 'qp'
-    Do `getpass google` to get your google password.  Depends on
-    storing line-oriented password data, *e.g.*, `www.google.com
-    userid password`.  The last word of the line is copied into the
-    clipboard.  See `getpass -h` for usage.
-qp
+    # +
+    # Do `getpass google` to get your google password.  Depends on
+    # storing line-oriented password data, *e.g.*, `www.google.com
+    # userid password`.  The last word of the line is copied into the
+    # clipboard.  See `getpass -h` for usage.
+    # -
     local PASSKEY=$VW_DIR/tools/data/key
     local PASSDB=$VW_DIR/tools/data/safe
     local PASSTMP=$VW_DIR/tools/data/pass$$
@@ -100,7 +100,9 @@ qp
         read -p 'update to google? ' 
         grep -q '^y' <<< $REPLY || return
         # save merged version on google and locally
+        cd $(dirname $PASSWORDS)
         google docs edit Passwords --editor "../replace_edit.sh"
+        cd - &> /dev/null
         getpass --encrypt
         ;;
     -i) # init db
