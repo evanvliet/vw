@@ -81,18 +81,17 @@ and paste files. See `isp -h` for usage.
 
 ###### [base/pass.sh](base/pass.sh)
 Password storage.
+
+Note that you can encrypt the data for added security, using the `-n`
+option to set the key.  It caches this key, encrpyting with `vw_key`
+to foil decryption by just copying files to another machine.  If you
+do encrypt the password data, you will have to enter the key once on
+each machine.
 * `getpass`  use passsword db.
 Do `getpass google` to get your google password.  Depends on
 storing line-oriented password data, *e.g.*, `www.google.com
 userid password`.  The last word of the line is copied into the
 clipboard.  See `getpass -h` for usage.
-
-Note that you can encrypt this data for added security, using
-the `-k` option to set the key.  The key is cached, using
-`vw_key` to encrypt to foil decryption by just copying files
-to another machine.  If you do encrypt the password data, you will
-have to enter the key once on each machine to access the password
-data.
 
 ###### [base/scrap.sh](base/scrap.sh)
 Sets up s as a scrap file. For doing stuff like ls > $s and then

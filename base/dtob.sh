@@ -21,9 +21,9 @@ htob() # hex to binary
 }
 dtob() # decimal to binary
 {
-    local i=$(dtoh $1)
-    i=$(htob ${i#*x})
-    echo $1 = ${i#*= }
+    local hex=$(dtoh $1)
+    local bin=$(htob ${hex#*x})
+    echo $1 = ${bin#*= }
 }
 recase() # upper case file names or use -lower to lower case
 {
@@ -31,8 +31,8 @@ recase() # upper case file names or use -lower to lower case
     test "$1" = -lower && shift && casing=lower
     for i in ${@:-*}
     do
-        local I=$(_tu "$i")
-        test $casing = lower && I=$(_tl "$i")
+        test $casing = upper && local I=$(_tu "$i")
+        test $casing = lower && local I=$(_tl "$i")
         test "$i" = "$I" && continue
         mv "$i" "$tmp"
         mv "$tmp" "$I"

@@ -12,30 +12,40 @@ sd() # set directory via nicknames
       + `-l` tail db, list last added nicknames
       + `-v` expand nick, for use in other scripts
 qp
-    local SDTMP=$(sed -n -e "/^$2 /s/.*  //p" ~/.sdrc)
-    test -f ~/.sdrc || touch ~/.sdrc
+    local SD_LIST=~/.sdrc
+    local SD_DIR
+    test -f $SD_LIST || touch $SD_LIST
     case "$1" in
-    "") sort ~/.sdrc
+    "") # sorted list
+        sort $SD_LIST
         ;;
-    -e) vi ~/.sdrc
+    -e) # edit list
+        vi $SD_LIST
         ;;
-    -l) tail ~/.sdrc
+    -l) # last added
+        tail $SD_LIST
         ;;
-    -v) test "$SD_TMP" && echo $SD_TMP
+    -v) # verify nickname
+        test "$2" && SD_DIR=$(sed -n -e "/^$2 /s/.*  //p" $SD_LIST)
+        test "$SD_DIR" && echo $SD_DIR
         ;;
-    -h) sed 's/^  */   /' <<< 'sd [<nick> | -e | -l | -v]
+    -h) # help
+        sed 's/^  */   /' <<< 'sd [<nick> | -e | -l | -v]
             -e edit db
             -l tail db
             -v expand nick'
         ;;
-    *)  test -d "$SD_TMP" && cd "$SD_TMP" && pwd && return
+    *) # default look up and either cd or add new nickname
+        SD_DIR=$(sed -n -e "/^$1 /s/.*  //p" $SD_LIST)
+        test -d "$SD_DIR" && cd "$SD_DIR" && pwd && return
         # add new nickname
         read -p "add $1 as a shortcut to $PWD? "
         grep -q y <<< $REPLY || return
         # replace existing versions with current one
-        grep -v "^$1 " ~/.sdrc > ~/.sd_tmp
-        mv ~/.sd_tmp ~/.sdrc
-        printf "%-9s  %s\n" $1 "$PWD" | tee -a ~/.sdrc
+        grep -v "^$1 " $SD_LIST > $SD_LIST$$
+        mv $SD_LIST$$ $SD_LIST
+        printf "%-9s  %s\n" $1 "$PWD" >> $SD_LIST
+        tail -1 $SD_LIST
         ;;
     esac
 }

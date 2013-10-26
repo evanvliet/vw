@@ -190,7 +190,7 @@ class FileComment:
             print ' '.join(cmd_output('ls', '-dl', self.name).split()[:8]) ,
             print '%s lines' % cmd_output('wc', '-l', self.name).split()[0]
             print ' '.join(cmd_output('file', self.name).split(':')[1:]).strip()
-            print cmd_output('od', '-cN64', '-An', self.name)
+            print cmd_output('env', '-i', 'od', '-cN64', '-An', self.name)
         elif comment == 'e':  # erase existing comment
             self.comment = ''
             rv = 1  # next

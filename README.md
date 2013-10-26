@@ -18,7 +18,7 @@ Options:
 
 ###### Dependency
 Note that *tools/shtags.py* generates the tags and documentation.  To
-work right, match the regular expression therein. *I.e.*:
+work right, match the regular expression therein.  *I.e.*:
 + `func() # about func`
 + `XX=xxx # about XX`
 + `alias xx=yy # about xx`
@@ -33,7 +33,7 @@ See the sample scripts.
 + minimal home directory clutter
 
 #### Installation
-Run `INSTALL`. Login or exec to source *vw* configuration files. Example:
+Run `INSTALL`.  Login or exec to source *vw* configuration files.  Example:
 
 + `git clone git@github.com:evanvliet/vw.git`
 + `bash vw/INSTALL`
@@ -52,12 +52,13 @@ git clone command for downsteam access.
 
 #### Notes
 See [INDEX.md](../master/INDEX.md) for descirptions of the included
-sample functions. They are an idiosyncratic collection of accumulated
+sample functions.  They are an idiosyncratic collection of accumulated
 favorites; some, in particular `sd`, `getpass`, and the scrap file
 ones, have proven useful over the years, but mostly serve as samples
 of how to format code so the vw tagging utility finds function
-defiinitions.  Note the scripts use a *qp* here document trick to
-hold block comments.  The tagging utility 
+defiinitions.  Note the scripts use a *qp* here document convention to
+hold block comments.  The tagging utility extracts these when
+generating documentation.
 
 ##### Folders
 Keeps configuration files in a directory, typically `vw`, set in
@@ -71,7 +72,7 @@ Keeps configuration files in a directory, typically `vw`, set in
 
 ##### Usage
 Most effective when sharing configuration via a base machine holding a
-bare repository. Then, on the leaf machines, the usual *git* pulls,
+bare repository.  Then, on the leaf machines, the usual *git* pulls,
 commits, and pushes from the *vw* directory keep machines in sync. 
 Also, `vw --sync` does a commit, pull, push and sync of dot files in
 one swell foop.
@@ -84,5 +85,5 @@ one swell foop.
 
 The last one wins, so whatever the host configuration file defines
 wins over the os configuration, which in turn overrides whatever is
-set up in the base files. The tags reflect this precedence so `vw`
+set up in the base files.  The tags reflect this precedence so `vw`
 edits the effective definition.
