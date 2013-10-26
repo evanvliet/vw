@@ -21,7 +21,7 @@ getpass() # use passsword db
     local PASSTMP=$VW_DIR/tools/data/pass$$
     local PASSWORDS=$VW_DIR/tools/data/passwords
     local PLAINTEXT='plaintext'
-    trap 'rm -f $PASSTMP*' RETURN
+    trap 'test "$PASSTMP" && rm -f $PASSTMP*' RETURN
     case ${1:--h} in
     --usage) # show help text
         sed 's/^  */  /' <<< 'getpass [ word | option ]
