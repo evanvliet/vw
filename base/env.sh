@@ -8,6 +8,7 @@ export PS4='${LINENO} ' # debug info
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}\007"' # sets window title
 export HISTFILE=$HISTFILE # bash history
 export MANPAGER='less -csr' # manpager opts
+export PYTHONSTARTUP=~/.pythonrc.py # python startup
 export VISUAL=vi # default editor
 export CDPATH=.:$VW_DIR:~ # include vw in CDPATH
 shopt -s histappend

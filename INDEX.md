@@ -57,6 +57,7 @@ Exported variables and an environmnet pretty printer.
 * `PROMPT_COMMAND`  sets window title.
 * `PS1`  prompt.
 * `PS4`  debug info.
+* `PYTHONSTARTUP`  python startup.
 * `VISUAL`  default editor.
 * `ep`  expand paths.
 
@@ -71,10 +72,6 @@ collect common seequences.
 * `gitbr`  show branch name or delete with -d.
 * `lastdiff`  last diff for a file.
 * `setconf`  set up a default .gitconfig.
-
-###### [base/google_sync.sh](base/google_sync.sh)
-sync with google drive
-* `google_sync`  sync passwords.
 
 ###### [base/isp.sh](base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good on
@@ -131,12 +128,14 @@ Definitions and completion routine for vw and huh.
 * `huh`  melange of type typeset alias info.
 * `vw`  vi whence.
 
-###### [os/Linux.sh](os/Linux.sh)
-For linux.
+###### [os/Darwin.sh](os/Darwin.sh)
+For mac.  Added a ssh-copy-id goody.
 * `browse`  web.
 * `gdiff`  gui diff.
-* `gdir`  gui files.
+* `gdir`  gui dir.
 * `gedit`  gui editor.
+* `python-vi-mode`  mac python uses editrc vs readline.
+* `ssh-copy-id`  for mac.
 * `vw_key`  machine dependent key.
 * `wcopy`  copy to clipboard.
 * `wpaste`  paste from clipboard.
