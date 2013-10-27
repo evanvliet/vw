@@ -72,6 +72,10 @@ collect common seequences.
 * `lastdiff`  last diff for a file.
 * `setconf`  set up a default .gitconfig.
 
+###### [base/google_sync.sh](base/google_sync.sh)
+sync with google drive
+* `google_sync`  sync passwords.
+
 ###### [base/isp.sh](base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good on
 an isp, ergo the name.
@@ -80,18 +84,26 @@ Start an ssh session, setup and retrieve git repositories, copy
 and paste files. See `isp -h` for usage.
 
 ###### [base/pass.sh](base/pass.sh)
-Password storage.
+Do `getpass google` to get your google password.  Prints matching
+lines from a password list and copies the last word into the
+clipboard.  Use `getpass -e` to edit the password list.
 
 Note that you can encrypt the data for added security, using the `-n`
 option to set the key.  It caches this key, encrpyting with `vw_key`
 to foil decryption by just copying files to another machine.  If you
 do encrypt the password data, you will have to enter the key once on
 each machine.
+
+If different changes are made on different machines, collisions
+can occur.  Use `getpass -m` to launch *vi* on a merged version.
+
+To revert to plaintext storage, use `getpass -i` to reset, then add
+your previous data.
+
+Adding a keyword, *e.g.*, *autopay*, to enable retrieving all password
+data associated with that keyword.  This helps if you lose a credit
+card, and need to update web sites.
 * `getpass`  use passsword db.
-Do `getpass google` to get your google password.  Depends on
-storing line-oriented password data, *e.g.*, `www.google.com
-userid password`.  The last word of the line is copied into the
-clipboard.  See `getpass -h` for usage.
 
 ###### [base/scrap.sh](base/scrap.sh)
 Sets up s as a scrap file. For doing stuff like ls > $s and then
