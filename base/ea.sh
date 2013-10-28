@@ -4,7 +4,36 @@
 # -
 alias ..='cd ..; pwd'  # cd ..
 alias ...='cd ../..; pwd' # cd ../..
-trace () # trace execution of bash script or function
+# one liners
+chcount () { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
+cpo () { cp $* "$OLDPWD" ; } # copy to $OLDPWD
+findext() { find . -name "*.$1" -print ; } # find by extension
+fm() { history -a; "$VW_DIR/tools/fm.py" "$@" ; } # fm with history
+h() { fc -l $* ; } # history
+llt() { ls -lgo -t "$@" | head ; } # ls latest
+lsc() { ls -bC $* ; } # printable chars
+mo() { less -c $* ; } # less -c
+r() { fc -s $* ; } # redo
+root() { sudo bash ; } # be admin
+t() { cat $* ; } # cat
+# vw related
+vwh() { vi "$VW_DIR/$(vw --HOST)" ; . "$HOME/.bashrc" ; } # vi host config
+vwo() { vi "$VW_DIR/$(vw --OS)" ; . "$HOME/.bashrc" ; } # vi os config
+vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; . "$HOME/.bashrc" ; } # vi vw profile
+vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; . "$HOME/.bashrc" ; } # vi base config
+don () # do something a number of times
+{ 
+    # +
+    # For example, use `don 3 echo` to get 3 blank lines.
+    # -
+    local n=3
+    ((1$1 > 10)) &> /dev/null && n=$1 && shift
+    for i in $(seq $n)
+    do
+        $*
+    done
+}
+xv () # trace execution of bash script or function
 {
     # print separation
     don 5 echo
@@ -14,19 +43,15 @@ trace () # trace execution of bash script or function
     set -xv
     $@
 }
-chcount() { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
-cpo() { cp $* "$OLDPWD" ; } # copy to $OLDPWD
-don() # do something a number of times
-{ 
-    # +
-    # For example, use `don 3 echo a` to `echo a` 3 times.
-    # -
-    local n=3
-    ((1$1 > 10)) &> /dev/null && n=$1 && shift
-    for i in $(seq $n)
-    do
-        $*
-    done
+textbelt() # text phone using textbelt
+{
+    local TB_INFO=/tmp/textbelt$$
+    pn=$(num textbelt | sed -e 's/ .*//')
+    test .$pn = . && read -p 'phone number? ' && pn=$REPLY
+    curl http://textbelt.com/text -d number=$pn -d message="$*" &> $TB_INFO
+    grep -q 'success.:true' $TB_INFO && num -a $pn textbelt
+    grep success $TB_INFO
+    rm $TB_INFO
 }
 ea() # echo all
 {
@@ -36,24 +61,18 @@ ea() # echo all
     # without spamming your screen.  Prints `+nn` to show more files
     # that were not shown.
     # -
-    local EACOLS EATMP
-    let EACOLS=$(tput cols)-6
-    EATMP=/tmp/ea.$$
+    local EACOLS EATMP=/tmp/ea.$$
+    trap 'test "$EATMP" && rm -f $EATMP*' RETURN
+    let EACOLS=$COLUMNS-6
     ls -d ${@:-*} > $EATMP
     head -c $EACOLS $EATMP > $EATMP.1
-    cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && rm $EATMP* && return
+    cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed -e '$d' $EATMP.1 > $EATMP.2
     echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
-    rm -f $EATMP*
 }
-findext() { find . -name "*.$1" -print ; } # find by extension
-fm() { history -a; "$VW_DIR/tools/fm.py" "$@" ; } # fm with history
-h() { fc -l $* ; } # history
-llt() { ls -lgo -t "$@" | head ; } # ls latest
-lsc() { ls -bC $* ; } # printable chars
 num() # phone numbers
 {
-    NUM_DB="$VW_DIR/tools/data/phone.nos"
+    NUM_DB="$VW_DIR/tools/data/num.db"
     case $1 in
     -a) shift # append new info
         grep -v "$*" $NUM_DB >> $NUM_DB.tmp
@@ -64,29 +83,4 @@ num() # phone numbers
     *)  grep -i "$1" $NUM_DB # search db
         ;;
     esac
-}
-mo() { less -c $* ; } # less -c
-r() { fc -s $* ; } # redo
-root() { sudo bash ; } # be admin
-t() { cat $* ; } # cat
-# vw related
-vwh() { vi "$VW_DIR/$(vw --HOST)" ; . "$HOME/.bashrc" ; } # vi host config
-vwo() { vi "$VW_DIR/$(vw --OS)" ; . "$HOME/.bashrc" ; } # vi os config
-vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; . "$HOME/.bashrc" ; } # vi vw.profile
-vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; . "$HOME/.bashrc" ; } # vi startup
-vwsh() { isp sh ; } # start sh on isp
-vwget() { isp get $* ; } # copy from isp xfer folder
-vwput() { isp put $* ; } # copy to isp xfer folder
-vwclone() { isp clone $* ; } # clone project from isp
-vwcreate() { isp git $* ; } # make git repository
-# texting
-textbelt() # text phone using textbelt
-{
-    local TB_INFO=/tmp/textbelt$$
-    pn=$(num textbelt | sed -e 's/ .*//')
-    test .$pn = . && read -p 'phone number? ' && pn=$REPLY
-    curl http://textbelt.com/text -d number=$pn -d message="$*" &> $TB_INFO
-    grep -q 'success.:true' $TB_INFO && num -a $pn textbelt
-    grep success $TB_INFO
-    rm $TB_INFO
 }

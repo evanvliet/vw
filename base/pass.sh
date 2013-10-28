@@ -2,7 +2,10 @@
 # +
 # Do `getpass google` to get your google password.  Prints matching
 # lines from a password list and copies the last word into the
-# clipboard.  Use `getpass -e` to edit the password list.
+# clipboard.  Use `getpass -e` to edit the password list.  Example:
+# + www.google.com myname mypassword
+# + icpu626 root 789sdf987
+# + www.chase.com visa autopay mychaseid mychasepassword
 #
 # Note that you can encrypt the data for added security, using the `-n`
 # option to set the key.  It caches this key, encrpyting with `vw_key`
@@ -22,8 +25,8 @@
 # -
 getpass() # use passsword db
 {
-    local PASSKEY=$VW_DIR/tools/data/key
-    local PASSDB=$VW_DIR/tools/data/safe
+    local PASSKEY=$VW_DIR/tools/data/getpass.key
+    local PASSDB=$VW_DIR/tools/data/getpass.db
     local PASSWORDS=$VW_DIR/tools/data/passwords
     local PLAINTEXT='plaintext'
     trap 'test "$PASSWORDS" && rm -f $PASSWORDS.*' RETURN
@@ -40,7 +43,7 @@ getpass() # use passsword db
     --key)  # get / set key to safe
         local PAD=$(vw_key)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         if test "$2" ; then # set key
-            echo "$2$PAD" | openssl des3 -k $(vw_key) > $PASSKEY
+            openssl des3 -k $(vw_key) <<< "$PAD$2" > $PASSKEY 
         elif test -f $PASSKEY ; then # retrieve key
             openssl des3 -d -k $(vw_key) < $PASSKEY | sed -e s/$PAD//
         else # use plaintext
@@ -57,13 +60,15 @@ getpass() # use passsword db
     --decrypt) # decrypt safe and put into passwords
         while true ; do
             > $PASSWORDS
+            test -s $PASSDB || break
             local KEY=$(getpass --key)
             test $KEY = $PLAINTEXT &&
                 file $PASSDB | grep -q text &&
-                cp $PASSDB $PASSWORDS && break
-            test -s $PASSDB || break
-            ( openssl des3 -k $KEY -d < $PASSDB | zcat > $PASSWORDS ) &> /dev/null
-            test -s $PASSWORDS && file $PASSWORDS | grep -q text && break
+                cp $PASSDB $PASSWORDS && return
+            (
+                openssl des3 -k $KEY -d < $PASSDB | zcat > $PASSWORDS
+            ) &> /dev/null
+            test -s $PASSWORDS && file $PASSWORDS | grep -q text && return
             read -p 'key: '
             test "$REPLY" || break
             getpass --key "$REPLY"
@@ -79,7 +84,7 @@ getpass() # use passsword db
         rm -f $PASSWORDS
         ;;
     -i) # init db
-        rm -f key $PASSDB
+        rm -f $PASSKEY $PASSDB
         echo google google.pass > $PASSWORDS
         getpass --encrypt
         ;;
@@ -96,10 +101,6 @@ getpass() # use passsword db
         getpass --decrypt
         read -p 'key: '
         getpass --key "$REPLY"
-        # save in passwords file, deleting former entry
-        grep -v ^getpass < $PASSWORDS > $PASSWORDS.tmp
-        echo getpass "$REPLY" >> $PASSWORDS.tmp
-        mv $PASSWORDS.tmp $PASSWORDS
         getpass --encrypt
         ;;
     -p) # password generation

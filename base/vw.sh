@@ -58,13 +58,11 @@ vw() # vi whence
         pushd $VW_DIR
         git diff --exit-code || (
             read -p 'comment? '
-            test "$REPLY" && (
-                git commit -a -m "$REPLY"
-                git pull
-                git push
-                vw --dot
+            test "$REPLY" && git commit -a -m "$REPLY"
             )
-        )
+        git pull
+        git push
+        vw --dot
         popd &> /dev/null
         ;;
     -*) # print usage
@@ -105,6 +103,6 @@ huh() # melange of type typeset alias info
     esac;
 }
 
-_vw_complete() { COMPREPLY=($(sed -n -e "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
+_vw_complete() { vw --make-tags ; COMPREPLY=($(sed -n -e "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
 complete -F _vw_complete huh
 complete -F _vw_complete vw

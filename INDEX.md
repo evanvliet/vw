@@ -21,7 +21,7 @@ Convenient shortcuts.
 * `chcount`  character count.
 * `cpo`  copy to $OLDPWD.
 * `don`  do something a number of times.
-For example, use `don 3 echo a` to `echo a` 3 times.
+For example, use `don 3 echo` to get 3 blank lines.
 * `ea`  echo all.
 Actually echoes just as many file names as will fit on one line.
 Good for getting a quick idea of the file population of a folder
@@ -38,16 +38,11 @@ that were not shown.
 * `root`  be admin.
 * `t`  cat.
 * `textbelt`  text phone using textbelt.
-* `trace`  trace execution of bash script or function.
-* `vwclone`  clone project from isp.
-* `vwcreate`  make git repository.
-* `vwget`  copy from isp xfer folder.
 * `vwh`  vi host config.
 * `vwo`  vi os config.
-* `vwp`  vi vw.profile.
-* `vwput`  copy to isp xfer folder.
-* `vws`  vi startup.
-* `vwsh`  start sh on isp.
+* `vwp`  vi vw profile.
+* `vws`  vi base config.
+* `xv`  trace execution of bash script or function.
 
 ###### [base/env.sh](base/env.sh)
 Exported variables and an environmnet pretty printer.
@@ -83,7 +78,10 @@ and paste files. See `isp -h` for usage.
 ###### [base/pass.sh](base/pass.sh)
 Do `getpass google` to get your google password.  Prints matching
 lines from a password list and copies the last word into the
-clipboard.  Use `getpass -e` to edit the password list.
+clipboard.  Use `getpass -e` to edit the password list.  Example:
++ www.google.com myname mypassword
++ icpu626 root 789sdf987
++ www.chase.com visa autopay mychaseid mychasepassword
 
 Note that you can encrypt the data for added security, using the `-n`
 option to set the key.  It caches this key, encrpyting with `vw_key`
