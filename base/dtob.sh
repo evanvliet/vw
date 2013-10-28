@@ -3,8 +3,8 @@
 # Conversions, both numbers and file names. Dates from looking
 # at a datascope and dealing with file names on Eunice.
 # -
-_tu() { echo $1 | tr '[a-z]' '[A-Z]' ; }
-_tl() { echo $1 | tr '[A-Z]' '[a-z]' ; }
+_tu() { tr '[a-z]' '[A-Z]' <<< $1 ; }
+_tl() { tr '[A-Z]' '[a-z]' <<< $1 ; }
 dtoh() # decimal to hex
 {
     printf '%d = 0x%X\n' $1 $1
@@ -15,8 +15,9 @@ htod() # hex to decimal
 }
 htob() # hex to binary
 {
-    local bin=$(dc <<< "16 i 1$1 2 o p q")
-    echo 0x$(_tu $1) = $(sed -e 's/..../& /g' <<< ${bin#1})
+    local hex=$(_tu $1)
+    local bin=$(dc <<< "16 i 1$hex 2 o p q")
+    echo 0x$hex = $(sed -e 's/..../& /g' <<< ${bin#1})
 }
 dtob() # decimal to binary
 {

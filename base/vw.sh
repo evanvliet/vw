@@ -17,7 +17,7 @@ vw() # vi whence
         echo os/$(uname | sed -e 's/_.*//').sh
         ;;
     --dot) # sync dot files
-        cd
+        pushd $HOME &> /dev/null
         local VW_DOT="$VW_DIR/dot"
         for i in $(ls -A "$VW_DOT")
         do
@@ -26,7 +26,7 @@ vw() # vi whence
             test "$newdir/$i" -nt "$olddir/$i" && olddir="$VW_DOT" newdir=.
             cp -vi "$olddir/$i" "$newdir/$i"
         done
-        cd - &> /dev/null
+        popd &> /dev/null
         ;;
     --files) # return nanes of config files in order
         cd $VW_DIR
@@ -54,8 +54,8 @@ vw() # vi whence
         cd - &> /dev/null
         ;;
     --sync) # commit new stuff, get latest
-        cd $VW_DIR
         vw --dot
+        pushd $VW_DIR
         git diff --exit-code || (
             read -p 'comment? '
             test "$REPLY" && (
@@ -65,7 +65,7 @@ vw() # vi whence
                 vw --dot
             )
         )
-        cd - &> /dev/null
+        popd &> /dev/null
         ;;
     -*) # print usage
         sed 's/  */  /' <<< 'usage: vw [<function>|<export>|<alias>|<option>]

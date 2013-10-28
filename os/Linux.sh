@@ -13,5 +13,5 @@ wcopy() { xsel -ib 2> /dev/null || cat - > $s ; } # copy to clipboard
 wpaste() { xsel -ob 2> /dev/null || cat $s; } # paste from clipboard
 vw_key() # machine dependent key
 {
-    grep ' / ' /etc/fstab | md5sum | sed -e 's/ .*//'
+    grep '^UUID' /etc/fstab | md5sum | sed -e 's/ .*//'
 }

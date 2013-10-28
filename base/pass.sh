@@ -26,7 +26,7 @@ getpass() # use passsword db
     local PASSDB=$VW_DIR/tools/data/safe
     local PASSWORDS=$VW_DIR/tools/data/passwords
     local PLAINTEXT='plaintext'
-    trap 'test "$PASSWORDS.tmp" && rm -f $PASSWORDS.tmp*' RETURN
+    trap 'test "$PASSWORDS" && rm -f $PASSWORDS.*' RETURN
     case ${1:--h} in
     --usage) # show help text
         sed 's/^  */  /' <<< 'getpass [ word | option ]
