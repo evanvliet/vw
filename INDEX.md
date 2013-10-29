@@ -79,9 +79,10 @@ and paste files. See `isp -h` for usage.
 Do `getpass google` to get your google password.  Prints matching
 lines from a password list and copies the last word into the
 clipboard.  Use `getpass -e` to edit the password list.  Example:
-+ www.google.com myname mypassword
-+ icpu626 root 789sdf987
-+ www.chase.com visa autopay mychaseid mychasepassword
+
+    www.google.com myname mypassword
+    icpu626 root 789sdf987
+    www.chase.com visa autopay mychaseid mychasepassword
 
 Note that you can encrypt the data for added security, using the `-n`
 option to set the key.  It caches this key, encrpyting with `vw_key`
