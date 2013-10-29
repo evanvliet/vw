@@ -22,8 +22,8 @@ vw() # vi whence
         for i in $(ls -A "$VW_DOT")
         do
             cmp -s "$VW_DOT/$i" $i && continue
-            local olddir=. newdir="$VW_DOT"
-            test "$newdir/$i" -nt "$olddir/$i" && olddir="$VW_DOT" newdir=.
+            local olddir="$HOME" newdir="$VW_DOT"
+            test "$newdir/$i" -nt "$olddir/$i" && olddir="$VW_DOT" newdir="$HOME"
             cp -vi "$olddir/$i" "$newdir/$i"
         done
         popd &> /dev/null
@@ -46,8 +46,14 @@ vw() # vi whence
         cd - &> /dev/null
         ;;
     --man) # recap info
-        ( cat $VW_DIR/README.md ; vw --md ) | sed -e 's/^##* /* /' -e 's/^*//'
-        ;;
+        vw --md > $VW_DIR/INDEX.md
+        sed -e '/^##* /i\
+
+                s/^##* /# /
+                s/^*//' \
+            $VW_DIR/README.md \
+            $VW_DIR/INDEX.md | $MANPAGER
+    ;;
     --md) # markdown
         cd $VW_DIR
         tools/shtags.py -m $(vw --files)
@@ -73,13 +79,13 @@ vw() # vi whence
 	*) # look up arg and invoke vi or describe
         vw --make-tags
         cd $VW_DIR
-        local VW_LOC=$(command -v $1 2> /dev/null) # file location
+        local VW_LOC="$(command -v $1 2> /dev/null)" # file location
         if grep -q "^$1	" tags ; then
             set $(grep "^$1	" tags)
             vi -t $1
             . $2
-        elif file -L $VW_LOC 2> /dev/null | grep -q text ; then
-            vi $VW_LOC > $VW_TMP
+        elif file -L "$VW_LOC" 2> /dev/null | grep -q text ; then
+            vi "$VW_LOC"
         elif test "$VW_LOC" ; then
             echo $1 is $VW_LOC
         elif test "$(ls tools/$1* 2> /dev/null)" ; then

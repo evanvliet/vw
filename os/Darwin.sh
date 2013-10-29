@@ -10,7 +10,10 @@ wcopy() { pbcopy ; } # copy to clipboard
 wpaste() { pbpaste ; } # paste from clipboard
 vw_key() # machine dependent key
 {
-    sysctl kern.uuid | md5
+    (
+        sysctl kern.uuid
+        sysctl kern.bootsignature
+    ) 2> /dev/null | md5
 }
 ssh-copy-id() # for mac
 {

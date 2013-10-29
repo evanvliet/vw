@@ -1,4 +1,4 @@
-rem add cygwin and some shortcuts
+@rem add cygwin and some shortcuts
 @echo off
 if ..==.%HOMEDRIVE%. (
     SET HOMEDRIVE=%SystemDrive%
@@ -17,7 +17,7 @@ if exist "%LOCALX%" (
 )
 
 rem // need goto because parentheses in path discombobulates scripts
-if ..==.%CYGWIN_PATH%. set CYGWIN_PATH=%HOMEDRIVE%\CYGWIN\BIN
+if ..==.%CYGWIN_PATH%. set CYGWIN_PATH=%HOMEDRIVE%\CYGWIN64\BIN
 path | %WINDIR%\System32\find.exe /i "cygwin" > nul
 if not errorlevel 1 goto next_aa
 if exist %CYGWIN_PATH%\ps.exe PATH %PATH%;%CYGWIN_PATH%

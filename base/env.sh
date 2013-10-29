@@ -2,10 +2,11 @@
 # +
 # Exported variables and an environmnet pretty printer.
 # -
+test $TERM=xterm &&
+export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}\007"' # sets window title
 export PS1='\$ ' # prompt
 export PS4='(${BASH_SOURCE##*/}''${LINENO}''${FUNCNAME[0]}' # debug info
 export PS4='${LINENO} ' # debug info
-export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}\007"' # sets window title
 export HISTFILE=$HISTFILE # bash history
 export MANPAGER='less -csr' # manpager opts
 export PYTHONSTARTUP=~/.pythonrc.py # python startup

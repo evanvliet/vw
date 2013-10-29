@@ -13,3 +13,4 @@ vw_key() # machine dependent key
 {
     cmd /c vol $HOMEDRIVE | grep Serial | openssl dgst -md5 | sed -e s/.*=.//
 }
+set -o vi

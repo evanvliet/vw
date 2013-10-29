@@ -16,7 +16,7 @@ htod() # hex to decimal
 htob() # hex to binary
 {
     local hex=$(_tu $1)
-    local bin=$(dc <<< "16 i 1$hex 2 o p q")
+    local bin=$(dc <<< "16 i 1$hex 2 o p")
     echo 0x$hex = $(sed -e 's/..../& /g' <<< ${bin#1})
 }
 dtob() # decimal to binary

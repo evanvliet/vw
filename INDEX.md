@@ -127,14 +127,12 @@ Definitions and completion routine for vw and huh.
 * `huh`  melange of type typeset alias info.
 * `vw`  vi whence.
 
-###### [os/Darwin.sh](os/Darwin.sh)
-For mac.  Added a ssh-copy-id goody.
+###### [os/Linux.sh](os/Linux.sh)
+For linux.
 * `browse`  web.
 * `gdiff`  gui diff.
-* `gdir`  gui dir.
+* `gdir`  gui files.
 * `gedit`  gui editor.
-* `python-vi-mode`  mac python uses editrc vs readline.
-* `ssh-copy-id`  for mac.
 * `vw_key`  machine dependent key.
 * `wcopy`  copy to clipboard.
 * `wpaste`  paste from clipboard.

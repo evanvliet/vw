@@ -18,7 +18,8 @@ map g 1G
 map <F2> :e#<CR>
 map <F3> :e$s<CR> " edit scrap file
 " map <F4> :w!$s<CR>
-map <F4> :wn<CR>
+" map <F4> :wn<CR>
+map <F4> :,/^$/s/^\( *\)  /\1# /<CR>
 map <F5> 072 bF r<CR>
 map <F6> :"mac reserved
 map <F7> :map<CR>
