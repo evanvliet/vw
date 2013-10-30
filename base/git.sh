@@ -33,47 +33,46 @@ lastdiff() # last diff for a file
 }
 setconf() # set up a default .gitconfig
 {
-    (
-        EMAIL=$(id -un)@$(hostname) 
-        NAME=$(tr , : < /etc/passwd | awk -F: "/$(whoami)/ { print \$5 ; }")
-	    hash finger &> /dev/null &&
-        NAME=$(finger $(whoami) | sed -ne 's/.*Name..//p')
-        echo '
-        [color]
-            ui = auto
-            ui = true
-        [color "branch"]
-            current = yellow reverse
-            local = yellow
-            remote = green
-        [color "diff"]
-            meta = yellow bold
-            frag = magenta bold
-            old = red bold
-            new = green bold
-            whitespace = red reverse
-        [color "status"]
-            added = yellow
-            changed = green
-            untracked = cyan
-        [core]
-            whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-            trustctime = false
-        [alias]
-            st = status
-            ci = commit -a
-            ad = add
-            ls = ls-files
-            br = branch
-            co = checkout
-            lg = log -p
-            di = diff
-            vdi = difftool -t meld
-        [push]
-            default = matching
-        [user]
-            name = FULL_NAME
-            email = EMAIL
-    ' | sed -e 's/^    / /g' -e "s/NAME/$NAME/" -e "s/EMAIL/$EMAIL/" > ~/.gitconfig
-    )
+    local EMAIL=$(id -un)@$(hostname) 
+    local NAME=$(tr , : < /etc/passwd | awk -F: "/$(whoami)/ { print \$5 ; }")
+    sed -e "s/^ *\[/[/
+            s/^  */  /
+            s/FULL_NAME/$NAME/
+            s/EMAIL/$EMAIL/" > ~/.gitconfig <<< '
+    [color]
+        ui = auto
+        ui = true
+    [color "branch"]
+        current = yellow reverse
+        local = yellow
+        remote = white
+    [color "diff"]
+        meta = yellow bold
+        frag = magenta
+        old = red bold
+        new = green bold
+        whitespace = red reverse
+    [color "status"]
+        added = yellow
+        changed = green
+        untracked = cyan
+    [core]
+        whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+        trustctime = false
+    [alias]
+        st = status
+        ci = commit -a
+        ad = add
+        ls = ls-files
+        br = branch
+        co = checkout
+        lg = log -p
+        di = diff
+        vdi = difftool -t meld
+    [push]
+        default = matching
+    [user]
+        name = FULL_NAME
+        email = EMAIL
+    '
 }

@@ -1,0 +1,6 @@
+ alias p_ for k in sorted(%1.keys()): print "%s%-15s= %-80.80s" % ("%2",k,repr(%1[k]))
+ alias pi p_ %1.__dict__ %1.
+ alias ps pi self
+ alias pl p_ locals() local:
+ alias nl n;;l
+ alias sl s;;l

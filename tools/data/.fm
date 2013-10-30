@@ -1,4 +1,3 @@
-intro.txt vw man page intro
-key       to the safe
-phone.nos phone number db
-safe      storage for getpass
+getpass.db possibly encrypted storage for getpass
+getpass.key cached key, remove to disable encryption
+num.db    phone number db
