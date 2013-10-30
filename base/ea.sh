@@ -8,7 +8,7 @@ alias ...='cd ../..; pwd' # cd ../..
 chcount () { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
 cpo () { cp $* "$OLDPWD" ; } # copy to $OLDPWD
 findext() { find . -name "*.$1" -print ; } # find by extension
-fm() { history -a; "$VW_DIR/tools/fm.py" "$@" ; } # fm with history
+fm() { history -a; COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@" ; } # fm with history
 h() { fc -l $* ; } # history
 llt() { ls -lgo -t "$@" | head ; } # ls latest
 lsc() { ls -bC $* ; } # printable chars
@@ -24,13 +24,14 @@ vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; . "$HOME/.bashrc" ; } # vi bas
 don () # do something a number of times
 { 
     # +
-    # For example, use `don 3 echo` to get 3 blank lines.
+    # For example, use `don 3 echo` to get 3 blank lines.  Default repition is `3` and
+    # default command is `echo` so acutually, just `don` does the same.
     # -
     local n=3
     ((1$1 > 10)) &> /dev/null && n=$1 && shift
     for i in $(seq $n)
     do
-        $*
+        ${*:-echo}
     done
 }
 xv () # trace execution of bash script or function
@@ -61,11 +62,11 @@ ea() # echo all
     # without spamming your screen.  Prints `+nn` to show more files
     # that were not shown.
     # -
-    local EACOLS EATMP=/tmp/ea.$$
+    local EATMP=/tmp/ea.$$ MAXCHAR=75
+    test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
     trap 'test "$EATMP" && rm -f $EATMP*' RETURN
-    let EACOLS=$COLUMNS-6
     ls -d ${@:-*} > $EATMP
-    head -c $EACOLS $EATMP > $EATMP.1
+    head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed -e '$d' $EATMP.1 > $EATMP.2
     echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)

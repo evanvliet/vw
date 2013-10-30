@@ -61,7 +61,7 @@ vw() # vi whence
         ;;
     --sync) # commit new stuff, get latest
         vw --dot
-        pushd $VW_DIR
+        pushd $VW_DIR &> /dev/null
         git diff --exit-code || (
             read -p 'comment? '
             test "$REPLY" && git commit -a -m "$REPLY"

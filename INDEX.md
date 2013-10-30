@@ -21,7 +21,8 @@ Convenient shortcuts.
 * `chcount`  character count.
 * `cpo`  copy to $OLDPWD.
 * `don`  do something a number of times.
-For example, use `don 3 echo` to get 3 blank lines.
+For example, use `don 3 echo` to get 3 blank lines.  Default repition is `3` and
+default command is `echo` so acutually, just `don` does the same.
 * `ea`  echo all.
 Actually echoes just as many file names as will fit on one line.
 Good for getting a quick idea of the file population of a folder
@@ -62,7 +63,6 @@ control systems.  Some encapsulate git opts for convenience.  Others
 collect common seequences.
 * `ci`  git checkin does commit pull and push in one swell foop.
 * `co`  per rcs and old times just git checkout.
-* `fix_file`  restore file after a merge --no-commit master.
 * `gist`  root folder, remote url, and current status.
 * `gitbr`  show branch name or delete with -d.
 * `lastdiff`  last diff for a file.

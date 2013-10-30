@@ -27,12 +27,6 @@ co() # per rcs and old times just git checkout
 {
     git checkout $*
 }
-fix_file() # restore file after a merge --no-commit master
-{ 
-    test -f $1 
-    DELETED=$?
-    git checkout $(gitbr) && test 0 -ne $DELETED && git add $1
-}
 lastdiff() # last diff for a file
 {
     git diff $(git log -2 $1 | sed -n /commit./s///p) $1

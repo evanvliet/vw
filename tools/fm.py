@@ -125,7 +125,7 @@ class FileComment:
     history = []
     bold = cmd_output('tput', 'setaf', '5').strip()
     sgr0 = cmd_output('tput', 'sgr0').strip()
-    cols = int(cmd_output('tput', 'cols') or 80)
+    cols = int(os.getenv('COLUMNS', '80'))
 
     @staticmethod
     def load_history():
