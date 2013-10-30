@@ -21,8 +21,9 @@ Convenient shortcuts.
 * `chcount`  character count.
 * `cpo`  copy to $OLDPWD.
 * `don`  do something a number of times.
-For example, use `don 3 echo` to get 3 blank lines.  Default repition is `3` and
-default command is `echo` so acutually, just `don` does the same.
+For example, use `don 3 echo` to get 3 blank lines.  Default
+repetition is `3` and default command is `echo` so acutually,
+just `don` does the same.
 * `ea`  echo all.
 Actually echoes just as many file names as will fit on one line.
 Good for getting a quick idea of the file population of a folder

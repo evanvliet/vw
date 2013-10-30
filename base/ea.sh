@@ -24,8 +24,9 @@ vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; . "$HOME/.bashrc" ; } # vi bas
 don () # do something a number of times
 { 
     # +
-    # For example, use `don 3 echo` to get 3 blank lines.  Default repition is `3` and
-    # default command is `echo` so acutually, just `don` does the same.
+    # For example, use `don 3 echo` to get 3 blank lines.  Default
+    # repetition is `3` and default command is `echo` so acutually,
+    # just `don` does the same.
     # -
     local n=3
     ((1$1 > 10)) &> /dev/null && n=$1 && shift
