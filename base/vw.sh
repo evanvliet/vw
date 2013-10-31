@@ -1,13 +1,17 @@
 #!/bin/bash
 # +
-# Definitions and completion routine for vw and huh.
+# Track and edit configuration files.
 # -
-vw() # vi whence
+vw() # edit the definition of a function, alias or export 
 {
     case "$1" in
     "") # print index of defintions
         cd $VW_DIR
-        tools/shtags.py -s $(vw --files)
+        tools/shtags.py -s $(vw --files) | sed '
+            /\-\-\-/i\
+
+            /^\-\-\-/s/^\-* /* /
+        '
         cd - &> /dev/null
         ;;
     --HOST) # host config file
@@ -81,6 +85,7 @@ vw() # vi whence
 	*) # look up arg and invoke vi or describe
         cd $VW_DIR
         local VW_LOC="$(command -v $1 2> /dev/null)" # file location
+        vw --tag
         if grep -q "^$1	" tags ; then
             set $(grep "^$1	" tags)
             vi -t $1
@@ -111,7 +116,7 @@ huh() # melange of type typeset alias info
     esac;
 }
 
-_vw_complete() { COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
+_vw_complete() { vw --tag ; COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
 complete -F _vw_complete huh
 complete -F _vw_complete vw
 

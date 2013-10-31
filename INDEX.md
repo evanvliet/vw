@@ -127,9 +127,9 @@ lists known nicknames.  Options:
   + `-v` expand nick, for use in other scripts
 
 ###### [base/vw.sh](base/vw.sh)
-Definitions and completion routine for vw and huh.
+Track and edit configuration files.
 * `huh`  melange of type typeset alias info.
-* `vw`  vi whence.
+* `vw`  edit the definition of a function, alias or export.
 
 ###### [os/Linux.sh](os/Linux.sh)
 For linux.
