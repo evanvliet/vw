@@ -22,8 +22,8 @@ else # add line to .bashrc to source vw profile
     cd
     B=.bashrc
     test -s $B || echo > $B
-    grep -v vw.profile $B > $B.tmp
-    echo ". $VW_DIR/profile" >> $B.tmp
+    grep -v '^source .*/profile$' $B > $B.tmp
+    echo "source $VW_DIR/profile" >> $B.tmp
     cmp -s $B $B.tmp || mv -v $B $B.bak
     mv $B.tmp $B
     )
