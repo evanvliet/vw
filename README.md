@@ -56,7 +56,7 @@ sample functions.  They are an idiosyncratic collection of accumulated
 favorites; some, in particular `sd`, `getpass`, and the scrap file
 ones, have proven useful over the years, but mostly serve as samples
 of how to format code so the vw tagging utility finds function
-defiinitions.  Note the scripts use a *# +/# -* idiom to hold block
+defiinitions.  Note the scripts use a `# +`/`# -` idiom to hold block
 comments.  The tagging utility extracts these when generating
 documentation.
 
