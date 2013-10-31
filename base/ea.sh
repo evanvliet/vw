@@ -8,7 +8,6 @@ alias ...='cd ../..; pwd' # cd ../..
 chcount () { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
 cpo () { cp $* "$OLDPWD" ; } # copy to $OLDPWD
 findext() { find . -name "*.$1" -print ; } # find by extension
-fm() { history -a; COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@" ; } # fm with history
 h() { fc -l $* ; } # history
 llt() { ls -lgo -t "$@" | head ; } # ls latest
 lsc() { ls -bC $* ; } # printable chars
@@ -17,10 +16,11 @@ r() { fc -s $* ; } # redo
 root() { sudo bash ; } # be admin
 t() { cat $* ; } # cat
 # vw related
-vwh() { vi "$VW_DIR/$(vw --HOST)" ; . "$HOME/.bashrc" ; } # vi host config
-vwo() { vi "$VW_DIR/$(vw --OS)" ; . "$HOME/.bashrc" ; } # vi os config
-vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; . "$HOME/.bashrc" ; } # vi vw profile
-vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; . "$HOME/.bashrc" ; } # vi base config
+vw_reload() { . "$HOME/.bashrc" ; vw --tag ; } # reload config
+vwh() { vi "$VW_DIR/$(vw --HOST)" ; vw_reload ; } # vi host config
+vwo() { vi "$VW_DIR/$(vw --OS)" ; vw_reload ; } # vi os config
+vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; vw_reload ; } # vi vw profile
+vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; vw_reload ; } # vi base
 don () # do something a number of times
 { 
     # +
@@ -85,4 +85,9 @@ num() # phone numbers
     *)  grep -i "$1" $NUM_DB # search db
         ;;
     esac
+}
+fm() # fm with history
+{
+    history -a
+    HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@" 
 }

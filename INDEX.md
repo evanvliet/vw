@@ -40,16 +40,16 @@ that were not shown.
 * `root`  be admin.
 * `t`  cat.
 * `textbelt`  text phone using textbelt.
+* `vw_reload`  reload config.
 * `vwh`  vi host config.
 * `vwo`  vi os config.
 * `vwp`  vi vw profile.
-* `vws`  vi base config.
+* `vws`  vi base.
 * `xv`  trace execution of bash script or function.
 
 ###### [base/env.sh](base/env.sh)
 Exported variables and an environmnet pretty printer.
 * `CDPATH`  include vw in CDPATH.
-* `HISTFILE`  bash history.
 * `MANPAGER`  manpager opts.
 * `PROMPT_COMMAND`  sets window title.
 * `PS1`  prompt.
@@ -86,7 +86,7 @@ clipboard.  Use `getpass -e` to edit the password list.  Example:
     www.chase.com visa autopay mychaseid mychasepassword
 
 Note that you can encrypt the data for added security, using the `-n`
-option to set the key.  It caches this key, encrpyting with `vw_key`
+option to set the key.  It caches this key, encrpyting with `hostid`
 to foil decryption by just copying files to another machine.  If you
 do encrypt the password data, you will have to enter the key once on
 each machine.
@@ -103,11 +103,14 @@ card, and need to update web sites.
 * `getpass`  use passsword db.
 
 ###### [base/scrap.sh](base/scrap.sh)
-Sets up s as a scrap file. For doing stuff like ls > $s and then
-editing with vis, *etc*.
-Note dependence on wcopy and wpaste which are  os dependent and
-set up in os-specific config file.
+Sets up s as a scrap file.  For doing stuff like `ls > $s` and then
+editing with `vis`, *etc*.  Another common one is to go `h > $s` and
+then edit your history with `vis`, turning a sequence of commands
+into a shell function.  Then source it with `dots` for testing and
+deployment.  Note dependence on wcopy and wpaste which are  os
+dependent and set up in os-specific config file.
 * `dots`  source scrap.
+* `s`  scrap file.
 * `ts`  type scrap.
 * `vis`  vi scrap.
 * `wcs`  copy clipboard to scrap.
@@ -134,6 +137,5 @@ For linux.
 * `gdiff`  gui diff.
 * `gdir`  gui files.
 * `gedit`  gui editor.
-* `vw_key`  machine dependent key.
 * `wcopy`  copy to clipboard.
 * `wpaste`  paste from clipboard.

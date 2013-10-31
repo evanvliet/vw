@@ -10,9 +10,9 @@ import re
 import sys
 import optparse
 
-reExport = re.compile(r'^export ([A-Za-z]\w+)=.*# (.*)')
+reExport = re.compile(r'^export ([A-Za-z]\w*)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
-reAlias = re.compile(r'^alias ([\.A-Za-z][\-\.\w]+)=.*# (.*)')
+reAlias = re.compile(r'^alias ([\.A-Za-z][\-\.\w]*)=.*# (.*)')
 reBlockStart = re.compile(r"^ *# \+")
 reBlockEnd = re.compile(r"^ *# \-")
 

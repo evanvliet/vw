@@ -9,7 +9,7 @@
 #     www.chase.com visa autopay mychaseid mychasepassword
 #
 # Note that you can encrypt the data for added security, using the `-n`
-# option to set the key.  It caches this key, encrpyting with `vw_key`
+# option to set the key.  It caches this key, encrpyting with `hostid`
 # to foil decryption by just copying files to another machine.  If you
 # do encrypt the password data, you will have to enter the key once on
 # each machine.
@@ -42,11 +42,11 @@ getpass() # use passsword db
             -p make [big|small] password'
         ;;
     --key)  # get / set key to safe
-        local PAD=$(vw_key)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        local PAD=$(hostid)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         if test "$2" ; then # set key
-            openssl des3 -k $(vw_key) <<< "$PAD$2" > $PASSKEY 
+            openssl des3 -k $(hostid) <<< "$PAD$2" > $PASSKEY
         elif test -f $PASSKEY ; then # retrieve key
-            openssl des3 -d -k $(vw_key) < $PASSKEY | sed -e s/$PAD//
+            openssl des3 -d -k $(hostid) < $PASSKEY | sed -e s/$PAD//
         else # use plaintext
             echo $PLAINTEXT
         fi
@@ -111,7 +111,7 @@ getpass() # use passsword db
         getpass --usage
         ;;
     *) # default prints matching lines from db
-        getpass --decrypt 
+        getpass --decrypt
         grep -i $1 $PASSWORDS | tee $PASSWORDS.tmp | tr ';' '\n'
         # copy last word to clipboard as password
         sed -n '$s/.*[; ]//p' $PASSWORDS.tmp | tr -d '\r\n' | wcopy

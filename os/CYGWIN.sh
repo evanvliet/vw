@@ -8,9 +8,5 @@ gdir() { cmd /c start . ; } # gui dir
 gedit() { cmd /c start notepad $1 ; } # gui editor
 wcopy() { cat - > /dev/clipboard ; } # copy to clipboard
 wpaste() { cat /dev/clipboard ; } # paste from clipboard
-vw_key() # machine dependent key
-{
-    cmd /c vol $HOMEDRIVE | grep Serial | openssl dgst -md5 | sed -e s/.*=.//
-}
 set -o vi
 shopt -s checkwinsize

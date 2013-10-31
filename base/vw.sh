@@ -23,7 +23,8 @@ vw() # vi whence
         do
             cmp -s "$VW_DOT/$i" $i && continue
             local olddir="$HOME" newdir="$VW_DOT"
-            test "$newdir/$i" -nt "$olddir/$i" && olddir="$VW_DOT" newdir="$HOME"
+            test "$newdir/$i" -nt "$olddir/$i" &&
+                olddir="$VW_DOT" newdir="$HOME"
             cp -vi "$olddir/$i" "$newdir/$i"
         done
         popd &> /dev/null
@@ -38,7 +39,7 @@ vw() # vi whence
         echo $VW_FILES
         cd - &> /dev/null
         ;;
-    --make-tags) # make tags for vw scripts
+    --tag) # make tags for vw scripts
         cd $VW_DIR
         local MAKE_TAGS=tags
         test -s tags && MAKE_TAGS=$(find $(vw --files) -newer tags)
@@ -49,6 +50,7 @@ vw() # vi whence
         vw --md > $VW_DIR/INDEX.md
         sed -e '/^##* /i\
 
+                s/sh](.*/sh]/
                 s/^##* /# /
                 s/^*//' \
             $VW_DIR/README.md \
@@ -72,18 +74,18 @@ vw() # vi whence
         popd &> /dev/null
         ;;
     -*) # print usage
-        sed 's/  */  /' <<< 'usage: vw [<function>|<export>|<alias>|<option>]
+        sed 's/  */  /' <<< 'usage: vw [<function>|<export>|<option>]
             --sync  git latest and push changes
             --man   print man page'
         ;;
 	*) # look up arg and invoke vi or describe
-        vw --make-tags
         cd $VW_DIR
         local VW_LOC="$(command -v $1 2> /dev/null)" # file location
         if grep -q "^$1	" tags ; then
             set $(grep "^$1	" tags)
             vi -t $1
-            . $2
+            source $2
+            vw --tag
         elif file -L "$VW_LOC" 2> /dev/null | grep -q text ; then
             vi "$VW_LOC"
         elif test "$VW_LOC" ; then
@@ -109,6 +111,8 @@ huh() # melange of type typeset alias info
     esac;
 }
 
-_vw_complete() { vw --make-tags ; COMPREPLY=($(sed -n -e "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
+_vw_complete() { COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
 complete -F _vw_complete huh
 complete -F _vw_complete vw
+
+vw --tag # udpate tags at login

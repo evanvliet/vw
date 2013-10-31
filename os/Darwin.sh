@@ -8,7 +8,7 @@ gdir() { open . ; } # gui dir
 gedit() { open -a TextEdit $1 ; } # gui editor
 wcopy() { pbcopy ; } # copy to clipboard
 wpaste() { pbpaste ; } # paste from clipboard
-vw_key() # machine dependent key
+hostid() # missing on mac
 {
     (
         sysctl kern.uuid
