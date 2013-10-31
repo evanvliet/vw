@@ -89,6 +89,6 @@ set up in the base files.  The tags reflect this precedence so `vw`
 edits the effective definition.
 
 ##### Completion
-`vw` supports bash completion, so typing `vw xx<tab><tab>' will show
+`vw` supports bash completion, so typing `vw xx<tab><tab>` will show
 all *vw* tracked functions, exports or aliases beginning with `xx`.
 Same with `huh`.
