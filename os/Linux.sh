@@ -4,7 +4,9 @@
 # -
 browse() # web
 {
-    ( nohup xdg-open $* & ) &> /dev/null
+    local url=${1:-google.com}
+    test "${url##http*}" && url="http://$url"
+    ( nohup xdg-open $url & ) &> /dev/null
 }
 gdiff() { meld $* 2> /dev/null . ; } # gui diff
 gdir() { nautilus 2> /dev/null . ; } # gui files
