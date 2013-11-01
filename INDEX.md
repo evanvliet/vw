@@ -44,7 +44,6 @@ that were not shown.
 * `vwh`  vi host config.
 * `vwo`  vi os config.
 * `vwp`  vi vw profile.
-* `vws`  vi base.
 * `xv`  trace execution of bash script or function.
 
 ###### [base/env.sh](base/env.sh)

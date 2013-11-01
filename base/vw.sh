@@ -6,7 +6,7 @@ vw() # edit the definition of a function, alias or export
 {
     case "$1" in
     "") # print index of defintions
-        cd $VW_DIR
+        cd "$VW_DIR"
         tools/shtags.py -s $(vw --files) | sed '
             /\-\-\-/i\
 
@@ -34,7 +34,7 @@ vw() # edit the definition of a function, alias or export
         popd &> /dev/null
         ;;
     --files) # return nanes of config files in order
-        cd $VW_DIR
+        cd "$VW_DIR"
         local VW_FILES=base/*
         local VW_=$(vw --OS)
         test -s $VW_ && VW_FILES="$VW_FILES $VW_"
@@ -44,30 +44,30 @@ vw() # edit the definition of a function, alias or export
         cd - &> /dev/null
         ;;
     --tag) # make tags for vw scripts
-        cd $VW_DIR
+        cd "$VW_DIR"
         local MAKE_TAGS=tags
         test -s tags && MAKE_TAGS=$(find $(vw --files) -newer tags)
         test "$MAKE_TAGS" && tools/shtags.py -t $(vw --files) > tags
         cd - &> /dev/null
         ;;
     --man) # recap info
-        vw --md > $VW_DIR/INDEX.md
+        vw --md > "$VW_DIR"/INDEX.md
         sed -e '/^##* /i\
 
                 s/sh](.*/sh]/
                 s/^##* /# /
                 s/^*//' \
-            $VW_DIR/README.md \
-            $VW_DIR/INDEX.md | $MANPAGER
+            "$VW_DIR"/README.md \
+            "$VW_DIR"/INDEX.md | $MANPAGER
     ;;
     --md) # markdown
-        cd $VW_DIR
+        cd "$VW_DIR"
         tools/shtags.py -m $(vw --files)
         cd - &> /dev/null
         ;;
     --sync) # commit new stuff, get latest
         vw --dot
-        pushd $VW_DIR &> /dev/null
+        pushd "$VW_DIR" &> /dev/null
         git diff --exit-code || (
             read -p 'comment? '
             test "$REPLY" && git commit -a -m "$REPLY"
@@ -83,7 +83,7 @@ vw() # edit the definition of a function, alias or export
             --man   print man page'
         ;;
 	*) # look up arg and invoke vi or describe
-        cd $VW_DIR
+        cd "$VW_DIR"
         local VW_LOC="$(command -v $1 2> /dev/null)" # file location
         vw --tag
         if grep -q "^$1	" tags ; then

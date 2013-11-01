@@ -10,7 +10,7 @@ isp() # interact with base machine on isp
     # and paste files. See `isp -h` for usage.
     # -
     local ISP_HOST=$(
-        cd $VW_DIR; git config remote.origin.url | sed -e s/:.*//)
+        cd "$VW_DIR"; git config remote.origin.url | sed -e s/:.*//)
     local op=$1
     shift
     case $op in

@@ -26,11 +26,12 @@
 # -
 getpass() # use passsword db
 {
-    local PASSKEY=$VW_DIR/tools/data/getpass.key
-    local PASSDB=$VW_DIR/tools/data/getpass.db
-    local PASSWORDS=$VW_DIR/tools/data/passwords
-    local PLAINTEXT='plaintext'
-    trap 'test "$PASSWORDS" && rm -f $PASSWORDS.*' RETURN
+    local PASSKEY="$VW_DIR/tools/data/getpass.key"
+    local PASSDB="$VW_DIR/tools/data/getpass.db"
+    local PASSWORDS="$VW_DIR/tools/data/passwords"
+    local PASSTMP="$VW_DIR/tools/data/passwords.tmp"
+    local PLAINTEXT=plaintext
+    trap 'test -f "$PASSTMP" && rm -f "$PASSTMP"' RETURN EXIT INT
     case ${1:--h} in
     --usage) # show help text
         sed 's/^  */  /' <<< 'getpass [ word | option ]
@@ -44,32 +45,32 @@ getpass() # use passsword db
     --key)  # get / set key to safe
         local PAD=$(hostid)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         if test "$2" ; then # set key
-            openssl des3 -k $(hostid) <<< "$PAD$2" > $PASSKEY
-        elif test -f $PASSKEY ; then # retrieve key
-            openssl des3 -d -k $(hostid) < $PASSKEY | sed -e s/$PAD//
+            openssl des3 -k $(hostid) <<< "$PAD$2" > "$PASSKEY"
+        elif test -f "$PASSKEY" ; then # retrieve key
+            openssl des3 -d -k $(hostid) < "$PASSKEY" | sed -e s/$PAD//
         else # use plaintext
             echo $PLAINTEXT
         fi
         ;;
     --encrypt) # encrypt passwords and and save in safe
-        > $PASSDB
-        local KEY=$(getpass --key)
-        test $KEY = $PLAINTEXT && mv $PASSWORDS $PASSDB && return
-        gzip -c $PASSWORDS | openssl des3 -k $KEY > $PASSDB
-        rm -f $PASSWORDS
+        > "$PASSDB"
+        local KEY="$(getpass --key)"
+        test "$KEY" = $PLAINTEXT && mv "$PASSWORDS" "$PASSDB" && return
+        gzip -c "$PASSWORDS" | openssl des3 -k "$KEY" > "$PASSDB"
+        rm -f "$PASSWORDS"
         ;;
     --decrypt) # decrypt safe and put into passwords
         while true ; do
-            > $PASSWORDS
-            test -s $PASSDB || break
-            local KEY=$(getpass --key)
-            test $KEY = $PLAINTEXT &&
-                file $PASSDB | grep -q text &&
-                cp $PASSDB $PASSWORDS && return
+            > "$PASSWORDS"
+            test -s "$PASSDB" || break
+            local KEY="$(getpass --key)"
+            test "$KEY" = $PLAINTEXT &&
+                file "$PASSDB" | grep -q text &&
+                cp "$PASSDB" "$PASSWORDS" && return
             (
-                openssl des3 -k $KEY -d < $PASSDB | zcat > $PASSWORDS
+                openssl des3 -k "$KEY" -d < "$PASSDB" | zcat > "$PASSWORDS"
             ) &> /dev/null
-            test -s $PASSWORDS && file $PASSWORDS | grep -q text && return
+            test -s "$PASSWORDS" && file "$PASSWORDS" | grep -q text && return
             read -p 'key: '
             test "$REPLY" || break
             getpass --key "$REPLY"
@@ -77,25 +78,25 @@ getpass() # use passsword db
         ;;
     -e) # edit db - decode, edit, save encrypted if changed
         getpass --decrypt
-        cp $PASSWORDS $PASSWORDS.tmp
-        cd $(dirname $PASSWORDS)
-        vi $(basename $PASSWORDS)
+        cp "$PASSWORDS" "$PASSTMP"
+        cd "$(dirname "$PASSWORDS")"
+        vi $(basename "$PASSWORDS")
         cd - &> /dev/null
-        cmp -s $PASSWORDS.tmp $PASSWORDS || getpass --encrypt
-        rm -f $PASSWORDS
+        cmp -s "$PASSTMP" "$PASSWORDS" || getpass --encrypt
+        rm -f "$PASSWORDS"
         ;;
     -i) # init db
-        rm -f $PASSKEY $PASSDB
-        echo google google.pass > $PASSWORDS
+        rm -f "$PASSKEY" "$PASSDB"
+        echo google google.pass > "$PASSWORDS"
         getpass --encrypt
         ;;
     -m) # merge handling, use our copy but prepend any extra
         getpass --decrypt
-        mv $PASSWORDS $PASSWORDS.tmp
-        git co --theirs $PASSDB
+        mv "$PASSWORDS" "$PASSTMP"
+        git co --theirs "$PASSDB"
         getpass --decrypt
-        diff $PASSWORDS.tmp $PASSWORDS | sed -n '/^> /s//+ /p' > $PASSDB
-        cat $PASSDB $PASSWORDS.tmp > $PASSWORDS
+        diff "$PASSTMP" "$PASSWORDS" | sed -n '/^> /s//+ /p' > "$PASSDB"
+        cat "$PASSDB" "$PASSTMP" > "$PASSWORDS"
         getpass --encrypt
         ;;
     -n) # encrypt with new key
@@ -112,10 +113,10 @@ getpass() # use passsword db
         ;;
     *) # default prints matching lines from db
         getpass --decrypt
-        grep -i $1 $PASSWORDS | tee $PASSWORDS.tmp | tr ';' '\n'
+        grep -i $1 "$PASSWORDS" | tee "$PASSTMP" | tr ';' '\n'
         # copy last word to clipboard as password
-        sed -n '$s/.*[; ]//p' $PASSWORDS.tmp | tr -d '\r\n' | wcopy
-        rm -f $PASSWORDS
+        sed -n '$s/.*[; ]//p' "$PASSTMP" | tr -d '\r\n' | wcopy
+        rm -f "$PASSWORDS"
         ;;
     esac
 }

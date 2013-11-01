@@ -20,7 +20,6 @@ vw_reload() { . "$HOME/.bashrc" ; vw --tag ; } # reload config
 vwh() { vi "$VW_DIR/$(vw --HOST)" ; vw_reload ; } # vi host config
 vwo() { vi "$VW_DIR/$(vw --OS)" ; vw_reload ; } # vi os config
 vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; vw_reload ; } # vi vw profile
-vws() { vi -o  $(ls $VW_DIR/base/$1* | head -3) ; vw_reload ; } # vi base
 don () # do something a number of times
 { 
     # +
@@ -66,7 +65,8 @@ ea() # echo all
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
     trap 'test "$EATMP" && rm -f $EATMP*' RETURN
-    ls -d ${@:-*} > $EATMP
+    test "$@" && ls -d "$@" > $EATMP
+    test "$@" || ls > $EATMP
     head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed -e '$d' $EATMP.1 > $EATMP.2

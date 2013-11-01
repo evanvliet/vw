@@ -10,6 +10,6 @@
 export s=~/.scrap # scrap file
 dots() { . $s "$@" ; } # source scrap
 ts() { cat $s ; } # type scrap
-vis() { vim $s ; } # vi scrap
+vis() { vi $s ; } # vi scrap
 wcs() { wcopy < $s ; } # copy clipboard to scrap
 wps() { wpaste > $s ; } # paste scrap to clipbaord
