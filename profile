@@ -5,8 +5,8 @@
 # -
 pushd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null
 export VW_DIR="$PWD"
-source base/vw.sh # vw function
-for vw_file in $(vw --files)
+source base/vw.sh # vw functions
+for vw_file in $(vwfiles)
 do
     source $vw_file
 done

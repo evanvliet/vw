@@ -40,10 +40,6 @@ that were not shown.
 * `root`  be admin.
 * `t`  cat.
 * `textbelt`  text phone using textbelt.
-* `vw_reload`  reload config.
-* `vwh`  vi host config.
-* `vwo`  vi os config.
-* `vwp`  vi vw profile.
 * `xv`  trace execution of bash script or function.
 
 ###### [base/env.sh](base/env.sh)
@@ -129,6 +125,12 @@ lists known nicknames.  Options:
 Track and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
+* `vwfiles`  print nanes of config files in order.
+* `vwh`  vi host config.
+* `vwman`  recap info.
+* `vwo`  vi os config.
+* `vwp`  vi vw profile.
+* `vwsync`  commit new stuff, get latest.
 
 ###### [os/Linux.sh](os/Linux.sh)
 For linux.

@@ -15,11 +15,6 @@ mo() { less -c $* ; } # less -c
 r() { fc -s $* ; } # redo
 root() { sudo bash ; } # be admin
 t() { cat $* ; } # cat
-# vw related
-vw_reload() { . "$HOME/.bashrc" ; vw --tag ; } # reload config
-vwh() { vi "$VW_DIR/$(vw --HOST)" ; vw_reload ; } # vi host config
-vwo() { vi "$VW_DIR/$(vw --OS)" ; vw_reload ; } # vi os config
-vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; vw_reload ; } # vi vw profile
 don () # do something a number of times
 { 
     # +

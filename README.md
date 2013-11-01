@@ -5,16 +5,12 @@ From *vi whence* - finds and edits the definition of a function among
 various configuration files.
 
 #### Synopsis
-vw [ variable | option ]
+vw variable
 
 #### Description
 Invokes vi on the definition of a variable / function in the
-configuration files.With no variable, produces index of known
+configuration files.  With no variable, produces index of known
 functions, aliases, exports.
-
-Options:
-  + `--man`       print doc + index
-  + `--sync`      commit new stuff, get latest
 
 ###### Dependency
 Note that *tools/shtags.py* generates the tags and documentation.  To
@@ -74,7 +70,7 @@ Keeps configuration files in a directory, typically `vw`, set in
 Most effective when sharing configuration via a base machine holding a
 bare repository.  Then, on the leaf machines, the usual *git* pulls,
 commits, and pushes from the *vw* directory keep machines in sync.
-Also, `vw --sync` does a commit, pull, push and sync of dot files in
+Also, `vwsync` does a commit, pull, push and sync of dot files in
 one swell foop.
 
 ##### Precedence
