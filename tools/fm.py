@@ -188,7 +188,8 @@ class FileComment:
         elif comment == 'd':  # get data
             print self.hist() ,
             print ' '.join(cmd_output('ls', '-dl', self.name).split()[:8]) ,
-            print '%s lines' % cmd_output('wc', '-l', self.name).split()[0]
+            nlines = cmd_output('wc', '-l', self.name)[1:].split() or ['?']
+            print '%s lines' % nlines[0]
             print ' '.join(cmd_output('file', self.name).split(':')[1:]).strip()
             print cmd_output('env', '-i', 'od', '-cN64', '-An', self.name)
         elif comment == 'e':  # erase existing comment

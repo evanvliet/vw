@@ -2,14 +2,14 @@
 # +
 # Track and edit configuration files.
 # -
-vwfiles() # print nanes of config files in order
+vwfiles() # print config files in order sourced
 {
     cd "$VW_DIR"
     local VW_FILES=base/*
-    local VW_=$(_vw_os)
-    test -s $VW_ && VW_FILES="$VW_FILES $VW_"
-    VW_=$(_vw_host)
-    test -s $VW_ && VW_FILES="$VW_FILES $VW_"
+    local LOCAL_CONFIG=$(_vw_os)
+    test -s $LOCAL_CONFIG && VW_FILES="$VW_FILES $LOCAL_CONFIG"
+    LOCAL_CONFIG=$(_vw_host)
+    test -s $LOCAL_CONFIG && VW_FILES="$VW_FILES $LOCAL_CONFIG"
     echo $VW_FILES
     cd - &> /dev/null
 }
@@ -17,9 +17,10 @@ _vw_tag()
 {
     # make tags for vw scripts
     cd "$VW_DIR"
-    local MAKE_TAGS=tags
-    test -s tags && MAKE_TAGS=$(find $(vwfiles) -newer tags)
-    test "$MAKE_TAGS" && tools/shtags.py -t $(vwfiles) > tags
+    local NEW_FILES=tags
+    local VW_FILES=$(vwfiles)
+    test -s tags && NEW_FILES=$(find $VW_FILES -newer tags)
+    test "$NEW_FILES" && tools/shtags.py -t $VW_FILES > tags
     cd - &> /dev/null
 }
 _vw_host()
@@ -84,18 +85,20 @@ vwsync() # commit new stuff, get latest
 {
     _vw_dot
     pushd "$VW_DIR" &> /dev/null
-    git diff --exit-code || (
-        read -p 'comment? '
-        test "$REPLY" && git commit -a -m "$REPLY"
-        )
+    trap 'popd &> /dev/null' RETURN INT EXIT
+    test -z "$(git status -s)" && echo no changes && return
+    git diff
+    git status -s
+    read -p 'comment? '
+    test "$REPLY" || return
+    git commit -a -m "$REPLY"
     git pull
     git push
-    popd &> /dev/null
     _vw_dot
 }
 vw() # edit the definition of a function, alias or export
 {
-    test .$1 == . && _vw_index | pr -t -2 -w$COLUMNS && return
+    test .$1 == . && _vw_index | pr -t -2 -w${COLUMNS:-80} && return
     cd "$VW_DIR"
     local VW_LOC="$(command -v $1 2> /dev/null)" # file location
     _vw_tag
@@ -125,6 +128,12 @@ huh() # melange of type typeset alias info
     *)            printf "%s\n" "$HUH" ;;
     esac;
 }
-_vw_complete() { _vw_tag ; COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags")) ; }
-complete -F _vw_complete huh
-complete -F _vw_complete vw
+_vw_complete()
+{
+    # arg 2 is the guy to search for in tags db
+    # returns list of matches as per bash completion
+    _vw_tag
+    COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags"))
+}
+complete -o bashdefault -F _vw_complete huh
+complete -o bashdefault -F _vw_complete vw

@@ -15,7 +15,9 @@ gitbr() # show branch name or delete with -d
 {
     git rev-parse --is-inside-work-tree &> /dev/null || return
     test ! $1. = -d. && git rev-parse --abbrev-ref HEAD && return
-    git branch | grep -q $2 && git branch -D $2 && git push origin :$2
+    git branch | grep -q $2 && git branch -D $2
+    test $2 = master && return
+    git push origin :$2
 }
 ci() # git checkin does commit pull and push in one swell foop
 {

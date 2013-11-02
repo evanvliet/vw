@@ -44,7 +44,6 @@ that were not shown.
 
 ###### [base/env.sh](base/env.sh)
 Exported variables and an environmnet pretty printer.
-* `CDPATH`  include vw in CDPATH.
 * `MANPAGER`  manpager opts.
 * `PROMPT_COMMAND`  sets window title.
 * `PS1`  prompt.
@@ -65,11 +64,15 @@ collect common seequences.
 * `setconf`  set up a default .gitconfig.
 
 ###### [base/isp.sh](base/isp.sh)
-Use base machine, *.i.e.*, machine hosting your configuration.  Good on
-an isp, ergo the name.
-* `isp`  interact with base machine on isp.
-Start an ssh session, setup and retrieve git repositories, copy
-and paste files. See `isp -h` for usage.
+Use base machine, *.i.e.*, machine hosting your configuration.  Good
+to have on an isp, ergo the name.  Options:
+  + `get` copy file from xfer folder
+  + `put` copy file to xfer folder
+  + `sh` run sh
+  + `git` create git repository from working directory
+  + `update` update git_root repo from origin, e.g., github
+  + `clone` clone from '$ISP_HOST':~/git_root/' |
+* `isp`  interact with base machine.
 
 ###### [base/pass.sh](base/pass.sh)
 Do `getpass google` to get your google password.  Prints matching
@@ -125,7 +128,7 @@ lists known nicknames.  Options:
 Track and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
-* `vwfiles`  print nanes of config files in order.
+* `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.
 * `vwo`  vi os config.
