@@ -70,15 +70,16 @@ ea() # echo all
 }
 num() # phone numbers
 {
-    NUM_DB="$VW_DIR/tools/data/num.db"
+    local NUMS="$VW_DIR/tools/data/num.db"
     case $1 in
     -a) shift # append new info
-        grep -v "$*" $NUM_DB >> $NUM_DB.tmp
-        echo $* >> $NUM_DB.tmp && mv $NUM_DB.tmp $NUM_DB
+        grep -v "$*" "$NUMS" > "$NUMS".tmp
+        echo $* >> "$NUMS".tmp 
+        mv "$NUMS".tmp "$NUMS"
         ;;
-    -e) vi $NUM_DB # edit db
+    -e) vi "$NUMS" # edit db
         ;;
-    *)  grep -i "$1" $NUM_DB # search db
+    *)  grep -i "$1" "$NUMS" # search db
         ;;
     esac
 }

@@ -5,12 +5,12 @@
 vwfiles() # print config files in order sourced
 {
     cd "$VW_DIR"
-    local VW_FILES=base/*
+    local FILES=base/*
     local LOCAL_CONFIG=$(_vw_os)
-    test -s $LOCAL_CONFIG && VW_FILES="$VW_FILES $LOCAL_CONFIG"
+    test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
     LOCAL_CONFIG=$(_vw_host)
-    test -s $LOCAL_CONFIG && VW_FILES="$VW_FILES $LOCAL_CONFIG"
-    echo $VW_FILES
+    test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
+    echo $FILES
     cd - &> /dev/null
 }
 _vw_tag()
@@ -18,9 +18,9 @@ _vw_tag()
     # make tags for vw scripts
     cd "$VW_DIR"
     local NEW_FILES=tags
-    local VW_FILES=$(vwfiles)
-    test -s tags && NEW_FILES=$(find $VW_FILES -newer tags)
-    test "$NEW_FILES" && tools/shtags.py -t $VW_FILES > tags
+    local FILES=$(vwfiles)
+    test -s tags && NEW_FILES=$(find $FILES -newer tags)
+    test "$NEW_FILES" && tools/shtags.py -t $FILES > tags
     cd - &> /dev/null
 }
 _vw_host()
@@ -70,13 +70,13 @@ _vw_dot()
 {
     # sync dot files
     pushd $HOME &> /dev/null
-    local VW_DOT="$VW_DIR/dot"
-    for i in $(ls -A "$VW_DOT")
+    local DOT="$VW_DIR/dot"
+    for i in $(ls -A "$DOT")
     do
-        cmp -s "$VW_DOT/$i" $i && continue
-        local olddir="$HOME" newdir="$VW_DOT"
+        cmp -s "$DOT/$i" $i && continue
+        local olddir="$HOME" newdir="$DOT"
         test "$newdir/$i" -nt "$olddir/$i" &&
-            olddir="$VW_DOT" newdir="$HOME"
+            olddir="$DOT" newdir="$HOME"
         cp -vi "$olddir/$i" "$newdir/$i"
     done
     popd &> /dev/null
@@ -95,24 +95,28 @@ vwsync() # commit new stuff, get latest
     fi
     status=$(git remote -v update)
     test "$(git status -uno)" || return
+    git pull
     git push
     _vw_dot
 }
 vw() # edit the definition of a function, alias or export
 {
-    test .$1 == . && _vw_index | pr -t -2 -w${COLUMNS:-80} && return
+    test -t 1 ||
+        { echo output is not a terminal ; return ; }
+    test -z "$1" &&
+        { _vw_index | pr -t -2 -w${COLUMNS:-80} ; return ; }
     cd "$VW_DIR"
-    local VW_LOC="$(command -v $1 2> /dev/null)" # file location
+    local LOC="$(command -v $1 2> /dev/null)" # file location
     _vw_tag
     if grep -q "^$1	" tags ; then
         set $(grep "^$1	" tags)
         vi -t $1
         source $2
         _vw_tag
-    elif file -L "$VW_LOC" 2> /dev/null | grep -q text ; then
-        vi "$VW_LOC"
-    elif test "$VW_LOC" ; then
-        echo $1 is $VW_LOC
+    elif file -L "$LOC" 2> /dev/null | grep -q text ; then
+        vi "$LOC"
+    elif test "$LOC" ; then
+        echo $1 is $LOC
     elif test "$(ls tools/$1* 2> /dev/null)" ; then
         vi $(ls tools/$1* | head -1)
     else
