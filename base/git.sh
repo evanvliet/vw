@@ -16,8 +16,7 @@ gitbr() # show branch name or delete with -d
     git rev-parse --is-inside-work-tree &> /dev/null || return
     test ! $1. = -d. && git rev-parse --abbrev-ref HEAD && return
     git branch | grep -q $2 && git branch -D $2
-    test $2 = master && return
-    git push origin :$2
+    test $2 = master || git push origin :$2
 }
 ci() # git checkin does commit pull and push in one swell foop
 {
@@ -36,7 +35,8 @@ lastdiff() # last diff for a file
 setconf() # set up a default .gitconfig
 {
     local EMAIL=$(id -un)@$(hostname) 
-    local NAME=$(tr , : < /etc/passwd | awk -F: "/:$(whoami):/ { print \$5 ; }")
+    local NAME=$(awk -F, "/,$(whoami),/ { print \$5 ; }" /etc/passwd)
+    test "$NAME" || NAME=$(finger $(whoami) | sed -n 's/.*Name..//p')
     sed -e "s/^ *\[/[/
             s/^  */  /
             s/FULL_NAME/$NAME/

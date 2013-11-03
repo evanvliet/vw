@@ -17,7 +17,8 @@ isp() # interact with base machine
     shift
     case $op in
     get)
-        scp $ISP_HOST:xfer/$1 . || isp sh 'ls -ltgoh xfer | head'
+        scp $ISP_HOST:xfer/$1 . ||
+        isp sh 'ls -lgoth xfer | sed -n 2,12s/.............//p'
         ;;
     put)
         isp sh mkdir -p xfer

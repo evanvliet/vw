@@ -6,7 +6,7 @@ alias ..='cd ..; pwd'  # cd ..
 alias ...='cd ../..; pwd' # cd ../..
 # one liners
 chcount () { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
-cpo () { cp $* "$OLDPWD" ; } # copy to $OLDPWD
+cpo () { cp "$@" "$OLDPWD" ; } # copy to $OLDPWD
 findext() { find . -name "*.$1" -print ; } # find by extension
 h() { fc -l $* ; } # history
 llt() { ls -lgo -t "$@" | head ; } # ls latest
@@ -62,6 +62,7 @@ ea() # echo all
     trap 'test "$EATMP" && rm -f $EATMP*' RETURN
     test "$@" && ls -d "$@" > $EATMP
     test "$@" || ls > $EATMP
+    test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed -e '$d' $EATMP.1 > $EATMP.2

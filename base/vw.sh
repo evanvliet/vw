@@ -86,13 +86,15 @@ vwsync() # commit new stuff, get latest
     _vw_dot
     pushd "$VW_DIR" &> /dev/null
     trap 'popd &> /dev/null' RETURN INT EXIT
-    test -z "$(git status -s)" && echo no changes && return
-    git diff
-    git status -s
-    read -p 'comment? '
-    test "$REPLY" || return
-    git commit -a -m "$REPLY"
-    git pull
+    if test "$(git status -s)" ; then
+        git diff
+        git status -s
+        read -p 'comment? '
+        test "$REPLY" || return
+        git commit -a -m "$REPLY"
+    fi
+    status=$(git remote -v update)
+    test "$(git status -uno)" || return
     git push
     _vw_dot
 }

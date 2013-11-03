@@ -7,17 +7,8 @@ if ..==.%HOME%. (
     SET HOME=%USERPROFILE%
 )
 
-rem // local environment
-set LOCALX=%~dp0\local_%COMPUTERNAME%.bat
-if exist "%LOCALX%" (
-    call "%LOCALX%" 
-) else (
-    echo rem %LOCALX% > "%LOCALX%"
-    start notepad %LOCALX%
-)
-
 rem // need goto because parentheses in path discombobulates scripts
-if ..==.%CYGWIN_PATH%. set CYGWIN_PATH=%HOMEDRIVE%\CYGWIN64\BIN
+if ..==.%CYGWIN_PATH%. set CYGWIN_PATH=%HOMEDRIVE%\CYGWIN\BIN
 path | %WINDIR%\System32\find.exe /i "cygwin" > nul
 if not errorlevel 1 goto next_aa
 if exist %CYGWIN_PATH%\ps.exe PATH %PATH%;%CYGWIN_PATH%
@@ -34,7 +25,7 @@ DOSKEY ES=PRINTF "%%s " $*
 DOSKEY PBRUSH=MSPAINT $*
 DOSKEY WORDPAD="%ProgramFiles%\Windows NT\Accessories\Wordpad"
 DOSKEY LL=LS -lgo $*
-DOSKEY VSU=NOTEPAD %-dp0\cmdrc.bat
+DOSKEY VSU=NOTEPAD %~dp0\cmdrc.bat
 DOSKEY VSL=NOTEPAD "%~dp0local_%COMPUTERNAME%.bat"
 DOSKEY VDIR=EXPLORER .
 DOSKEY ANT=C:\ANT\BIN\ANT $*
@@ -57,3 +48,13 @@ if not defined SESSIONNAME (
 ) else (
     PROMPT $P$S$+$_$G
 )
+
+rem // local environment
+set LOCALX=%~dp0\local_%COMPUTERNAME%.bat
+if exist "%LOCALX%" (
+    call "%LOCALX%" 
+) else (
+    echo rem %LOCALX% > "%LOCALX%"
+    start notepad %LOCALX%
+)
+
