@@ -2,6 +2,80 @@
 # +
 # Track and edit configuration files.
 # -
+vw() # edit the definition of a function, alias or export
+{
+    test -t 1 || { echo output is not a terminal ; return ; }
+    test "$1" || { _vw_index ; return ; }
+    pushd "$VW_DIR" &> /dev/null
+    trap 'popd &> /dev/null' RETURN EXIT INT
+    _vw_tag
+    grep -q "^$1	" tags && {
+        vi -t $1
+        _vw_reload
+        _vw_tag
+        return
+    }
+    local LOC="$(command -v $1 2> /dev/null)" # general command
+    test "$LOC" || LOC=$(ls tools/$1* | sed 1q) # vw tool
+    file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
+    test "$LOC" && echo $1 is $LOC && return
+    echo no match for $1
+}
+vwh() # vi host config
+{
+    vi "$VW_DIR/$(_vw_host)" 
+    _vw_reload 
+}
+vwo() # vi os config
+{
+    vi "$VW_DIR/$(_vw_os)" 
+    _vw_reload 
+}
+vwp() # vi vw profile
+{
+    vi -o ~/.bashrc "$VW_DIR/profile" 
+    _vw_reload 
+}
+vwman() # recap info
+{
+    _vw_md > "$VW_DIR"/INDEX.md
+    sed -e '/^##* /i\
+
+            s/sh](.*/sh]/
+            s/^##* /# /
+            s/^*//' \
+        "$VW_DIR"/README.md \
+        "$VW_DIR"/INDEX.md | $MANPAGER
+}
+vwsync() # commit new stuff, get latest
+{
+    _vw_dot
+    pushd "$VW_DIR" &> /dev/null
+    trap 'popd &> /dev/null' RETURN INT EXIT
+    if test "$(git status -s)" ; then
+        git diff
+        git status -s
+        read -p 'comment? '
+        test "$REPLY" || return
+        git commit -a -m "$REPLY"
+    fi
+    status=$(git remote -v update)
+    test "$(git status -uno)" || return
+    git pull
+    git push
+    _vw_dot
+    _vw_reload
+}
+huh() # melange of type typeset alias info
+{
+    local HUH=$(type $1 2> /dev/null)
+    case "$HUH" in
+    "" | *found)  echo $1 not found ;;
+    *function*)   typeset -f $1 ;;
+    *aliased?to*) alias $1 ;;
+    *)            printf "%s\n" "$HUH" ;;
+    esac;
+}
 vwfiles() # print config files in order sourced
 {
     cd "$VW_DIR"
@@ -34,9 +108,6 @@ _vw_os()
     echo os/$(uname | sed -e 's/_.*//').sh
 }
 _vw_reload() { . "$HOME/.bashrc" ; _vw_tag ; }
-vwh() { vi "$VW_DIR/$(_vw_host)" ; _vw_reload ; } # vi host config
-vwo() { vi "$VW_DIR/$(_vw_os)" ; _vw_reload ; } # vi os config
-vwp() { vi -o ~/.bashrc "$VW_DIR/profile" ; _vw_reload ; } # vi vw profile
 _vw_md()
 {
     # generate markdown
@@ -44,26 +115,17 @@ _vw_md()
     tools/shtags.py -m $(vwfiles)
     cd - &> /dev/null
 }
-vwman() # recap info
-{
-    _vw_md > "$VW_DIR"/INDEX.md
-    sed -e '/^##* /i\
-
-            s/sh](.*/sh]/
-            s/^##* /# /
-            s/^*//' \
-        "$VW_DIR"/README.md \
-        "$VW_DIR"/INDEX.md | $MANPAGER
-}
 _vw_index()
 {
     # print index of defintions
     cd "$VW_DIR"
+    local PAGER="pr -t -2 -w${COLUMNS:-80}"
+    test -t 1 || PAGER=cat
     tools/shtags.py -s $(vwfiles) | sed '
         /\-\-\-/i\
 
         /^\-\-\-/s/^\-* /* /
-    '
+    ' | $PAGER
     cd - &> /dev/null
 }
 _vw_dot()
@@ -80,59 +142,6 @@ _vw_dot()
         cp -vi "$olddir/$i" "$newdir/$i"
     done
     popd &> /dev/null
-}
-vwsync() # commit new stuff, get latest
-{
-    _vw_dot
-    pushd "$VW_DIR" &> /dev/null
-    trap 'popd &> /dev/null' RETURN INT EXIT
-    if test "$(git status -s)" ; then
-        git diff
-        git status -s
-        read -p 'comment? '
-        test "$REPLY" || return
-        git commit -a -m "$REPLY"
-    fi
-    status=$(git remote -v update)
-    test "$(git status -uno)" || return
-    git pull
-    git push
-    _vw_dot
-}
-vw() # edit the definition of a function, alias or export
-{
-    test -t 1 ||
-        { echo output is not a terminal ; return ; }
-    test -z "$1" &&
-        { _vw_index | pr -t -2 -w${COLUMNS:-80} ; return ; }
-    cd "$VW_DIR"
-    local LOC="$(command -v $1 2> /dev/null)" # file location
-    _vw_tag
-    if grep -q "^$1	" tags ; then
-        set $(grep "^$1	" tags)
-        vi -t $1
-        source $2
-        _vw_tag
-    elif file -L "$LOC" 2> /dev/null | grep -q text ; then
-        vi "$LOC"
-    elif test "$LOC" ; then
-        echo $1 is $LOC
-    elif test "$(ls tools/$1* 2> /dev/null)" ; then
-        vi $(ls tools/$1* | head -1)
-    else
-        echo no match for $1
-    fi
-    cd - &> /dev/null
-}
-huh() # melange of type typeset alias info
-{
-    local HUH=$(type $1 2> /dev/null)
-    case "$HUH" in
-    "" | *found)  echo $1 not found ;;
-    *function*)   typeset -f $1 ;;
-    *aliased?to*) alias $1 ;;
-    *)            printf "%s\n" "$HUH" ;;
-    esac;
 }
 _vw_complete()
 {
