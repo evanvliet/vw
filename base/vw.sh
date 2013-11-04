@@ -71,7 +71,7 @@ huh() # melange of type typeset alias info
     *)            printf "%s\n" "$HUH" ;;
     esac;
 }
-_vw_files()
+vwfiles()
 {
     # print config files in order sourced
     pushd "$VW_DIR" &> /dev/null
@@ -87,7 +87,7 @@ _vw_tag()
 {
     # make tags for vw scripts
     local NEW_FILES=tags
-    local FILES=$(_vw_files)
+    local FILES=$(vwfiles)
     test -s tags && NEW_FILES=$(find $FILES -newer tags)
     test "$NEW_FILES" && tools/shtags.py -t $FILES > tags
 }
@@ -121,7 +121,7 @@ _vw_index()
     pushd "$VW_DIR" &> /dev/null
     local PAGER="pr -t -2 -w${COLUMNS:-80}"
     test -t 1 || PAGER=cat
-    tools/shtags.py -s $(_vw_files) | sed '
+    tools/shtags.py -s $(vwfiles) | sed '
         /\-\-\-/i\
 
         /^\-\-\-/s/^\-* /* /
