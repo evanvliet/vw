@@ -1,6 +1,6 @@
 #!/bin/bash
 # +
-# Track and edit configuration files.
+# Track, sync and edit configuration files.
 # -
 vw() # edit the definition of a function, alias or export
 {
@@ -42,7 +42,7 @@ vwman() # recap info
         "$VW_DIR"/README.md \
         "$VW_DIR"/INDEX.md | $MANPAGER
 }
-vwsync() # commit new stuff, get latest
+vwsync() # commit new stuff and get latest
 {
     _vw_dot
     pushd "$VW_DIR" &> /dev/null
@@ -54,8 +54,6 @@ vwsync() # commit new stuff, get latest
         test "$REPLY" || return
         git commit -a -m "$REPLY"
     fi
-    status=$(git remote -v update)
-    test "$(git status -s -uno)" || return
     git pull
     git push
     _vw_dot
@@ -71,9 +69,9 @@ huh() # melange of type typeset alias info
     *)            printf "%s\n" "$HUH" ;;
     esac;
 }
-vwfiles()
+vwfiles() # print config files in order sourced
 {
-    # print config files in order sourced
+    # really for internal use but needed in vw profile
     pushd "$VW_DIR" &> /dev/null
     local FILES=base/*
     local LOCAL_CONFIG=$(_vw_os)

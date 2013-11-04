@@ -1,6 +1,6 @@
 #!/bin/bash
-# use "INSTALL bare" to install bare repository on base machine
-# use "INSTALL" with no arg on leaf machine to source vw/profile
+# "INSTALL bare" installs a bare repository on the base machine
+# "INSTALL" with no argument to source vw/profile in .bashrc
 
 pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
 VW_DIR="$PWD"

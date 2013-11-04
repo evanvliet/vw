@@ -125,14 +125,15 @@ lists known nicknames.  Options:
   + `-v` expand nick, for use in other scripts
 
 ###### [base/vw.sh](base/vw.sh)
-Track and edit configuration files.
+Track, sync and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
+* `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.
 * `vwo`  vi os config.
 * `vwp`  vi vw profile.
-* `vwsync`  commit new stuff, get latest.
+* `vwsync`  commit new stuff and get latest.
 
 ###### [os/Linux.sh](os/Linux.sh)
 For linux.
