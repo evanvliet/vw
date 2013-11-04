@@ -9,9 +9,9 @@ vw() # edit the definition of a function, alias or export
     pushd "$VW_DIR" &> /dev/null
     trap 'popd &> /dev/null' RETURN EXIT INT
     _vw_tag
-    grep -q "^$1	" tags && vi -t $1 && _vw_reload &&  return
+    grep -q "^$1	" tags && vi -t $1 && _vw_reload && return
     local LOC="$(command -v $1 2> /dev/null)" # general command
-    test "$LOC" || LOC=$(ls tools/$1* | sed 1q) # vw tool
+    test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
     file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
     test "$LOC" && echo $1 is $LOC && return
     echo no match for $1
@@ -55,7 +55,7 @@ vwsync() # commit new stuff, get latest
         git commit -a -m "$REPLY"
     fi
     status=$(git remote -v update)
-    test "$(git status -uno)" || return
+    test "$(git status -s -uno)" || return
     git pull
     git push
     _vw_dot
@@ -71,22 +71,23 @@ huh() # melange of type typeset alias info
     *)            printf "%s\n" "$HUH" ;;
     esac;
 }
-vwfiles() # print config files in order sourced
+_vw_files()
 {
-    cd "$VW_DIR"
+    # print config files in order sourced
+    pushd "$VW_DIR" &> /dev/null
     local FILES=base/*
     local LOCAL_CONFIG=$(_vw_os)
     test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
     LOCAL_CONFIG=$(_vw_host)
     test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
     echo $FILES
-    cd - &> /dev/null
+    popd &> /dev/null
 }
 _vw_tag()
 {
     # make tags for vw scripts
     local NEW_FILES=tags
-    local FILES=$(vwfiles)
+    local FILES=$(_vw_files)
     test -s tags && NEW_FILES=$(find $FILES -newer tags)
     test "$NEW_FILES" && tools/shtags.py -t $FILES > tags
 }
@@ -102,30 +103,30 @@ _vw_os()
 }
 _vw_reload()
 {
-    cd "$VW_DIR"
+    pushd "$VW_DIR" &> /dev/null
     . "$HOME/.bashrc"
     _vw_tag
-    cd - &> /dev/null
+    popd &> /dev/null
 }
 _vw_md()
 {
     # generate markdown
-    cd "$VW_DIR"
+    pushd "$VW_DIR" &> /dev/null
     tools/shtags.py -m $(vwfiles)
-    cd - &> /dev/null
+    popd &> /dev/null
 }
 _vw_index()
 {
     # print index of defintions
-    cd "$VW_DIR"
+    pushd "$VW_DIR" &> /dev/null
     local PAGER="pr -t -2 -w${COLUMNS:-80}"
     test -t 1 || PAGER=cat
-    tools/shtags.py -s $(vwfiles) | sed '
+    tools/shtags.py -s $(_vw_files) | sed '
         /\-\-\-/i\
 
         /^\-\-\-/s/^\-* /* /
     ' | $PAGER
-    cd - &> /dev/null
+    popd &> /dev/null
 }
 _vw_dot()
 {

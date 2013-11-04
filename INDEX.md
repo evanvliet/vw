@@ -128,7 +128,6 @@ lists known nicknames.  Options:
 Track and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
-* `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.
 * `vwo`  vi os config.

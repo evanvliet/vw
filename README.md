@@ -73,6 +73,11 @@ commits, and pushes from the *vw* directory keep machines in sync.
 Also, `vwsync` does a commit, pull, push and sync of dot files in
 one swell foop.
 
+In addition to `vwsync`, there are these:
++ `vwh` vi host config
++ `vwo` vi os config
++ `vwp` vi vw profile
+
 ##### Precedence
 `vw` sources files in a deterministic fashion:
 + first those in `base`,
