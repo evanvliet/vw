@@ -4,17 +4,12 @@
 # -
 vw() # edit the definition of a function, alias or export
 {
-    test -t 1 || { echo output is not a terminal ; return ; }
     test "$1" || { _vw_index ; return ; }
+    test -t 1 || { echo output is not a terminal ; return ; }
     pushd "$VW_DIR" &> /dev/null
     trap 'popd &> /dev/null' RETURN EXIT INT
     _vw_tag
-    grep -q "^$1	" tags && {
-        vi -t $1
-        _vw_reload
-        _vw_tag
-        return
-    }
+    grep -q "^$1	" tags && vi -t $1 && _vw_reload &&  return
     local LOC="$(command -v $1 2> /dev/null)" # general command
     test "$LOC" || LOC=$(ls tools/$1* | sed 1q) # vw tool
     file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
@@ -90,12 +85,10 @@ vwfiles() # print config files in order sourced
 _vw_tag()
 {
     # make tags for vw scripts
-    cd "$VW_DIR"
     local NEW_FILES=tags
     local FILES=$(vwfiles)
     test -s tags && NEW_FILES=$(find $FILES -newer tags)
     test "$NEW_FILES" && tools/shtags.py -t $FILES > tags
-    cd - &> /dev/null
 }
 _vw_host()
 {
@@ -107,7 +100,13 @@ _vw_os()
     # return OS config file
     echo os/$(uname | sed -e 's/_.*//').sh
 }
-_vw_reload() { . "$HOME/.bashrc" ; _vw_tag ; }
+_vw_reload()
+{
+    cd "$VW_DIR"
+    . "$HOME/.bashrc"
+    _vw_tag
+    cd - &> /dev/null
+}
 _vw_md()
 {
     # generate markdown
@@ -147,8 +146,10 @@ _vw_complete()
 {
     # arg 2 is the guy to search for in tags db
     # returns list of matches as per bash completion
+    pushd "$VW_DIR" &> /dev/null
     _vw_tag
-    COMPREPLY=($(sed -n "/^$2/s/	.*//p" "$VW_DIR/tags"))
+    COMPREPLY=($(sed -n "/^$2/s/	.*//p" tags))
+    popd &> /dev/null
 }
 complete -o bashdefault -F _vw_complete huh
 complete -o bashdefault -F _vw_complete vw
