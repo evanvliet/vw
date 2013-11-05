@@ -23,6 +23,11 @@
 # Adding a keyword, *e.g.*, *autopay*, to enable retrieving all password
 # data associated with that keyword.  This helps if you lose a credit
 # card, and need to update web sites.
+#
+# To generate a password, use `getpass -p`.  Pass an option, *e.g.*
+# `large` or `small` or `right` to get one thats too big, or too
+# small, or just right.  Also accepts inter options for a custom
+# mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 # -
 getpass() # use passsword db
 {
@@ -40,7 +45,7 @@ getpass() # use passsword db
             -i initialize
             -m merge conflicts
             -n encode with new key
-            -p make [big|small] password'
+            -p opt make password opt = [small | right | large]'
         ;;
     --key)  # get / set key to safe
         local PAD=$(hostid)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
@@ -106,7 +111,9 @@ getpass() # use passsword db
         getpass --encrypt
         ;;
     -p) # password generation
-        "$VW_DIR/tools/mk_passwd.py" $2
+        shift
+        "$VW_DIR/tools/mk_passwd.py" $* | wcopy
+        wpaste
         ;;
     -*)
         getpass --usage
