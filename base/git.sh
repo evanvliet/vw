@@ -9,7 +9,7 @@ gist()  # root folder, remote url, and current status
     gitroot="$(git rev-parse --show-toplevel 2> /dev/null)"
     test "$gitroot" || return
     echo $gitroot $(gitbr) from $(git config remote.origin.url)
-    git status -s
+    git status -s -uno
 }
 gitbr() # show branch name or delete with -d
 {

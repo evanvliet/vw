@@ -62,6 +62,6 @@ if __name__ == '__main__':
     opt = (sys.argv[1] if sys.argv[1:] else 'right')
     custom_recipes = tuple([int(i) for i in sys.argv[1:]]) if str.isdigit(opt) else None
     if custom_recipes: print make_password(*custom_recipes)
-    if opt == 'small': print make_password(4, 2, 0, 2)
-    if opt == 'right': print make_password(4, 2, 0, 2)
+    if opt == 'small': print make_password(3, 2, 0, 1)
+    if opt == 'right': print make_password(5, 3, 2)
     if opt == 'large': print make_password(20, 0, 0)
