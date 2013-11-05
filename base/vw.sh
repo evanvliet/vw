@@ -47,7 +47,7 @@ vwsync() # commit new stuff and get latest
     _vw_dot
     pushd "$VW_DIR" &> /dev/null
     trap 'popd &> /dev/null' RETURN INT EXIT
-    if test "$(git status -s)" ; then
+    if test "$(git status -s -uno)" ; then
         git diff
         git status -s
         read -p 'comment? '
