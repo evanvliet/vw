@@ -73,7 +73,7 @@ vwfiles() # print config files in order sourced
 {
     # really for internal use but needed in vw profile
     pushd "$VW_DIR" &> /dev/null
-    local CONFIG FILES=base/* CONFIG
+    local CONFIG FILES=base/*
     CONFIG=$(_vw_os)
     test -s $CONFIG && FILES="$FILES $CONFIG"
     CONFIG=$(_vw_host)
