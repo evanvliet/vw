@@ -18,18 +18,18 @@ vw() # edit the definition of a function, alias or export
 }
 vwh() # vi host config
 {
-    vi "$VW_DIR/$(_vw_host)" 
-    _vw_reload 
+    vi "$VW_DIR/$(_vw_host)"
+    _vw_reload
 }
 vwo() # vi os config
 {
-    vi "$VW_DIR/$(_vw_os)" 
-    _vw_reload 
+    vi "$VW_DIR/$(_vw_os)"
+    _vw_reload
 }
 vwp() # vi vw profile
 {
-    vi -o ~/.bashrc "$VW_DIR/profile" 
-    _vw_reload 
+    vi -o ~/.bashrc "$VW_DIR/profile"
+    _vw_reload
 }
 vwman() # recap info
 {
@@ -56,15 +56,15 @@ vwsync() # commit new stuff and get latest
     fi
     git pull
     git push
-    _vw_dot
     _vw_reload
+    _vw_dot
 }
 huh() # melange of type typeset alias info
 {
     local HUH=$(type $1 2> /dev/null)
     case "$HUH" in
-    "" | *found)  echo $1 not found ;;
     *function*)   typeset -f $1 ;;
+    "" | *found)  echo $1 not found ;;
     *aliased?to*) alias $1 ;;
     *)            printf "%s\n" "$HUH" ;;
     esac;
@@ -73,17 +73,17 @@ vwfiles() # print config files in order sourced
 {
     # really for internal use but needed in vw profile
     pushd "$VW_DIR" &> /dev/null
-    local FILES=base/*
-    local LOCAL_CONFIG=$(_vw_os)
-    test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
-    LOCAL_CONFIG=$(_vw_host)
-    test -s $LOCAL_CONFIG && FILES="$FILES $LOCAL_CONFIG"
+    local FILES=base/* CONFIG
+    CONFIG=$(_vw_os)
+    test -s $CONFIG && FILES="$FILES $CONFIG"
+    CONFIG=$(_vw_host)
+    test -s $CONFIG && FILES="$FILES $CONFIG"
     echo $FILES
     popd &> /dev/null
 }
 _vw_tag()
 {
-    # make tags for vw scripts
+    # tags for vw scripts
     local NEW_FILES=tags
     local FILES=$(vwfiles)
     test -s tags && NEW_FILES=$(find $FILES -newer tags)
@@ -91,16 +91,17 @@ _vw_tag()
 }
 _vw_host()
 {
-    # return host config file
+    # host config file
     echo host/$(hostname | tr -d '\r ').sh
 }
 _vw_os()
 {
-    # return OS config file
+    # OS config file
     echo os/$(uname | sed -e 's/_.*//').sh
 }
 _vw_reload()
 {
+    # load source files and build tags
     pushd "$VW_DIR" &> /dev/null
     . "$HOME/.bashrc"
     _vw_tag
@@ -129,7 +130,7 @@ _vw_index()
 _vw_dot()
 {
     # sync dot files
-    pushd $HOME &> /dev/null
+    pushd "$HOME" &> /dev/null
     local DOT="$VW_DIR/dot"
     for i in $(ls -A "$DOT")
     do

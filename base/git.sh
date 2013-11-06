@@ -34,7 +34,7 @@ lastdiff() # last diff for a file
 }
 setconf() # set up a default .gitconfig
 {
-    local EMAIL=$(id -un)@$(hostname) 
+    local EMAIL=$(id -un)@$(hostname)
     local NAME=$(awk -F, "/,$(whoami),/ { print \$5 ; }" /etc/passwd)
     test "$NAME" || NAME=$(finger $(whoami) | sed -n 's/.*Name..//p')
     sed -e "s/^ *\[/[/

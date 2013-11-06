@@ -16,7 +16,7 @@ r() { fc -s $* ; } # redo
 root() { sudo bash ; } # be admin
 t() { cat $* ; } # cat
 don () # do something a number of times
-{ 
+{
     # +
     # For example, use `don 3 echo` to get 3 blank lines.  Default
     # repetition is `3` and default command is `echo` so acutually,
@@ -74,7 +74,7 @@ num() # phone numbers
     case $1 in
     -a) shift # append new info
         grep -v "$*" "$NUMS" > "$NUMS".tmp
-        echo $* >> "$NUMS".tmp 
+        echo $* >> "$NUMS".tmp
         mv "$NUMS".tmp "$NUMS"
         ;;
     -e) vi "$NUMS" # edit db
@@ -86,5 +86,5 @@ num() # phone numbers
 fm() # fm with history
 {
     history -a
-    HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@" 
+    HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
 }

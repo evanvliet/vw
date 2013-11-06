@@ -122,7 +122,7 @@ getpass() # use passsword db
         ;;
     *) # default prints matching lines from db
         getpass --decrypt
-        grep -i $1 "$PASSWORDS" > "$PASSTMP" 
+        grep -i $1 "$PASSWORDS" > "$PASSTMP"
         nl=$(wc -l < "$PASSTMP")
         test $nl -gt 0 || return
         test $nl -gt 3 && {

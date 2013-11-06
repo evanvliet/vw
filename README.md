@@ -38,8 +38,10 @@ Run `INSTALL`.  Login or exec to activate.  Example:
 The install script adds a line to .bashrc to source the *vw*
 configuration files.
 
-To set up a bare repository on a host that provides ssh access
-to leaf machines that will share configuration, run
+Many find it useful to synchronize configuration using source
+control.  To this end, the  *vw* `INSTALL` has a `bare` option To set
+up a bare *git* repository on a host that provides ssh access to leaf
+machines that will share configuration.  Run: 
 
 + `bash vw/INSTALL bare`
 
@@ -50,10 +52,10 @@ git clone command for downsteam access.
 See [INDEX.md](../master/INDEX.md) for descirptions of the included
 sample functions.  They are an idiosyncratic collection of accumulated
 favorites; some, in particular `sd`, `getpass`, and the scrap file
-ones, have proven useful over the years, but mostly serve as samples
+ones, have proven useful over the years; but mostly serve as samples
 of how to format code so the *vw* tagging utility finds function
-defiinitions.  Note the scripts use a `# +`/`# -` idiom to hold block
-comments.  The tagging utility extracts these when generating
+defiinitions.  Note the scripts use a `# +` / `# -` idiom to hold
+block comments.  The tagging utility extracts these when generating
 documentation.
 
 ##### Folders
@@ -80,9 +82,9 @@ In addition to `vwsync`, there are these:
 
 ##### Precedence
 `vw` sources files in a deterministic fashion:
-+ first those in `base`,
-+ then the os configuration, *e.g.*, `os/Linux.sh`,
-+ finally the host specific file, *e.g.*, `host/icpu232.sh`.
+1. those in `base`
+2. the os configuration, *e.g.*, `os/Linux.sh`
+3. the host specific file, *e.g.*, `host/icpu232.sh`
 
 The last one wins, so whatever the host configuration file defines
 wins over the os configuration, which in turn overrides whatever is
