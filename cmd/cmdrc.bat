@@ -37,7 +37,7 @@ DOSKEY HOME=PUSHD %HOME%
 DOSKEY VS9=if not defined DevEnvDir call "%VS90COMNTOOLS%"\vsvars32.bat
 DOSKEY VS10=if not defined DevEnvDir call "%VS100COMNTOOLS%"\vsvars32.bat
 DOSKEY VI=VIM $*
-DOSKEY FM=%-dp0\..\tools\fm.py
+DOSKEY FM=bash -c "python $(cygpath '%~dp0..\tools\fm.py') $*"
 
 TITLE %COMPUTERNAME%
 

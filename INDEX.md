@@ -77,7 +77,9 @@ to have on an isp, ergo the name.  Options:
 ###### [base/pass.sh](base/pass.sh)
 Do `getpass google` to get your google password.  Prints matching
 lines from a password list and copies the last word into the
-clipboard.  Use `getpass -e` to edit the password list.  Example:
+clipboard.  Does not print the last word, presumably the password,
+as a security precaution.  Use `getpass -e` to edit the password
+list.  Example:
 
     www.google.com myname mypassword
     icpu626 root 789sdf987

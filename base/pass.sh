@@ -2,7 +2,9 @@
 # +
 # Do `getpass google` to get your google password.  Prints matching
 # lines from a password list and copies the last word into the
-# clipboard.  Use `getpass -e` to edit the password list.  Example:
+# clipboard.  Does not print the last word, presumably the password,
+# as a security precaution.  Use `getpass -e` to edit the password
+# list.  Example:
 # 
 #     www.google.com myname mypassword
 #     icpu626 root 789sdf987
@@ -120,9 +122,19 @@ getpass() # use passsword db
         ;;
     *) # default prints matching lines from db
         getpass --decrypt
-        grep -i $1 "$PASSWORDS" | tee "$PASSTMP" | tr ';' '\n'
+        grep -i $1 "$PASSWORDS" > "$PASSTMP" 
+        nl=$(wc -l < "$PASSTMP")
+        test $nl -gt 0 || return
+        test $nl -gt 3 && {
+            head -3 "$PASSTMP" > "$PASSTMP.1"
+            mv "$PASSTMP.1" "$PASSTMP"
+            local extra=$nl-3
+            echo +$extra matches
+        }
         # copy last word to clipboard as password
         sed -n '$s/.*[; ]//p' "$PASSTMP" | tr -d '\r\n' | wcopy
+        # and print all but last word for security
+        sed '$s/.[^; ]*$//' "$PASSTMP" | tr ';' '\n'
         rm -f "$PASSWORDS"
         ;;
     esac

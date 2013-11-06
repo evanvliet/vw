@@ -2,9 +2,11 @@
 
 set SD_TMP=%TMP%\SD_TMP.cmd
 set SD_RC="%HOME%\.sdrc"
+rem if not exist "%SD_RC%" set SD_RC=c:\cygwin\home\eric\.sdrc
+set SD_RC=c:\cygwin\home\eric\.sdrc
 
 if .%1.==.. (
-    sort "%HOME%\.sdrc"
+    sort "%SD_RC%"
     goto :eof
 )
 

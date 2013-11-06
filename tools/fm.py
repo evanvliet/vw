@@ -40,8 +40,8 @@ USAGE = \
 b - go back to previous item
 d - get file data; type, ls, first bytes
 e - erase existing comment
-l - run ls on file
-m - use less to paginate file
+l - use less to paginate file
+m - invoke man on file
 q - quit
 r - delete file
 t - cat file
@@ -195,10 +195,10 @@ class FileComment:
         elif comment == 'e':  # erase existing comment
             self.comment = ''
             rv = 1  # next
-        elif comment == 'l':  # run ls
-            print cmd_output('ls', '-l', self.name).rstrip()
-        elif comment == 'm':  # use less to paginate file
+        elif comment == 'l':  # use less to paginate file
             subprocess.call(['less', self.name])
+        elif comment == 'm':  # use less to paginate file
+            subprocess.call(['man', self.name])
         elif comment == 'q':  # quit
             rv = 2  # quit signal
         elif comment == 'r':  # delete
