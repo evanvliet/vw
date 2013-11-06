@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-"""fm [ [-s | -a] file ...
+"""fm [-s | -a] file ...
 
 A file management tool for maintaining comments about files.
 

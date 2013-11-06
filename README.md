@@ -16,7 +16,7 @@ functions, aliases, exports.
 Note that *tools/shtags.py* generates the tags and documentation.  To
 work right, match the regular expression therein.  *I.e.*:
 + `func() # about func`
-+ `XX=xxx # about XX`
++ `export XX=xxx # about XX`
 + `alias xx=yy # about xx`
 
 See the sample scripts.

@@ -65,7 +65,7 @@ ea() # echo all
     test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
-    sed -e '$d' $EATMP.1 > $EATMP.2
+    sed '$d' $EATMP.1 > $EATMP.2
     echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
 }
 num() # phone numbers
@@ -85,6 +85,22 @@ num() # phone numbers
 }
 fm() # fm with history
 {
-    history -a
+    # +
+    # A file management tool for maintaining comments about files. 
+    # Lists files with stored comments. Options:
+    #   + `-a` prompt for comments for all files, even if there is already a comment
+    #   + `-s` prompt for comments for only some of the files, those without a comment
+    #
+    # Update file comments with the -a or -s option. When prompting
+    # for comments, fm recognizes one letter responses as commands to
+    # inspect the file, or delete it, or go back to the previous one. 
+    # The one letter h response gives usage.  With neither -a nor -s,
+    # fm lists existing comments and names of uncommented files.  A
+    # trailing list of file names restricts update or report to just
+    # those files. If no trailing arguments, it handles all files.
+    #
+    # Pass HISTFILE and COLUMNS so `fm` can pick up history data and
+    # format data for the current screen size.
+    # -
     HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
 }
