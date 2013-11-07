@@ -123,13 +123,13 @@ getpass() # use passsword db
     *) # default prints matching lines from db
         getpass --decrypt
         grep -i $1 "$PASSWORDS" > "$PASSTMP"
-        nl=$(wc -l < "$PASSTMP")
+        local nl=$(wc -l < "$PASSTMP" | tr -d ' ')
         test $nl -gt 0 || return
         test $nl -gt 3 && {
             head -3 "$PASSTMP" > "$PASSTMP.1"
             mv "$PASSTMP.1" "$PASSTMP"
-            local extra=$nl-3
-            echo +$extra matches
+            let nl=$nl-3
+            echo +$nl matches
         }
         # copy last word to clipboard as password
         sed -n '$s/.*[; ]//p' "$PASSTMP" | tr -d '\r\n' | wcopy
