@@ -31,7 +31,6 @@
 # small, or just right.  Also accepts integer options for a custom
 # mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 # -
-
 _gp_key() # get key
 {
     openssl des3 -k $(hostid) -d < getpass.key | sed -e s/$PAD//
@@ -140,4 +139,5 @@ getpass() # use passsword db
         ;;
     esac
     rm -f passwords pass.tmp pass.merge
+    popd > /dev/null
 }

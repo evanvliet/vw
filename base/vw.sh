@@ -31,7 +31,7 @@ vwh() # vi host config
 }
 vwo() # vi os config
 {
-    vi "$VW_DIR/$(_vw_os)"
+    vi "$VW_DIR/$(_vw_osys)"
     _vw_reload
 }
 vwp() # vi vw profile
@@ -81,11 +81,9 @@ vwfiles() # print config files in order sourced
 {
     # really for internal use but needed in vw profile
     pushd "$VW_DIR" &> /dev/null
-    local CONFIG FILES=base/*
-    CONFIG=$(_vw_os)
-    test -s $CONFIG && FILES="$FILES $CONFIG"
-    CONFIG=$(_vw_host)
-    test -s $CONFIG && FILES="$FILES $CONFIG"
+    local FILES=base/*.sh
+    test -s $(_vw_osys) && FILES="$FILES $(_vw_osys)"
+    test -s $(_vw_host) && FILES="$FILES $(_vw_host)"
     echo $FILES
     popd &> /dev/null
 }
@@ -101,7 +99,7 @@ _vw_host()
     # host config file
     echo host/$(hostname | tr -d '\r ').sh
 }
-_vw_os()
+_vw_osys()
 {
     # OS config file
     echo os/$(uname | sed -e 's/_.*//').sh
