@@ -39,10 +39,11 @@ def make_password(
 
     x0 = ' `\t\n\r\x0b\x0c'  # exclude list
     x1 = x0 + "'`&()|<>"  # more exclusions
+    x2 = '!@#$%^&*()' # as per cvs.com password requirements
     list_alnum = string.ascii_letters + string.digits
     list_digit = string.digits
     list_puibm = r"._-"  # least common denominator of punctuation in passwords
-    list_punct = list(set(string.punctuation) - set(x1)) # usable puncutation
+    list_punct = list(set(x2)) # usable puncutation
     list_ksink = list(set(string.printable) - set(x0)) # kitchen sink
     a = []
     a.extend(choice(list_alnum) for x in range(alnum))

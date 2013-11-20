@@ -39,8 +39,8 @@ The install script adds a line to .bashrc to source the *vw*
 configuration files.
 
 Many find it useful to synchronize configuration using source
-control.  To this end, the  *vw* `INSTALL` has a `bare` option To set
-up a bare *git* repository on a host that provides ssh access to leaf
+control.  To this end, the `bare` option creates a *git* repository
+for sharing.  Do this on a host that provides ssh access to leaf
 machines that will share configuration.  Run: 
 
 + `bash vw/INSTALL bare`

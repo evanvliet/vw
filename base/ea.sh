@@ -24,9 +24,10 @@ don () # do something a number of times
     # -
     local n=3
     ((1$1 > 10)) &> /dev/null && n=$1 && shift
-    for i in $(seq $n)
+    while (($n > 0))
     do
         ${*:-echo}
+        let n=n-1
     done
 }
 xv () # trace execution of bash script or function
@@ -60,8 +61,8 @@ ea() # echo all
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
     trap 'test "$EATMP" && rm -f $EATMP*' RETURN
+    ls > $EATMP
     test "$@" && ls -d "$@" > $EATMP
-    test "$@" || ls > $EATMP
     test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return

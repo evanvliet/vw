@@ -113,7 +113,7 @@ data associated with that keyword.  This helps if you lose a credit
 card, and need to update web sites.
 
 To generate a password, use `getpass -p`.  Pass an option, *e.g.*
-`large` or `small` or `right` to get one thats too big, or too
+`large`, `small` or `right` to get one that's too big, too
 small, or just right.  Also accepts integer options for a custom
 mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 * `getpass`  use passsword db.

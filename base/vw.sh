@@ -84,10 +84,9 @@ vwfiles() # print config files in order sourced
 _vw_tag()
 {
     # tags for vw scripts
-    local NEW_FILES=tags
-    local FILES=$(vwfiles)
-    test -s tags && NEW_FILES=$(find $FILES -newer tags)
-    test "$NEW_FILES" && tools/shtags.py -t $FILES > tags
+    local FILES=tags
+    test -s tags && FILES=$(find $(vwfiles) -newer tags)
+    test "$FILES" && tools/shtags.py -t $(vwfiles) > tags
 }
 _vw_host()
 {
@@ -103,9 +102,9 @@ _vw_reload()
 {
     # load source files and build tags
     pushd "$VW_DIR" &> /dev/null
-    . "$HOME/.bashrc"
     _vw_tag
     popd &> /dev/null
+    . "$HOME/.bashrc"
 }
 _vw_md()
 {
@@ -131,21 +130,19 @@ _vw_dot()
 {
     # sync dot files
     pushd "$HOME" &> /dev/null
-    local DOT="$VW_DIR/dot"
-    for i in $(ls -A "$DOT")
+    trap 'popd &> /dev/null' RETURN EXIT INT
+    for i in $(ls -A "$VW_DIR/dot")
     do
-        cmp -s "$DOT/$i" $i && continue
-        local olddir="$HOME" newdir="$DOT"
-        test "$newdir/$i" -nt "$olddir/$i" &&
-            olddir="$DOT" newdir="$HOME"
-        cp -vi "$olddir/$i" "$newdir/$i"
+        local old=$i new="$VW_DIR/dot/$i"
+        cmp -s "$new" $i && continue
+        test "$old" -nt "$new" && old="$VW_DIR/dot/$i" new=$i
+        cp -vi "$new" "$old"
     done
-    popd &> /dev/null
 }
 _vw_complete()
 {
     # arg 2 is the guy to search for in tags db
-    # returns list of matches as per bash completion
+    # return list of matches as per bash completion
     pushd "$VW_DIR" &> /dev/null
     _vw_tag
     COMPREPLY=($(sed -n "/^$2/s/	.*//p" tags))

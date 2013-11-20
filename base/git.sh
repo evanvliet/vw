@@ -6,7 +6,7 @@
 # -
 gist()  # root folder, remote url, and current status
 {
-    gitroot="$(git rev-parse --show-toplevel 2> /dev/null)"
+    local gitroot="$(git rev-parse --show-toplevel 2> /dev/null)"
     test "$gitroot" || return
     echo $gitroot $(gitbr) from $(git config remote.origin.url)
     git status -s -uno
@@ -30,16 +30,15 @@ co() # per rcs and old times just git checkout
 }
 lastdiff() # last diff for a file
 {
-    git diff $(git log -2 $1 | sed -n /commit./s///p) $1
+    git diff $(git log --pretty=format:%H --skip=1 -1 $1) $1
 }
 setconf() # set up a default .gitconfig
 {
     local EMAIL=$(id -un)@$(hostname)
     local NAME=$(awk -F: "/^$(whoami):/ { print \$5 ; }" /etc/passwd | sed s/,.*//)
     test "$NAME" || NAME=$(finger $(whoami) | sed -n 's/.*Name..//p')
-    sed -e "s/^ *\[/[/
-            s/^  */  /
-            s/FULL_NAME/$NAME/
+    sed -e "s/^    //
+            s/NAME/$NAME/
             s/EMAIL/$EMAIL/" > ~/.gitconfig <<< '
     [color]
         ui = auto
@@ -74,7 +73,7 @@ setconf() # set up a default .gitconfig
     [push]
         default = matching
     [user]
-        name = FULL_NAME
+        name = NAME
         email = EMAIL
     '
 }

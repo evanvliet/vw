@@ -27,115 +27,107 @@
 # card, and need to update web sites.
 #
 # To generate a password, use `getpass -p`.  Pass an option, *e.g.*
-# `large` or `small` or `right` to get one thats too big, or too
+# `large`, `small` or `right` to get one that's too big, too
 # small, or just right.  Also accepts integer options for a custom
 # mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 # -
+
+# get key
+_gp_cache() { openssl des3 -k $(hostid) <<< "$PAD$1" > getpass.key ; }
+# plaintext is true if not encrypting data
+_gp_plaintext() { test ! -s getpass.key ; }
+# encrypt stdin with key
+_gp_encrypt() { openssl des3 -k "$(_gp_key)"; }
+# decrypt stdin with key
+_gp_decrypt() { openssl des3 -k "$(_gp_key)" -d 2> /dev/null ; }
+# encrypt passwords in db
+_gp_encode()
+{
+    _gp_plaintext && cp passwords getpass.db && return
+    _gp_encrypt < passwords > getpass.db
+}
+# decrypt db into passwords
+_gp_decode()
+{
+    _gp_plaintext && cp getpass.db passwords ||
+    _gp_decrypt < getpass.db > passwords
+    while file passwords | grep -qv text ; do
+        read -p 'key: '
+        test "$REPLY" || break
+        _gp_cache "$REPLY"
+        _gp_decrypt < getpass.db > passwords
+    done
+}
 getpass() # use passsword db
 {
-    local PASSKEY="$VW_DIR/tools/data/getpass.key"
-    local PASSDB="$VW_DIR/tools/data/getpass.db"
-    local PASSWORDS="$VW_DIR/tools/data/passwords"
-    local PASSTMP="$VW_DIR/tools/data/passwords.tmp"
-    local PLAINTEXT=plaintext
-    trap 'test -f "$PASSTMP" && rm -f "$PASSTMP"' RETURN EXIT INT
+    pushd "$VW_DIR/tools/data" > /dev/null
+    local PAD=$(hostid)jlaskdjfaldskjaldkjfaldskjfaldkjalsdfjaljk
     case ${1:--h} in
-    --usage) # show help text
-        sed 's/^  */  /' <<< 'getpass [ word | option ]
-            Search for word in password list.  Options:
-            -e edit password list
-            -i initialize
-            -m merge conflicts
-            -n encode with new key
-            -p opt make password opt = [small | right | large]'
+    -a) # append to db
+        shift
+        _gp_decode
+        echo $* >> passwords
+        _gp_encode
         ;;
-    --key)  # get / set key to safe
-        local PAD=$(hostid)bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-        if test "$2" ; then # set key
-            openssl des3 -k $(hostid) <<< "$PAD$2" > "$PASSKEY"
-        elif test -f "$PASSKEY" ; then # retrieve key
-            openssl des3 -d -k $(hostid) < "$PASSKEY" | sed -e s/$PAD//
-        else # use plaintext
-            echo $PLAINTEXT
-        fi
-        ;;
-    --encrypt) # encrypt passwords and and save in safe
-        > "$PASSDB"
-        local KEY="$(getpass --key)"
-        test "$KEY" = $PLAINTEXT && mv "$PASSWORDS" "$PASSDB" && return
-        gzip -c "$PASSWORDS" | openssl des3 -k "$KEY" > "$PASSDB"
-        rm -f "$PASSWORDS"
-        ;;
-    --decrypt) # decrypt safe and put into passwords
-        while true ; do
-            > "$PASSWORDS"
-            test -s "$PASSDB" || break
-            local KEY="$(getpass --key)"
-            test "$KEY" = $PLAINTEXT &&
-                file "$PASSDB" | grep -q text &&
-                cp "$PASSDB" "$PASSWORDS" && return
-            (
-                openssl des3 -k "$KEY" -d < "$PASSDB" | zcat > "$PASSWORDS"
-            ) &> /dev/null
-            test -s "$PASSWORDS" && file "$PASSWORDS" | grep -q text && return
-            read -p 'key: '
-            test "$REPLY" || break
-            getpass --key "$REPLY"
-        done
-        ;;
-    -e) # edit db - decode, edit, save encrypted if changed
-        getpass --decrypt
-        cp "$PASSWORDS" "$PASSTMP"
-        cd "$(dirname "$PASSWORDS")"
-        vi $(basename "$PASSWORDS")
-        cd - &> /dev/null
-        cmp -s "$PASSTMP" "$PASSWORDS" || getpass --encrypt
-        rm -f "$PASSWORDS"
+    -e) # edit db - decode, edit, encrypt
+        _gp_decode
+        vi passwords
+        _gp_encode
         ;;
     -i) # init db
-        rm -f "$PASSKEY" "$PASSDB"
-        echo google google.pass > "$PASSWORDS"
-        getpass --encrypt
+        rm -f getpass.key getpass.db
+        echo google google.pass > passwords
+        _gp_encode
         ;;
     -m) # merge handling, use our copy but prepend any extra
-        getpass --decrypt
-        mv "$PASSWORDS" "$PASSTMP"
-        git co --theirs "$PASSDB"
-        getpass --decrypt
-        diff "$PASSTMP" "$PASSWORDS" | sed -n '/^> /s//+ /p' > "$PASSDB"
-        cat "$PASSDB" "$PASSTMP" > "$PASSWORDS"
-        getpass --encrypt
+		test -s pass.new && cp pass.new pass.merge || { # use pass.new
+            # or git version
+			git co --theirs getpass.db
+			_gp_decode
+			mv passwords pass.merge
+		}
+        _gp_decode
+        cp passwords pass.tmp
+        diff passwords pass.merge | sed -n '/^> /s//+ /p' > getpass.db
+        cat getpass.db pass.tmp > passwords
+        cmp passwords pass.tmp && echo no change && return
+        vi passwords
+        read -p 'update? '
+        test "${REPLY##y*}" && return
+        test -s pass.new && cp -v passwords pass.new
+        _gp_encode
         ;;
     -n) # encrypt with new key
-        getpass --decrypt
-        read -p 'key: '
-        getpass --key "$REPLY"
-        getpass --encrypt
+        shift
+        REPLY="$*"
+        test "$REPLY" || read -p 'new key: '
+        _gp_decode
+        _gp_cache "$REPLY"
+        _gp_encode
         ;;
     -p) # password generation
         shift
         "$VW_DIR/tools/mk_passwd.py" $* | wcopy
         wpaste
         ;;
-    -*)
-        getpass --usage
+    -*) # show help text
+        sed 's/^  */  /' <<< 'getpass [ word | option ]
+            Search for word in password list.  Options:
+            -a add args to passwords
+            -e edit password list
+            -i initialize
+            -m merge conflicts
+            -n encode with new key
+            -p opt make password opt = [small | right | large]'
         ;;
     *) # default prints matching lines from db
-        getpass --decrypt
-        grep -i $1 "$PASSWORDS" > "$PASSTMP"
-        local nl=$(wc -l < "$PASSTMP" | tr -d ' ')
-        test $nl -gt 0 || return
-        test $nl -gt 3 && {
-            head -3 "$PASSTMP" > "$PASSTMP.1"
-            mv "$PASSTMP.1" "$PASSTMP"
-            let nl=$nl-3
-            echo +$nl matches
-        }
-        # copy last word to clipboard as password
-        sed -n '$s/.*[; ]//p' "$PASSTMP" | tr -d '\r\n' | wcopy
+        _gp_decode
+        grep -i $1 passwords > pass.tmp
+        # copy last word of last match to clipboard as password
+        sed -n '$s/.*[; ]//p' pass.tmp | tr -d '\r\n' | wcopy
         # and print all but last word for security
-        sed '$s/.[^; ]*$//' "$PASSTMP" | tr ';' '\n'
-        rm -f "$PASSWORDS"
+        sed 's/.[^; ]*$//' pass.tmp | tr ';' '\n'
         ;;
     esac
+    rm -f passwords pass.tmp pass.merge
 }

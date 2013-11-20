@@ -10,10 +10,7 @@ wcopy() { pbcopy ; } # copy to clipboard
 wpaste() { pbpaste ; } # paste from clipboard
 hostid() # missing on mac
 {
-    (
-        sysctl kern.uuid
-        sysctl kern.bootsignature
-    ) 2> /dev/null | md5
+    ( sysctl kern.uuid ; sysctl kern.bootsignature ) 2>&1 | md5
 }
 ssh-copy-id() # for mac
 {

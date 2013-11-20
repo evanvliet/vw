@@ -14,7 +14,7 @@ sd() # set directory via nicknames
     # -
     local SD_LIST=~/.sdrc
     local SD_DIR
-    test -f $SD_LIST || touch $SD_LIST
+    test -f $SD_LIST || > $SD_LIST
     case "$1" in
     "") # sorted list
         sort $SD_LIST
