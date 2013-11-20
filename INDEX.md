@@ -32,15 +32,15 @@ that were not shown.
 * `findext`  find by extension.
 * `fm`  fm with history.
 A file management tool for maintaining comments about files.
-Lists files with stored comments.  Update file comments with the
-`-a` or `-s` option. When prompting for comments, fm recognizes one
-letter responses as commands to inspect the file, or delete it,
-or go back to the previous one.  The one letter `h` response gives
-usage.  With neither `-a` nor `-s`, fm lists existing comments and
-names of uncommented files.  A trailing list of file names
-restricts update or report to just those files. If no trailing
-arguments, it handles all files.  Pass HISTFILE and COLUMNS so
-`fm` can pick up history data and format data for the current
+Lists files with stored comments.  Options:
+  + `-a` update comments for all files
+  + `-s` update comments for some files, those without comments
+When prompting for comments, *fm* recognizes one letter
+responses as commands to inspect the file, or delete it, or go
+back to the previous one.  The one letter `h` response gives
+usage.  A trailing list of file names restricts update or report
+to just those files.  Note passing of HISTFILE and COLUMNS so
+*fm* can pick up history data and format data for the current
 screen size.
 * `h`  history.
 * `llt`  ls latest.
@@ -108,7 +108,7 @@ can occur.  Use `getpass -m` to launch *vi* on a merged version.
 To revert to plaintext storage, use `getpass -i` to reset, then add
 your previous data.
 
-Adding a keyword, *e.g.*, *autopay*, to enable retrieving all password
+Adding a keyword, *e.g.*, *autopay*, enables retrieving all password
 data associated with that keyword.  This helps if you lose a credit
 card, and need to update web sites.
 
@@ -134,11 +134,12 @@ dependent and set up in os-specific config file.
 
 ###### [base/sd.sh](base/sd.sh)
 Nicknames for directory navigation.  Use `sd nick` to cd to folder
-by nickname `nick`. If `nick` unknown, save it for the current
-directory. Without arg, `sd` lists known nicknames.  Options:
+by nickname `nick`.  Options:
   + `-e` edit db, using vi
   + `-l` tail db, list last added nicknames
   + `-v` expand nick, for use in other scripts
+If `nick` is new, save it for the current directory. Without a
+nickname argument, `sd` lists known nicknames.
 * `sd`  set directory via nicknames.
 
 ###### [base/vw.sh](base/vw.sh)
