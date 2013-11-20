@@ -7,14 +7,22 @@ vw() # edit the definition of a function, alias or export
     test "$1" || { _vw_index ; return ; }
     test -t 1 || { echo output is not a terminal ; return ; }
     pushd "$VW_DIR" &> /dev/null
-    trap 'popd &> /dev/null' RETURN EXIT INT
     _vw_tag
-    grep -q "^$1	" tags && vi -t $1 && _vw_reload && return
-    local LOC="$(command -v $1 2> /dev/null)" # general command
-    test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
-    file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
-    test "$LOC" && echo $1 is $LOC && return
-    echo no match for $1
+    if grep -q "^$1	" tags ; then
+        vi -t $1
+        _vw_reload
+    else
+        local LOC="$(command -v $1 2> /dev/null)" # general command
+        test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
+        if file -L "$LOC" 2> /dev/null | grep -q text ; then
+            vi "$LOC"
+        elif test "$LOC" ; then
+            echo $1 is $LOC
+        else
+            echo no match for $1
+        fi
+    fi
+    popd > /dev/null
 }
 vwh() # vi host config
 {

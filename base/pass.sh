@@ -5,7 +5,7 @@
 # clipboard.  Does not print the last word, presumably the password,
 # as a security precaution.  Use `getpass -e` to edit the password
 # list.  Example:
-# 
+#
 #     www.google.com myname mypassword
 #     icpu626 root 789sdf987
 #     www.chase.com visa autopay mychaseid mychasepassword
@@ -15,7 +15,7 @@
 # to foil decryption by just copying files to another machine.  If you
 # do encrypt the password data, you will have to enter the key once on
 # each machine.
-# 
+#
 # If different changes are made on different machines, collisions
 # can occur.  Use `getpass -m` to launch *vi* on a merged version.
 #
@@ -32,22 +32,32 @@
 # mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 # -
 
-# get key
-_gp_cache() { openssl des3 -k $(hostid) <<< "$PAD$1" > getpass.key ; }
-# plaintext is true if not encrypting data
-_gp_plaintext() { test ! -s getpass.key ; }
-# encrypt stdin with key
-_gp_encrypt() { openssl des3 -k "$(_gp_key)"; }
-# decrypt stdin with key
-_gp_decrypt() { openssl des3 -k "$(_gp_key)" -d 2> /dev/null ; }
-# encrypt passwords in db
-_gp_encode()
+_gp_key() # get key
 {
-    _gp_plaintext && cp passwords getpass.db && return
+    openssl des3 -k $(hostid) -d < getpass.key | sed -e s/$PAD//
+}
+_gp_cache() # cache key
+{
+    openssl des3 -k $(hostid) <<< "$PAD$1" > getpass.key
+}
+_gp_plaintext() # plaintext is true if not encrypting data
+{
+    test ! -s getpass.key
+}
+_gp_encrypt() # encrypt stdin with key
+{
+    openssl des3 -k "$(_gp_key)"
+}
+_gp_decrypt() # decrypt stdin with key
+{
+    openssl des3 -k "$(_gp_key)" -d 2> /dev/null
+}
+_gp_encode() # encrypt passwords in db
+{
+    _gp_plaintext && cp passwords getpass.db ||
     _gp_encrypt < passwords > getpass.db
 }
-# decrypt db into passwords
-_gp_decode()
+_gp_decode() # decrypt db into passwords
 {
     _gp_plaintext && cp getpass.db passwords ||
     _gp_decrypt < getpass.db > passwords
@@ -80,12 +90,12 @@ getpass() # use passsword db
         _gp_encode
         ;;
     -m) # merge handling, use our copy but prepend any extra
-		test -s pass.new && cp pass.new pass.merge || { # use pass.new
+        test -s pass.new && cp pass.new pass.merge || { # use pass.new
             # or git version
-			git co --theirs getpass.db
-			_gp_decode
-			mv passwords pass.merge
-		}
+            git co --theirs getpass.db
+            _gp_decode
+            mv passwords pass.merge
+        }
         _gp_decode
         cp passwords pass.tmp
         diff passwords pass.merge | sed -n '/^> /s//+ /p' > getpass.db
