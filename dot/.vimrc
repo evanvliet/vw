@@ -2,6 +2,7 @@ set ts=4 sw=4
 set autoindent
 set expandtab
 set history=300
+colorscheme evening
 set nu
 
 function Set_color_On()

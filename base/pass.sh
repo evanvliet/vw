@@ -16,8 +16,11 @@
 # do encrypt the password data, you will have to enter the key once on
 # each machine.
 #
-# If different changes are made on different machines, collisions
-# can occur.  Use `getpass -m` to launch *vi* on a merged version.
+# NB: this is a homebrew solution and not vetted for password
+# security.  Use at your own risk.
+#
+# If changes are made on different machines, collisions can occur.
+# Use `getpass -m` to launch *vi* on a merged version.
 #
 # To revert to plaintext storage, use `getpass -i` to reset, then add
 # your previous data.
@@ -34,7 +37,7 @@
 getpass() # use passsword db
 {
     pushd "$VW_DIR/tools/data" > /dev/null
-    local PAD=$(hostid)jlaskdjfaldskjaldkjfaldskjfaldkjalsdfjaljk
+    local PAD=${PAD:-$(hostid)jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQ4V}
     case ${1:--h} in
     -a) # append to db
         shift
