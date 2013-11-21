@@ -76,14 +76,15 @@ collect common seequences.
 
 ###### [base/isp.sh](base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good
-to have on an isp, ergo the name.  Options:
+to have on an isp, ergo the name.
+* `isp`  interact with base machine.
+Options:
   + `get` copy file from xfer folder
   + `put` copy file to xfer folder
-  + `sh` run sh
-  + `git` create git repository from working directory
+  + `sh` make ssh connection with isp
+  + `git` create git repository on isp git_root from local files
   + `update` update git_root repo from origin, e.g., github
-  + `clone` clone from '$ISP_HOST':~/git_root/' |
-* `isp`  interact with base machine.
+  + `clone` clone project from git_root repo
 
 ###### [base/pass.sh](base/pass.sh)
 Do `getpass google` to get your google password.  Prints matching
@@ -120,14 +121,21 @@ To generate a password, use `getpass -p`.  Pass an option, *e.g.*
 small, or just right.  Also accepts integer options for a custom
 mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 * `getpass`  use passsword db.
+Options:
+  + `-a` add args to passwords
+  + `-e` edit password list
+  + `-i` initialize
+  + `-m` merge conflicts
+  + `-n` encode with new key
+  + `-p` generate new password
 
 ###### [base/scrap.sh](base/scrap.sh)
-Sets up s as a scrap file.  For doing stuff like `ls > $s` and then
-editing with `vis`, *etc*.  Another common one is to go `h > $s` and
-then edit your history with `vis`, turning a sequence of commands
-into a shell function.  Then source it with `dots` for testing and
-deployment.  Note dependence on wcopy and wpaste which are  os
-dependent and set up in os-specific config file.
+Sets up `s` as a scrap file.  For doing stuff like `ls > $s` and
+then editing with `vis`, *etc*.  Another common one is to go `h >
+$s` and then edit your history with `vis`, turning a sequence of
+commands into a shell function.  Then source it with `dots` for
+testing and deployment.  Note dependence on `wcopy` and `wpaste`
+which are os dependent and set up in os-specific config file.
 * `dots`  source scrap.
 * `s`  scrap file.
 * `ts`  type scrap.
@@ -137,13 +145,13 @@ dependent and set up in os-specific config file.
 
 ###### [base/sd.sh](base/sd.sh)
 Nicknames for directory navigation.  Use `sd nick` to cd to folder
-by nickname `nick`.  Options:
+by nickname `nick`.  If `nick` is new, save it for the current
+directory. Without a nickname argument, list known nicknames.
+* `sd`  set directory via nicknames.
+Options:
   + `-e` edit db, using vi
   + `-l` tail db, list last added nicknames
-  + `-v` expand nick, for use in other scripts
-If `nick` is new, save it for the current directory. Without a
-nickname argument, `sd` lists known nicknames.
-* `sd`  set directory via nicknames.
+  + `-v` expand `nick`, for use in other scripts
 
 ###### [base/vw.sh](base/vw.sh)
 Track, sync and edit configuration files.

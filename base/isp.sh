@@ -1,16 +1,19 @@
 #!/bin/bash
 # +
 # Use base machine, *.i.e.*, machine hosting your configuration.  Good
-# to have on an isp, ergo the name.  Options:
-#   + `get` copy file from xfer folder
-#   + `put` copy file to xfer folder
-#   + `sh` run sh
-#   + `git` create git repository from working directory
-#   + `update` update git_root repo from origin, e.g., github
-#   + `clone` clone from '$ISP_HOST':~/git_root/' |
+# to have on an isp, ergo the name.
 # -
 isp() # interact with base machine
 {
+    # +
+    # Options:
+    #   + `get` copy file from xfer folder
+    #   + `put` copy file to xfer folder
+    #   + `sh` make ssh connection with isp
+    #   + `git` create git repository on isp git_root from local files
+    #   + `update` update git_root repo from origin, e.g., github
+    #   + `clone` clone project from git_root repo
+    # -
     local ISP_HOST=$(
         cd "$VW_DIR"; git config remote.origin.url | sed -e s/:.*//)
     local op=$1

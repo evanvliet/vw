@@ -36,6 +36,15 @@
 # -
 getpass() # use passsword db
 {
+    # +
+    # Options:
+    #   + `-a` add args to passwords
+    #   + `-e` edit password list
+    #   + `-i` initialize
+    #   + `-m` merge conflicts
+    #   + `-n` encode with new key
+    #   + `-p` generate new password
+    # -
     pushd "$VW_DIR/tools/data" > /dev/null
     local PAD=${PAD:-$(hostid)jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQ4V}
     case ${1:--h} in

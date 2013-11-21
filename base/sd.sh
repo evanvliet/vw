@@ -1,15 +1,17 @@
 #!/bin/bash
 # +
 # Nicknames for directory navigation.  Use `sd nick` to cd to folder
-# by nickname `nick`.  Options:
-#   + `-e` edit db, using vi
-#   + `-l` tail db, list last added nicknames
-#   + `-v` expand nick, for use in other scripts
-# If `nick` is new, save it for the current directory. Without a
-# nickname argument, `sd` lists known nicknames.
+# by nickname `nick`.  If `nick` is new, save it for the current
+# directory. Without a nickname argument, list known nicknames.
 # -
 sd() # set directory via nicknames
 {
+    # +
+    # Options:
+    #   + `-e` edit db, using vi
+    #   + `-l` tail db, list last added nicknames
+    #   + `-v` expand `nick`, for use in other scripts
+    # -
     local SD_LIST=~/.sdrc
     local SD_DIR
     test -f $SD_LIST || > $SD_LIST
