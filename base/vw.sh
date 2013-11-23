@@ -44,7 +44,6 @@ vwman() # recap info
     _vw_md > "$VW_DIR"/INDEX.md
     sed -e '/^##* /i\
 
-            s/sh](.*/sh]/
             s/^##* /# /
             s/^*//' \
         "$VW_DIR"/README.md \
@@ -52,10 +51,19 @@ vwman() # recap info
 }
 vwsync() # commit new stuff and get latest
 {
-    _vw_dot
-    pushd "$VW_DIR" &> /dev/null
-    trap 'popd &> /dev/null' RETURN INT EXIT
-    if test "$(git status -s -uno)" ; then
+    # check dot files
+    pushd $HOME > /dev/null
+    local dotdir=${VW_DIR#~/}/dot
+    local dotfiles=$(ls -A "$dotdir")
+    for i in $dotfiles
+    do
+        test $i -ef "$dotdir/$i" && continue
+        ln -iv "$dotdir/$i" .
+    done
+    # prompt for comment if adding new stuff
+    cd "$VW_DIR" > /dev/null
+    local mods=$(git status -s -uno)
+    if test "$mods" ; then
         git diff
         git status -s
         read -p 'comment? '
@@ -63,9 +71,9 @@ vwsync() # commit new stuff and get latest
         git commit -a -m "$REPLY"
     fi
     git pull
-    git push
+    test "$mods" && git push
     _vw_reload
-    _vw_dot
+    popd > /dev/null
 }
 huh() # melange of type typeset alias info
 {
@@ -131,19 +139,6 @@ _vw_index()
         /^\-\-\-/s/^\-* /* /
     ' | $PAGER
     popd &> /dev/null
-}
-_vw_dot()
-{
-    # sync dot files
-    pushd "$HOME" &> /dev/null
-    trap 'popd &> /dev/null' RETURN EXIT INT
-    for i in $(ls -A "$VW_DIR/dot")
-    do
-        local old=$i new="$VW_DIR/dot/$i"
-        cmp -s "$new" $i && continue
-        test "$old" -nt "$new" && old="$VW_DIR/dot/$i" new=$i
-        cp -vi "$new" "$old"
-    done
 }
 _vw_complete()
 {

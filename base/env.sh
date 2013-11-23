@@ -10,8 +10,8 @@ export PS4='${LINENO} ' # debug info
 export MANPAGER='less -csr' # manpager opts
 export PYTHONSTARTUP=~/.pythonrc.py # python startup
 export VISUAL=vi # default editor
-test "${CDPATH##*$VW_DIR*}" ||
-CDPATH=$CDPATH:$VW_DIR # include vw in CDPATH
+test "$CDPATH" || CDPATH="$HOME" # default
+grep -q "$VW_DIR" <<< "$CDPATH" || CDPATH=$CDPATH:$VW_DIR # include vw in CDPATH
 shopt -s histappend
 ep() { # expand paths
     list_parts() {

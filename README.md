@@ -72,7 +72,7 @@ Keeps configuration files in a directory, typically `vw`, set in
 Most effective when sharing configuration via a base machine holding a
 bare repository.  Then, on the leaf machines, the usual *git* pulls,
 commits, and pushes from the *vw* directory keep machines in sync.
-Also, `vwsync` does a commit, pull, push and sync of dot files in
+Also, `vwsync` does a commit, pull, push and check of dot files in
 one swell foop.
 
 In addition to `vwsync`, there are these:
