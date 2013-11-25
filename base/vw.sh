@@ -6,7 +6,7 @@ vw() # edit the definition of a function, alias or export
 {
     test "$1" || { _vw_index ; return ; }
     test -t 1 || { echo output is not a terminal ; return ; }
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     _vw_tag
     if grep -q "^$1	" tags ; then
         vi -t $1
@@ -88,12 +88,12 @@ huh() # melange of type typeset alias info
 vwfiles() # print config files in order sourced
 {
     # really for internal use but needed in vw profile
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     local FILES=base/*.sh
     test -s $(_vw_osys) && FILES="$FILES $(_vw_osys)"
     test -s $(_vw_host) && FILES="$FILES $(_vw_host)"
     echo $FILES
-    popd &> /dev/null
+    popd > /dev/null
 }
 _vw_tag()
 {
@@ -115,22 +115,22 @@ _vw_osys()
 _vw_reload()
 {
     # load source files and build tags
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     _vw_tag
-    popd &> /dev/null
+    popd > /dev/null
     . "$HOME/.bashrc"
 }
 _vw_md()
 {
     # generate markdown
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     tools/shtags.py -m $(vwfiles)
-    popd &> /dev/null
+    popd > /dev/null
 }
 _vw_index()
 {
     # print index of defintions
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     local PAGER="pr -t -2 -w${COLUMNS:-80}"
     test -t 1 || PAGER=cat
     tools/shtags.py -s $(vwfiles) | sed '
@@ -138,16 +138,16 @@ _vw_index()
 
         /^\-\-\-/s/^\-* /* /
     ' | $PAGER
-    popd &> /dev/null
+    popd > /dev/null
 }
 _vw_complete()
 {
     # arg 2 is the guy to search for in tags db
     # return list of matches as per bash completion
-    pushd "$VW_DIR" &> /dev/null
+    pushd "$VW_DIR" > /dev/null
     _vw_tag
     COMPREPLY=($(sed -n "/^$2/s/	.*//p" tags))
-    popd &> /dev/null
+    popd > /dev/null
 }
 complete -o bashdefault -F _vw_complete huh
 complete -o bashdefault -F _vw_complete vw

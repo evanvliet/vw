@@ -60,7 +60,6 @@ ea() # echo all
     # -
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
-    trap 'test "$EATMP" && rm -f $EATMP*' RETURN
     ls > $EATMP
     test "$@" && ls -d "$@" > $EATMP
     test -s $EATMP || return
@@ -68,6 +67,7 @@ ea() # echo all
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed '$d' $EATMP.1 > $EATMP.2
     echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
+    rm -f $EATMP*
 }
 num() # phone numbers
 {
@@ -88,16 +88,16 @@ fm() # fm with history
 {
     # +
     # A file management tool for maintaining comments about files. 
-    # Lists files with stored comments.  Options:
-    #   + `-a` update comments for all files
-    #   + `-s` update comments for some files, those without comments
+    # Just lists files with comments; use `-a` or `-s` to update.
     # When prompting for comments, *fm* recognizes one letter
     # responses as commands to inspect the file, or delete it, or go
     # back to the previous one.  The one letter `h` response gives
     # usage.  A trailing list of file names restricts update or report
     # to just those files.  Note passing of HISTFILE and COLUMNS so
     # *fm* can pick up history data and format data for the current
-    # screen size.
+    # screen size.  Options:
+    #   + `-a` update comments for all files
+    #   + `-s` update comments for some files, those without comments
     # -
     HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
 }

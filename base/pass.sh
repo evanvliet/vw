@@ -3,36 +3,17 @@
 # Do `getpass google` to get your google password.  Prints matching
 # lines from a password list and copies the last word into the
 # clipboard.  Does not print the last word, presumably the password,
-# as a security precaution.  Use `getpass -e` to edit the password
-# list.  Example:
+# as a security precaution.
+#
+# Use `getpass -e` to edit the password list.  Example:
 #
 #     www.google.com myname mypassword
 #     icpu626 root 789sdf987
 #     www.chase.com visa autopay mychaseid mychasepassword
 #
-# Note that you can encrypt the data for added security, using the `-n`
-# option to set the key.  It caches this key, encrpyting with `hostid`
-# to foil decryption by just copying files to another machine.  If you
-# do encrypt the password data, you will have to enter the key once on
-# each machine.
-#
-# NB: this is a homebrew solution and not vetted for password
-# security.  Use at your own risk.
-#
-# If changes are made on different machines, collisions can occur.
-# Use `getpass -m` to launch *vi* on a merged version.
-#
-# To revert to plaintext storage, use `getpass -i` to reset, then add
-# your previous data.
-#
 # Adding a keyword, *e.g.*, *autopay*, enables retrieving all password
 # data associated with that keyword.  This helps if you lose a credit
 # card, and need to update web sites.
-#
-# To generate a password, use `getpass -p`.  Pass an option, *e.g.*
-# `large`, `small` or `right` to get one that's too big, too
-# small, or just right.  Also accepts integer options for a custom
-# mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 # -
 getpass() # use passsword db
 {
@@ -40,10 +21,23 @@ getpass() # use passsword db
     # Options:
     #   + `-a` add args to passwords
     #   + `-e` edit password list
-    #   + `-i` initialize
-    #   + `-m` merge conflicts
-    #   + `-n` encode with new key
-    #   + `-p` generate new password
+    #   + `-i` initialize.  To revert to plaintext storage, use `getpass -i`
+    #     to reset, then add your previous data.
+    #   + `-m` merge conflicts.  If changes are made on different machines,
+    #     collisions can occur.  Use `getpass -m` to launch *vi* on a merged
+    #     version.
+    #   + `-n` encode with new key.  Note that you can encrypt the
+    #     data for added security, using the `-n` option to set the
+    #     key.  It caches this key, encrpyting with `hostid` to foil
+    #     decryption by just copying files to another machine.  If you
+    #     do encrypt the password data, you will have to enter the key
+    #     once on each machine.  **NB**: this is a homebrew solution and
+    #     not vetted for password security.  Use at your own risk.
+    #   + `-p` generate new password.  To generate a password, use
+    #     `getpass -p`.  Pass an option, *e.g.* `large`, `small` or `right`
+    #     to get one that's too big, too small, or just right.  Also accepts
+    #     integer options for a custom mix of letters, digts and punctation.
+    #     See *tools/mk_passwd.py*.
     # -
     pushd "$VW_DIR/tools/data" > /dev/null
     local PAD=${PAD:-$(hostid)jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQ4V}

@@ -32,16 +32,16 @@ that were not shown.
 * `findext`  find by extension.
 * `fm`  fm with history.
 A file management tool for maintaining comments about files.
-Lists files with stored comments.  Options:
-  + `-a` update comments for all files
-  + `-s` update comments for some files, those without comments
+Just lists files with comments; use `-a` or `-s` to update.
 When prompting for comments, *fm* recognizes one letter
 responses as commands to inspect the file, or delete it, or go
 back to the previous one.  The one letter `h` response gives
 usage.  A trailing list of file names restricts update or report
 to just those files.  Note passing of HISTFILE and COLUMNS so
 *fm* can pick up history data and format data for the current
-screen size.
+screen size.  Options:
+  + `-a` update comments for all files
+  + `-s` update comments for some files, those without comments
 * `h`  history.
 * `llt`  ls latest.
 * `lsc`  printable chars.
@@ -76,9 +76,10 @@ collect common seequences.
 
 ###### [base/isp.sh](base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good
-to have on an isp, ergo the name.
+to have on an isp, ergo the name.  The subcommand covers copying files,
+running a shell, using git to create, clone repositiories.
 * `isp`  interact with base machine.
-Options:
+Subcommands:
   + `get` copy file from xfer folder
   + `put` copy file to xfer folder
   + `sh` make ssh connection with isp
@@ -90,44 +91,38 @@ Options:
 Do `getpass google` to get your google password.  Prints matching
 lines from a password list and copies the last word into the
 clipboard.  Does not print the last word, presumably the password,
-as a security precaution.  Use `getpass -e` to edit the password
-list.  Example:
+as a security precaution.
+
+Use `getpass -e` to edit the password list.  Example:
 
     www.google.com myname mypassword
     icpu626 root 789sdf987
     www.chase.com visa autopay mychaseid mychasepassword
 
-Note that you can encrypt the data for added security, using the `-n`
-option to set the key.  It caches this key, encrpyting with `hostid`
-to foil decryption by just copying files to another machine.  If you
-do encrypt the password data, you will have to enter the key once on
-each machine.
-
-NB: this is a homebrew solution and not vetted for password
-security.  Use at your own risk.
-
-If changes are made on different machines, collisions can occur.
-Use `getpass -m` to launch *vi* on a merged version.
-
-To revert to plaintext storage, use `getpass -i` to reset, then add
-your previous data.
-
 Adding a keyword, *e.g.*, *autopay*, enables retrieving all password
 data associated with that keyword.  This helps if you lose a credit
 card, and need to update web sites.
-
-To generate a password, use `getpass -p`.  Pass an option, *e.g.*
-`large`, `small` or `right` to get one that's too big, too
-small, or just right.  Also accepts integer options for a custom
-mix of letters, digts and punctation.  See *tools/mk_passwd.py*.
 * `getpass`  use passsword db.
 Options:
   + `-a` add args to passwords
   + `-e` edit password list
-  + `-i` initialize
-  + `-m` merge conflicts
-  + `-n` encode with new key
-  + `-p` generate new password
+  + `-i` initialize.  To revert to plaintext storage, use `getpass -i`
+    to reset, then add your previous data.
+  + `-m` merge conflicts.  If changes are made on different machines,
+    collisions can occur.  Use `getpass -m` to launch *vi* on a merged
+    version.
+  + `-n` encode with new key.  Note that you can encrypt the
+    data for added security, using the `-n` option to set the
+    key.  It caches this key, encrpyting with `hostid` to foil
+    decryption by just copying files to another machine.  If you
+    do encrypt the password data, you will have to enter the key
+    once on each machine.  **NB**: this is a homebrew solution and
+    not vetted for password security.  Use at your own risk.
+  + `-p` generate new password.  To generate a password, use
+    `getpass -p`.  Pass an option, *e.g.* `large`, `small` or `right`
+    to get one that's too big, too small, or just right.  Also accepts
+    integer options for a custom mix of letters, digts and punctation.
+    See *tools/mk_passwd.py*.
 
 ###### [base/scrap.sh](base/scrap.sh)
 Sets up `s` as a scrap file.  For doing stuff like `ls > $s` and

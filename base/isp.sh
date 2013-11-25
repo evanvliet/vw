@@ -1,12 +1,13 @@
 #!/bin/bash
 # +
 # Use base machine, *.i.e.*, machine hosting your configuration.  Good
-# to have on an isp, ergo the name.
+# to have on an isp, ergo the name.  The subcommand covers copying files,
+# running a shell, using git to create, clone repositiories.
 # -
 isp() # interact with base machine
 {
     # +
-    # Options:
+    # Subcommands:
     #   + `get` copy file from xfer folder
     #   + `put` copy file to xfer folder
     #   + `sh` make ssh connection with isp
