@@ -8,7 +8,7 @@
 # which are os dependent and set up in os-specific config file.
 # -
 export s=~/.scrap # scrap file
-dots() { . $s "$@" ; } # source scrap
+dots() { source $s "$@" ; } # source scrap
 ts() { cat $s ; } # type scrap
 vis() { vi $s ; } # vi scrap
 wcs() { wcopy < $s ; } # copy clipboard to scrap

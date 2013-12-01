@@ -42,7 +42,7 @@ getpass() # use passsword db
     #     [mk_passwd.py](tools/mk_passwd.py).
     # -
     pushd "$VW_DIR/tools/data" > /dev/null
-    local PAD=${PAD:-$(hostid)jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQ4V}
+    local PAD=${PAD:-jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQzHtnpzntuNEO}
     case ${1:--h} in
     -a) # append to db
         shift
@@ -91,10 +91,12 @@ getpass() # use passsword db
         wpaste
         ;;
     --key) # internal get key
-        openssl des3 -k $(hostid) -d < getpass.key | sed -e s/$PAD//
+        local data=${PAD::10}
+        openssl des3 -k $(hostid) -d < getpass.key | sed -e s/$data.*//
         ;;
     --cache) # internal cache key
-        openssl des3 -k $(hostid) <<< "$PAD$2" > getpass.key
+        local data="$2$PAD$PAD"
+        openssl des3 -k $(hostid) <<< "${data::100}" > getpass.key
         ;;
     --encode) # internal encrypt passwords in db
         test ! -s getpass.key && cp passwords getpass.db ||

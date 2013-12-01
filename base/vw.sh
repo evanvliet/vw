@@ -10,7 +10,7 @@ vw() # edit the definition of a function, alias or export
     _vw_tag
     if grep -q "^$1	" tags ; then
         vi -t $1
-        . "$HOME/.bashrc"
+        source "$HOME/.bashrc"
     else
         local LOC="$(command -v $1 2> /dev/null)" # general command
         test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
@@ -27,17 +27,17 @@ vw() # edit the definition of a function, alias or export
 vwh() # vi host config
 {
     vi "$VW_DIR/$(_vw_host)"
-    . "$HOME/.bashrc"
+    source "$HOME/.bashrc"
 }
 vwo() # vi os config
 {
     vi "$VW_DIR/$(_vw_osys)"
-    . "$HOME/.bashrc"
+    source "$HOME/.bashrc"
 }
 vwp() # vi vw profile
 {
     vi -o $HOME/.bashrc "$VW_DIR/profile"
-    . "$HOME/.bashrc"
+    source "$HOME/.bashrc"
 }
 vwman() # recap info
 {
@@ -71,7 +71,7 @@ vwsync() # commit new stuff and get latest
     fi
     git pull
     test "$mods" && git push
-    . "$HOME/.bashrc"
+    source "$HOME/.bashrc"
     popd > /dev/null
 }
 huh() # melange of type typeset alias info
