@@ -12,6 +12,9 @@ Usual read of files from command line args or stdin if none.
 
 import sys
 import curses.ascii
+label = [curses.ascii.controlnames[i] for i in range(32)]
+label.extend([curses.ascii.unctrl(i) for i in range(33, 128)])
+label.extend(['\\%03o' % i for i in range (129, 255)])
 
 
 def charcnt(f, char_counts):
@@ -38,11 +41,5 @@ if __name__ == '__main__':
         sys.exit(1)
 
     for (code, count) in enumerate(char_counts):
-        if count > 0:
-            label = curses.ascii.unctrl(code)
-            if code <= 32:
-                label = curses.ascii.controlnames[code]
-            if code >= 128:
-                label = '\\%03o' % code
-            print '%7d %-4s' % (count, label)
-    sys.exit(0)
+        if count:
+            print '%7d %-4s' % (count, label[code])

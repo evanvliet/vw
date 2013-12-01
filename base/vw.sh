@@ -10,7 +10,7 @@ vw() # edit the definition of a function, alias or export
     _vw_tag
     if grep -q "^$1	" tags ; then
         vi -t $1
-        _vw_reload
+        . "$HOME/.bashrc"
     else
         local LOC="$(command -v $1 2> /dev/null)" # general command
         test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
@@ -27,17 +27,17 @@ vw() # edit the definition of a function, alias or export
 vwh() # vi host config
 {
     vi "$VW_DIR/$(_vw_host)"
-    _vw_reload
+    . "$HOME/.bashrc"
 }
 vwo() # vi os config
 {
     vi "$VW_DIR/$(_vw_osys)"
-    _vw_reload
+    . "$HOME/.bashrc"
 }
 vwp() # vi vw profile
 {
-    vi -o ~/.bashrc "$VW_DIR/profile"
-    _vw_reload
+    vi -o $HOME/.bashrc "$VW_DIR/profile"
+    . "$HOME/.bashrc"
 }
 vwman() # recap info
 {
@@ -52,10 +52,9 @@ vwman() # recap info
 vwsync() # commit new stuff and get latest
 {
     # check dot files
-    pushd $HOME > /dev/null
+    pushd "$HOME" > /dev/null
     local dotdir=${VW_DIR#~/}/dot
-    local dotfiles=$(ls -A "$dotdir")
-    for i in $dotfiles
+    for i in $(ls -A "$dotdir")
     do
         test $i -ef "$dotdir/$i" && continue
         ln -iv "$dotdir/$i" .
@@ -72,7 +71,7 @@ vwsync() # commit new stuff and get latest
     fi
     git pull
     test "$mods" && git push
-    _vw_reload
+    . "$HOME/.bashrc"
     popd > /dev/null
 }
 huh() # melange of type typeset alias info
@@ -88,19 +87,19 @@ huh() # melange of type typeset alias info
 vwfiles() # print config files in order sourced
 {
     # really for internal use but needed in vw profile
-    pushd "$VW_DIR" > /dev/null
+    cd "$VW_DIR"
     local FILES=base/*.sh
     test -s $(_vw_osys) && FILES="$FILES $(_vw_osys)"
     test -s $(_vw_host) && FILES="$FILES $(_vw_host)"
     echo $FILES
-    popd > /dev/null
+    cd - > /dev/null
 }
 _vw_tag()
 {
     # tags for vw scripts
     local FILES=tags
     test -s tags && FILES=$(find $(vwfiles) -newer tags)
-    test "$FILES" && tools/shtags.py -t $(vwfiles) > tags
+    test "$FILES" && tools/shtags.py -t ~/.bashrc $(vwfiles) > tags
 }
 _vw_host()
 {
@@ -111,14 +110,6 @@ _vw_osys()
 {
     # OS config file
     echo os/$(uname | sed -e 's/_.*//').sh
-}
-_vw_reload()
-{
-    # load source files and build tags
-    pushd "$VW_DIR" > /dev/null
-    _vw_tag
-    popd > /dev/null
-    . "$HOME/.bashrc"
 }
 _vw_md()
 {

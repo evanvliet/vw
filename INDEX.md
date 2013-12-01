@@ -119,10 +119,12 @@ Options:
     once on each machine.  **NB**: this is a homebrew solution and
     not vetted for password security.  Use at your own risk.
   + `-p` generate new password.  To generate a password, use
-    `getpass -p`.  Pass an option, *e.g.* `large`, `small` or `right`
-    to get one that's too big, too small, or just right.  Also accepts
-    integer options for a custom mix of letters, digts and punctation.
-    See *tools/mk_passwd.py*.
+    `getpass -p`.  Pass an option, *e.g.* `large` or `small`, to
+    get a longer password, or a shorter and simpler one.  The
+    default is to satisfy most common requirements of a number,
+    a punctuation, and mixed case.  Also accepts integer options
+    for a custom mix of letters, digts and punctation.  See
+    [mk_passwd.py](tools/mk_passwd.py).
 
 ###### [base/scrap.sh](base/scrap.sh)
 Sets up `s` as a scrap file.  For doing stuff like `ls > $s` and

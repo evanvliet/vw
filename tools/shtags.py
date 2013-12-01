@@ -20,7 +20,7 @@ import optparse
 
 reExport = re.compile(r'^export ([A-Za-z]\w*)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
-reAlias = re.compile(r'^alias ([\.A-Za-z][\-\.\w]*)=.*# (.*)')
+reAlias = re.compile(r'^([ \t]*alias )([\.A-Za-z][\-\.\w]*)=(.*)')
 reBlockStart = re.compile(r"^ *# \+")
 reBlockEnd = re.compile(r"^ *# \-")
 
@@ -81,9 +81,15 @@ def get_defs(f):
 
         match = reAlias.match(line)
         if match:
-            deftag = match.group(1)
-            re = r'^alias %s=' % match.group(1)
-            rv[deftag] = TagInfo(ti, match.group(2), re)
+            deftag = match.group(2)
+            re = r'^%s%s=' % (match.group(1), match.group(2))
+            comment = match.group(3)
+            k = comment.find('# ')
+            if k:
+                comment = comment[k+2:]
+            if len(comment) > 20:
+                comment = comment[:15] + ' ...'
+            rv[deftag] = TagInfo(ti, comment, re)
             continue
 
         match = reExport.match(line)
@@ -125,8 +131,9 @@ def make_md(xdefs, fns):
                 if fn.description:
                     print '\n'.join(fn.description)
             print '* `%s` ' % t,
-            end_dot = ('' if ti.comment[-1] == '.' else '.')
-            print '%s%s' % (ti.comment, end_dot)
+            comment = ti.comment or 'from %s' % ti.fn.fn
+            end_dot = ('' if comment[-1] == '.' else '.')
+            print '%s%s' % (comment, end_dot)
             if ti.description:
                 print '\n'.join(ti.description)
 
