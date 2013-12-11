@@ -70,8 +70,6 @@ collect common seequences.
 * `ci`  git checkin does commit pull and push in one swell foop.
 * `co`  per rcs and old times just git checkout.
 * `gist`  root folder, remote url, and current status.
-* `gitbr`  show branch name or delete with -d.
-* `lastdiff`  last diff for a file.
 * `setconf`  set up a default .gitconfig.
 
 ###### [base/isp.sh](base/isp.sh)

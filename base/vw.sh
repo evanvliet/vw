@@ -10,7 +10,7 @@ vw() # edit the definition of a function, alias or export
     _vw_tag
     if grep -q "^$1	" tags ; then
         vi -t $1
-        source "$HOME/.bashrc"
+        source "$VW_DIR/profile"
     else
         local LOC="$(command -v $1 2> /dev/null)" # general command
         test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
@@ -27,17 +27,17 @@ vw() # edit the definition of a function, alias or export
 vwh() # vi host config
 {
     vi "$VW_DIR/$(_vw_host)"
-    source "$HOME/.bashrc"
+    source "$VW_DIR/profile"
 }
 vwo() # vi os config
 {
     vi "$VW_DIR/$(_vw_osys)"
-    source "$HOME/.bashrc"
+    source "$VW_DIR/profile"
 }
 vwp() # vi vw profile
 {
     vi -o $HOME/.bashrc "$VW_DIR/profile"
-    source "$HOME/.bashrc"
+    source "$VW_DIR/profile"
 }
 vwman() # recap info
 {
@@ -52,26 +52,27 @@ vwman() # recap info
 vwsync() # commit new stuff and get latest
 {
     # check dot files
-    pushd "$HOME" > /dev/null
-    local dotdir=${VW_DIR#~/}/dot
-    for i in $(ls -A "$dotdir")
+    pushd ${VW_DIR#~/}/dot > /dev/null
+    cd
+    for i in $(ls -A "$OLDPWD")
     do
-        test $i -ef "$dotdir/$i" && continue
-        ln -iv "$dotdir/$i" .
+        test $i -ef "$OLDPWD/$i" && continue
+        cmp -s $i "$OLDPWD/$i" && ln -f "$OLDPWD/$i" . && continue
+        ln -iv "$OLDPWD/$i" .
     done
-    # prompt for comment if adding new stuff
+    # prompt for comment if committing changes
     cd "$VW_DIR" > /dev/null
-    local mods=$(git status -s -uno)
-    if test "$mods" ; then
+    local REPLY=""
+    test "$(git status -s -uno)" && {
         git diff
-        git status -s
-        read -p 'comment? '
-        test "$REPLY" || return
-        git commit -a -m "$REPLY"
-    fi
+        REPLY="$*"
+        test "$REPLY" || read -p 'comment? '
+        test "$REPLY" && git commit -a -m "$REPLY"
+    }
     git pull
-    test "$mods" && git push
-    source "$HOME/.bashrc"
+    test "$REPLY" && git push
+
+    # source ./profile
     popd > /dev/null
 }
 huh() # melange of type typeset alias info

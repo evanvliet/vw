@@ -16,6 +16,7 @@ import re
 import sys
 import optparse
 
+
 # Patterns that match definitions and block quotes.
 
 reExport = re.compile(r'^export ([A-Za-z]\w*)=.*# (.*)')
@@ -27,12 +28,7 @@ reBlockEnd = re.compile(r"^ *# \-")
 
 class TagInfo:  # hold info for a tag to create tags file
 
-    def __init__(
-        self,
-        fn,
-        comment='',
-        re='',
-        ):
+    def __init__( self, fn, comment='', re='',):
         self.fn = fn  # TagInfo object for file
         self.comment = comment  # from end of line
         self.re = re  # regular expression to use in tags
@@ -139,7 +135,7 @@ def make_md(xdefs, fns):
 
 
 def make_summary(xdefs, fns):
-    """Plain text summarty from comments."""
+    """Plain text summary from comments."""
 
     fn = None
     for f in fns:
@@ -153,33 +149,23 @@ def make_summary(xdefs, fns):
 
 if __name__ == '__main__':
 
-    op = optparse.OptionParser()  # process command line
-    oa = op.add_option
-    oa('-m', dest='md', help='generate md description',
-       action='store_true')
-    oa('-t', dest='tags', help='tag output', action='store_true')
-    oa('-s', dest='summary', help='summary index', action='store_true')
-
-
     class opts:
-
         md = False
         tags = False
         summary = False
 
+    op = optparse.OptionParser()
+    op.add_option('-m', dest='md', help='md description', action='store_true')
+    op.add_option('-t', dest='tags', help='tag output', action='store_true')
+    op.add_option('-s', dest='summary', help='summary index', action='store_true')
+    opts, args = op.parse_args(sys.argv[1:], opts)
 
-    (opts, args) = op.parse_args(sys.argv[1:], opts)
-
-    xdefs = {}  # extracted definitions
+    xdefs = {}  # dictionary of definitions
     fns = []  # list of filenames
-    for i in args:
-        if os.path.exists(i):
-            xdefs.update(get_defs(i))  # accumulate tag info
-            fns.append(i)
+    for i in filter(os.path.exists, args):
+        xdefs.update(get_defs(i))  # accumulate tag info
+        fns.append(i)
 
-    if opts.md:
-        make_md(xdefs, fns)
-    if opts.tags:
-        make_tags(xdefs)
-    if opts.summary:
-        make_summary(xdefs, fns)
+    if opts.md:      make_md(xdefs, fns)
+    if opts.tags:    make_tags(xdefs)
+    if opts.summary: make_summary(xdefs, fns)

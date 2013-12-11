@@ -44,7 +44,7 @@ isp() # interact with base machine
         local REPOS=git_root/$(basename $PWD).git
         git init
         git add *
-        git ci -m "$REPOS initial commit via isp git"
+        git commit -a -m "$REPOS initial commit via isp git"
         ssh $ISP_HOST "mkdir $REPOS; cd $REPOS; git --bare init"
         git remote add origin $ISP_HOST:$REPOS
         git push -u origin master

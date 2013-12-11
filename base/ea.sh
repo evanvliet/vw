@@ -33,7 +33,7 @@ don () # do something a number of times
 xv () # trace execution of bash script or function
 {
     # print separation
-    don 5 echo
+    don 5
     # set verbosity and trap restoration
     test -f $1 && bash -xv $@ && return
     trap 'set +xv' ERR EXIT INT RETURN

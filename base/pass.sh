@@ -42,78 +42,40 @@ getpass() # use passsword db
     #     [mk_passwd.py](tools/mk_passwd.py).
     # -
     pushd "$VW_DIR/tools/data" > /dev/null
-    local PAD=${PAD:-jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQzHtnpzntuNEO}
+    local PAD=jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQzHtnpzntuNEO
     case ${1:--h} in
     -a) # append to db
         shift
-        getpass --decode
+        _gp_decode
         echo $* >> passwords
-        getpass --encode
+        _gp_encode
         ;;
     -e) # edit db - decode, edit, encrypt
-        getpass --decode
+        _gp_decode
         vi passwords
-        getpass --encode
+        _gp_encode
         ;;
     -i) # init db
-        rm -f getpass.key getpass.db
-        echo google google.pass > passwords
-        getpass --encode
+        echo google google.pass > getpass.db
         ;;
     -m) # merge handling, use our copy but prepend any extra
-        test -s pass.new && cp pass.new pass.merge || { # use pass.new
-            # or git version
-            git co --theirs getpass.db
-            getpass --decode
-            mv passwords pass.merge
-        }
-        getpass --decode
-        cp passwords pass.tmp
-        diff passwords pass.merge | sed -n '/^> /s//+ /p' > getpass.db
-        cat getpass.db pass.tmp > passwords
-        cmp passwords pass.tmp && echo no change && return
-        vi passwords
-        read -p 'update? '
-        test -z "${REPLY##y*}" -a -s pass.new && cp passwords pass.new
-        getpass --encode
+        git checkout --theirs getpass.db
+        _gp_decode
+        mv passwords pass.merge
+        _gp_merge pass.merge
         ;;
     -n) # encrypt with new key
         shift
         REPLY="$*"
         test "$REPLY" || read -p 'new key: '
-        getpass --decode
-        getpass --cache "$REPLY"
-        getpass --encode
+        _gp_decode
+        _gp_cache "$REPLY"
+        _gp_encode
         ;;
     -p) # password generation
         shift
         "$VW_DIR/tools/mk_passwd.py" $* | wcopy
         wpaste
-        ;;
-    --key) # internal get key
-        local data=${PAD::10}
-        openssl des3 -k $(hostid) -d < getpass.key | sed -e s/$data.*//
-        ;;
-    --cache) # internal cache key
-        local data="$2$PAD$PAD"
-        openssl des3 -k $(hostid) <<< "${data::100}" > getpass.key
-        ;;
-    --encode) # internal encrypt passwords in db
-        test ! -s getpass.key && cp passwords getpass.db ||
-        openssl des3 -k "$(getpass --key)" < passwords > getpass.db
-        rm -f passwords
-        ;;
-    --decode) # internal decrypt db into passwords
-        test ! -s getpass.key && cp getpass.db passwords ||
-        openssl des3 -k "$(getpass --key)" -d \
-            < getpass.db > passwords 2> /dev/null
-        while file passwords | grep -qv text ; do
-            read -p 'key: '
-            test "$REPLY" || break
-            getpass --cache "$REPLY"
-            openssl des3 -k "$(getpass --key)" -d \
-                < getpass.db > passwords 2> /dev/null
-        done
         ;;
     -*) # show help text
         sed 's/^  */  /' <<< 'getpass [ word | option ]
@@ -126,7 +88,7 @@ getpass() # use passsword db
             -p opt make password opt = [small | right | large]'
         ;;
     *) # default prints matching lines from db
-        getpass --decode
+        _gp_decode
         grep -i $1 passwords > pass.tmp
         # copy last word of last match to clipboard as password
         sed -n '$s/.*[; ]//p' pass.tmp | tr -d '\r\n' | wcopy
@@ -137,4 +99,47 @@ getpass() # use passsword db
     esac
     rm -f pass.tmp pass.merge
     popd > /dev/null
+}
+_gp_merge() # (internal) merge password versions
+{
+    git checkout --ours getpass.db # our version is the reference
+    _gp_decode
+    mv passwords pass.ours
+    diff pass.ours $1 | sed -n '/^> /s//+ /p' > pass.theirs
+    test -s pass.theirs && {
+        cat pass.theirs pass.ours > passwords
+        ed passwords
+        read -p 'update? '
+        grep -q ^y <<< "$REPLY" && _gp_encode
+    }
+    rm -f pass.theirs pass.ours passwords
+}
+_gp_key() # (internal) get key
+{
+    test -s getpass.key && openssl des3 -k $(hostid) -d \
+        < getpass.key | sed -e s/${PAD::10}.*//
+}
+_gp_cache() # (internal) cache key
+{
+    local data="$2$PAD$PAD"
+    openssl des3 -k $(hostid) <<< "${data::100}" > getpass.key
+}
+_gp_encode() # (internal) encrypt passwords in db
+{
+    cp passwords getpass.db
+    local KEY="$(_gp_key)"
+    test "$KEY" && openssl des3 -k "$KEY" < passwords > getpass.db
+    rm -f passwords
+}
+_gp_decode() # (internal) decrypt db into passwords
+{
+    cp getpass.db passwords
+    local KEY="$(_gp_key)"
+    until file passwords | grep -q text ; do
+        test "$KEY" || read -p 'key: ' KEY
+        test "$KEY" || break
+        _gp_cache "$KEY"
+        openssl des3 -d -k "$KEY" < getpass.db > passwords 2> /dev/null
+        KEY=
+    done
 }

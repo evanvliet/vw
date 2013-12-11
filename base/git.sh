@@ -6,36 +6,31 @@
 # -
 gist()  # root folder, remote url, and current status
 {
-    local gitroot="$(git rev-parse --show-toplevel 2> /dev/null)"
-    test "$gitroot" || return
-    echo $gitroot $(gitbr) from $(git config remote.origin.url)
+    test "$(git root)" || return
+    echo $(git root) from $(git config remote.origin.url) [$(git pbr)]
     git status -s -uno
-}
-gitbr() # show branch name or delete with -d
-{
-    git rev-parse --is-inside-work-tree &> /dev/null || return
-    test ! $1. = -d. && git rev-parse --abbrev-ref HEAD && return
-    git branch | grep -q $2 && git branch -D $2
-    test $2 = master || git push origin :$2
 }
 ci() # git checkin does commit pull and push in one swell foop
 {
-    git commit -a -m "${*:-ci from $(id -un)@$(hostname)}"
+    local REPLY=""
+    test "$(git status -s -uno)" && {
+        git diff
+        REPLY="$*"
+        test "$REPLY" || read -p 'comment? '
+        test "$REPLY" && git commit -a -m "$REPLY"
+    }
     git pull
-    git push
+    test "$REPLY" && git push
 }
 co() # per rcs and old times just git checkout
 {
     git checkout $*
 }
-lastdiff() # last diff for a file
-{
-    git diff $(git log --pretty=format:%H --skip=1 -1 $1) $1
-}
 setconf() # set up a default .gitconfig
 {
     local EMAIL=$(id -un)@$(hostname)
-    local NAME=$(awk -F: "/^$(whoami):/ { print \$5 ; }" /etc/passwd | sed s/,.*//)
+    local NAME="Eric C. Van Vliet"
+    test "$NAME" || NAME=$(awk -F: "/^$(whoami):/ { print \$5 ; }" /etc/passwd | sed s/,.*//)
     test "$NAME" || NAME=$(finger $(whoami) | sed -n 's/.*Name..//p')
     sed -e "s/^    //
             s/NAME/$NAME/
@@ -61,15 +56,19 @@ setconf() # set up a default .gitconfig
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
         trustctime = false
     [alias]
-        st = status
-        ci = commit -a
-        ad = add
-        ls = ls-files
         br = branch
-        co = checkout
-        lg = log -p
         di = diff
-        vdi = difftool -t meld
+        f = "!git ls-files | grep -i"
+        gr = grep -Ii
+        la = "!git config -l | grep alias | cut -c 7-"
+        lg = log -p
+        ls = ls-files
+        pbr = rev-parse --abbrev-ref HEAD
+        rmbr = "!f() { git branch -D $1 && git push origin :$1 ; } ; f"
+        root = rev-parse --show-toplevel
+        st = status
+        vdi = difftool -t gdiff
+        xlg = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ %ce" --decorate
     [push]
         default = matching
     [user]
