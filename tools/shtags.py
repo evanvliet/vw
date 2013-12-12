@@ -6,15 +6,14 @@ Create tags and documentation for shell scripts.
 Usage:
     shtags.py [-t | -m | -s ] file ....
     options:
-        -t tags
-        -m md index
+        -t tagfile
+        -m markdown index
         -s brief text
 """
 
 import os
 import re
 import sys
-import optparse
 
 
 # Patterns that match definitions and block quotes.
@@ -36,7 +35,6 @@ class TagInfo:  # hold info for a tag to create tags file
 
     def append(self, info):
         self.description.append(info)
-
 
 def get_defs(f):
     """Return dict of TagInfo's for each definition in f.
@@ -104,23 +102,29 @@ def get_defs(f):
     return rv
 
 
-def make_tags(xdefs):
+def get_fns(defs):
+    """Return function names for in dict of TagInfos.
+    """
+    return list(set(defs[x].fn.fn for x in defs))
+
+
+def make_tags(defs):
     """Write vi suitable tags file."""
 
     rv = []
-    for t in xdefs:
-        x = xdefs[t]
+    for t in defs:
+        x = defs[t]
         rv.append('%s\t%s\t/%s/' % (t, x.fn.fn, x.re))
     print '\n'.join(sorted(rv))
 
 
-def make_md(xdefs, fns):
-    """Block comments in md format."""
+def make_markdown(defs):
+    """Block comments in markdown format."""
 
     fn = None
-    for f in fns:
-        for t in sorted(x for x in xdefs if xdefs[x].fn.fn == f):
-            ti = xdefs[t]
+    for f in get_fns(defs):
+        for t in sorted(x for x in defs if defs[x].fn.fn == f):
+            ti = defs[t]
             if ti.fn != fn:
                 fn = ti.fn
                 print '\n###### [%s](%s)' % (fn.fn, fn.fn)
@@ -134,13 +138,13 @@ def make_md(xdefs, fns):
                 print '\n'.join(ti.description)
 
 
-def make_summary(xdefs, fns):
+def make_summary(defs):
     """Plain text summary from comments."""
 
     fn = None
-    for f in fns:
-        for t in sorted(x for x in xdefs if xdefs[x].fn.fn == f):
-            ti = xdefs[t]
+    for f in get_fns(defs):
+        for t in sorted(x for x in defs if defs[x].fn.fn == f):
+            ti = defs[t]
             if ti.fn != fn:
                 fn = ti.fn
                 print '-------- %s' % fn.fn
@@ -149,23 +153,17 @@ def make_summary(xdefs, fns):
 
 if __name__ == '__main__':
 
-    class opts:
-        md = False
-        tags = False
-        summary = False
+    defs = {}  # dictionary of definitions
+    for f in filter(os.path.exists, sys.argv[2:]):
+        defs.update(get_defs(f))  # accumulate tag info
 
-    op = optparse.OptionParser()
-    op.add_option('-m', dest='md', help='md description', action='store_true')
-    op.add_option('-t', dest='tags', help='tag output', action='store_true')
-    op.add_option('-s', dest='summary', help='summary index', action='store_true')
-    opts, args = op.parse_args(sys.argv[1:], opts)
+    make = { # options map to make operations
+        '-m': make_markdown,
+        '-t': make_tags,
+        '-s': make_summary }
 
-    xdefs = {}  # dictionary of definitions
-    fns = []  # list of filenames
-    for i in filter(os.path.exists, args):
-        xdefs.update(get_defs(i))  # accumulate tag info
-        fns.append(i)
-
-    if opts.md:      make_md(xdefs, fns)
-    if opts.tags:    make_tags(xdefs)
-    if opts.summary: make_summary(xdefs, fns)
+    try:
+        opt = sys.argv[1]
+        make[opt](defs)
+    except:
+        print __doc__

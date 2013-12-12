@@ -1,7 +1,6 @@
 #!/bin/bash
 # +
-# A collection of git shortcuts.  Some names influenced by other source
-# control systems.
+# A few git shortcuts.
 # -
 gist()  # root folder, remote url, and current status
 {

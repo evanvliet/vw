@@ -27,6 +27,7 @@
         lg = log -p
         ls = ls-files
         pbr = rev-parse --abbrev-ref HEAD
+        rh = reset --hard HEAD
         rmbr = "!f() { git branch -D $1 && git push origin :$1 ; } ; f"
         root = rev-parse --show-toplevel
         st = status

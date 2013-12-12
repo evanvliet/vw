@@ -108,7 +108,7 @@ _gp_merge() # (internal) merge password versions
     diff pass.ours $1 | sed -n '/^> /s//+ /p' > pass.theirs
     test -s pass.theirs && {
         cat pass.theirs pass.ours > passwords
-        ed passwords
+        vi passwords
         read -p 'update? '
         grep -q ^y <<< "$REPLY" && _gp_encode
     }
@@ -134,6 +134,7 @@ _gp_encode() # (internal) encrypt passwords in db
 _gp_decode() # (internal) decrypt db into passwords
 {
     cp getpass.db passwords
+    file passwords | grep -q text && rm -f getpass.key
     local KEY="$(_gp_key)"
     until file passwords | grep -q text ; do
         test "$KEY" || read -p 'key: ' KEY

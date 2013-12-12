@@ -4,21 +4,18 @@
 # -
 vw() # edit the definition of a function, alias or export
 {
-    test "$1" || { _vw_index ; return ; }
-    test -t 1 || { echo output is not a terminal ; return ; }
     pushd "$VW_DIR" > /dev/null
+    test -z "$1" && _vw_index && return
+    test ! -t 1 && echo output is not a terminal && return
     _vw_tag
-    if grep -q "^$1	" tags ; then
+    grep -q "^$1	" tags && {
         vi -t $1
         source "$VW_DIR/profile"
-    else
-        local LOC="$(command -v $1 2> /dev/null)" # general command
-        if file -L "$LOC" 2> /dev/null | grep -q text ; then
-            vi "$LOC"
-        else
-            echo $1 is ${LOC:-not found}
-        fi
-    fi
+        return
+    }
+    local LOC="$(command -v $1 2> /dev/null)"
+    file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
+    echo $1 is ${LOC:-not found}
     popd > /dev/null
 }
 vwh() # vi host config
@@ -69,7 +66,7 @@ vwsync() # commit new stuff and get latest
     git pull
     test "$REPLY" && git push
 
-    # source ./profile
+    source ./profile
     popd > /dev/null
 }
 huh() # melange of type typeset alias info
