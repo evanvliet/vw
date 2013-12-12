@@ -12,8 +12,8 @@ export PYTHONSTARTUP=~/.pythonrc.py # python startup
 export VISUAL=vi # default editor
 test "$CDPATH" || CDPATH="$HOME" # default
 grep -q "$VW_DIR" <<< "$CDPATH" || CDPATH=$CDPATH:$VW_DIR
-shopt -s histappend
 set -o vi
+shopt -s histappend
 _ep() { env | sed -ne /^$1=/s/$/:/p | tr '=:' '\n' ; }  # split into lines
 ep() # expand paths
 {

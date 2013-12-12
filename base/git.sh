@@ -5,7 +5,7 @@
 gist()  # root folder, remote url, and current status
 {
     test "$(git root)" || return
-    echo $(git root) from $(git config remote.origin.url) [$(git pbr)]
+    echo $(git pbr) from $(git config remote.origin.url) in $(git root)
     git status -s -uno
 }
 ci() # git checkin does commit pull and push in one swell foop
@@ -26,9 +26,8 @@ co() # per rcs and old times just git checkout
 }
 setconf() # set up a default .gitconfig
 {
-    local NAME=$(grep ^$(id -un): < /etc/passwd | tr ',' ':' | cut -d: -f5)
+    local NAME=$(grep ^$(id -un): /etc/passwd | tr , : | cut -d: -f5)
     local EMAIL=$(id -un)@$(hostname)
-    sed -e "s/NAME/$NAME/
-            s/EMAIL/$EMAIL/
-            s/^    //" < "$VW_DIR/tools/data/gitconfig" > ~/.gitconfig 
+    local TEMPLATE="$VW_DIR/tools/data/gitconfig"
+    sed -e "s/EMAIL/$EMAIL/" -e "s/NAME/$NAME/" "$TEMPLATE" > ~/.gitconfig 
 }

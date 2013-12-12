@@ -55,8 +55,8 @@ ea() # echo all
     # +
     # Actually echoes just as many file names as will fit on one line.
     # Good for getting a quick idea of the file population of a folder
-    # without spamming your screen.  Prints `+nn` to show more files
-    # that were not shown.
+    # without spamming your screen.  Prints `+nn` to show number of
+    # files that were not listed.
     # -
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
