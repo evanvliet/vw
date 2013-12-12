@@ -4,18 +4,19 @@
 # -
 vw() # edit the definition of a function, alias or export
 {
-    pushd "$VW_DIR" > /dev/null
     test -z "$1" && _vw_index && return
     test ! -t 1 && echo output is not a terminal && return
+    pushd "$VW_DIR" > /dev/null
     _vw_tag
-    grep -q "^$1	" tags && {
+    local LOC="$(command -v $1 2> /dev/null)"
+    if grep -q "^$1	" tags ; then
         vi -t $1
         source "$VW_DIR/profile"
-        return
-    }
-    local LOC="$(command -v $1 2> /dev/null)"
-    file -L "$LOC" 2> /dev/null | grep -q text && vi "$LOC" && return
-    echo $1 is ${LOC:-not found}
+    elif file -L "$LOC" 2> /dev/null | grep -q text ; then
+        vi "$LOC"
+    else
+        echo $1 is ${LOC:-not found}
+    fi
     popd > /dev/null
 }
 vwh() # vi host config

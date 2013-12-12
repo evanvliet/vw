@@ -103,9 +103,9 @@ def get_defs(f):
 
 
 def get_fns(defs):
-    """Return function names for in dict of TagInfos.
+    """Return file names for defs in dict of TagInfos.
     """
-    return list(set(defs[x].fn.fn for x in defs))
+    return sorted(set(defs[x].fn.fn for x in defs))
 
 
 def make_tags(defs):
