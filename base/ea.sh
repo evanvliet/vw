@@ -42,13 +42,13 @@ xv () # trace execution of bash script or function
 }
 textbelt() # text phone using textbelt
 {
-    local TB_INFO=/tmp/textbelt$$
+    local TB_=/tmp/textbelt$$
     local REPLY=$(num textbelt | sed -e 's/ .*//')
     test -z "$REPLY" && read -p 'phone number? '
-    curl http://textbelt.com/text -d number=$REPLY -d message="$*" &> $TB_INFO
-    grep -q 'success.:true' $TB_INFO && num -a $REPLY textbelt
-    grep success $TB_INFO
-    rm $TB_INFO
+    curl http://textbelt.com/text -d number=$REPLY -d message="$*" &> $TB_
+    grep -q 'success.:true' $TB_ && num -a $REPLY textbelt
+    grep success $TB_
+    rm $TB_
 }
 ea() # echo all
 {

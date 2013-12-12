@@ -121,7 +121,7 @@ _gp_key() # (internal) get key
 }
 _gp_cache() # (internal) cache key
 {
-    local data="$2$PAD$PAD"
+    local data="$1$PAD$PAD"
     openssl des3 -k $(hostid) <<< "${data::100}" > getpass.key
 }
 _gp_encode() # (internal) encrypt passwords in db

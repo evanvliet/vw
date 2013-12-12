@@ -13,13 +13,10 @@ vw() # edit the definition of a function, alias or export
         source "$VW_DIR/profile"
     else
         local LOC="$(command -v $1 2> /dev/null)" # general command
-        test "$LOC" || LOC=$(ls tools/$1* 2> /dev/null | sed 1q) # vw tool
         if file -L "$LOC" 2> /dev/null | grep -q text ; then
             vi "$LOC"
-        elif test "$LOC" ; then
-            echo $1 is $LOC
         else
-            echo no match for $1
+            echo $1 is ${LOC:-not found}
         fi
     fi
     popd > /dev/null

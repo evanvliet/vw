@@ -56,7 +56,6 @@ screen size.  Options:
 ###### [base/env.sh](base/env.sh)
 Exported variables and an environmnet pretty printer.
 * `MANPAGER`  manpager opts.
-* `PROMPT_COMMAND`  sets window title.
 * `PS1`  prompt.
 * `PS4`  debug info.
 * `PYTHONSTARTUP`  python startup.
@@ -65,8 +64,7 @@ Exported variables and an environmnet pretty printer.
 
 ###### [base/git.sh](base/git.sh)
 A collection of git shortcuts.  Some names influenced by other source
-control systems.  Some encapsulate git opts for convenience.  Others
-collect common seequences.
+control systems.
 * `ci`  git checkin does commit pull and push in one swell foop.
 * `co`  per rcs and old times just git checkout.
 * `gist`  root folder, remote url, and current status.
