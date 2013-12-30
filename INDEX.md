@@ -67,6 +67,7 @@ A few git shortcuts.
 * `ci`  git checkin does commit pull and push in one swell foop.
 * `co`  per rcs and old times just git checkout.
 * `gist`  root folder, remote url, and current status.
+* `github_create_repository`  as per github create repository quick setup.
 * `setconf`  set up a default .gitconfig.
 
 ###### [base/isp.sh](base/isp.sh)

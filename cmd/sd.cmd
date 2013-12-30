@@ -10,7 +10,7 @@ if .%1.==.. (
     goto :eof
 )
 
-type "%SD_RC%" | sed -n -e "/^%1 /s/.*  //p" | cygpath -wf - | sed -e "s/^/CD /" > %SD_TMP%
+sed -n -e "/^%1 /s/.*  //p" < "%SD_RC%" | cygpath -wf - | sed -e "s/^/CD /" > %SD_TMP%
 call %SD_TMP%
 grep -q CD %SD_TMP%
 if errorlevel 1 type "%SD_RC%" | sed -n -e "/^%1/s/ .*//p"

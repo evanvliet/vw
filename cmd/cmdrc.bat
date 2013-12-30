@@ -1,5 +1,12 @@
-@rem add cygwin and some shortcuts
 @echo off
+
+rem add cygwin and some shortcuts
+rem
+rem for use from shorcut with a target of:
+rem      %windir%\system32\cmd.exe /k vw\cmd\cmdrc.bat
+rem and a staring directory of %USERPROFILE% or other
+rem directory containing the vw package
+
 if ..==.%HOMEDRIVE%. (
     SET HOMEDRIVE=%SystemDrive%
 )
@@ -32,12 +39,13 @@ DOSKEY ANT=C:\ANT\BIN\ANT $*
 DOSKEY NOTE=NOTEPAD $*
 DOSKEY vihosts=notepad %WINDIR%\System32\drivers\etc\hosts
 DOSKEY SPHOME=PUSHD "%HOME%"
-DOSKEY VS8=if not defined DevEnvDir call "%VS90COMNTOOLS%"\vsvars32.bat
 DOSKEY HOME=PUSHD %HOME%
 DOSKEY VS9=if not defined DevEnvDir call "%VS90COMNTOOLS%"\vsvars32.bat
 DOSKEY VS10=if not defined DevEnvDir call "%VS100COMNTOOLS%"\vsvars32.bat
 DOSKEY VI=VIM $*
 DOSKEY FM=bash -c "python $(cygpath '%~dp0..\tools\fm.py') $*"
+DOSKEY ..=CD ..
+DOSKEY ...=CD ..\..
 
 TITLE %COMPUTERNAME%
 

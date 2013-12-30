@@ -3,6 +3,11 @@ set autoindent
 set expandtab
 set history=300
 set nu
+colorscheme slate
+autocmd BufRead,BufNewFile *.dart set filetype=dart
+autocmd FileType css setlocal shiftwidth=2 tabstop=2
+autocmd FileType dart setlocal shiftwidth=2 tabstop=2
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
 function Set_color_On()
 		syntax on

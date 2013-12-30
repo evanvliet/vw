@@ -47,27 +47,29 @@ vwman() # recap info
 vwsync() # commit new stuff and get latest
 {
     # check dot files
-    pushd ${VW_DIR#~/}/dot > /dev/null
+    pushd "$VW_DIR/dot" > /dev/null
     cd
     for i in $(ls -A "$OLDPWD")
     do
         test $i -ef "$OLDPWD/$i" && continue
-        cmp -s $i "$OLDPWD/$i" && ln -f "$OLDPWD/$i" . && continue
-        ln -iv "$OLDPWD/$i" .
+        cmp -s $i "$OLDPWD/$i" && ln -f "$OLDPWD/$i" # link identical files
+        cmp -s $i "$OLDPWD/$i" || ln -iv "$OLDPWD/$i" $i # ask for ok
     done
+    popd > /dev/null
     # prompt for comment if committing changes
-    cd "$VW_DIR" > /dev/null
-    local REPLY=""
-    test "$(git status -s -uno)" && {
-        git diff
-        REPLY="$*"
-        test "$REPLY" || read -p 'comment? '
-        test "$REPLY" && git commit -a -m "$REPLY"
-    }
-    git pull
-    test "$REPLY" && git push
-
-    source ./profile
+    pushd "$VW_DIR" > /dev/null
+    local REPLY="$*"
+    if test "$(git status -s -uno)" ; then
+        git diff | cat
+        (($(wc -c <<< "$REPLY") > 3)) || read -p 'comment? '
+        (($(wc -c <<< "$REPLY") > 3)) && git commit -a -m "$REPLY"
+    fi
+    # sync up
+    git pull 
+    if (($(wc -c <<< "$REPLY") > 3)) ; then
+        git push
+        source ./profile
+    fi
     popd > /dev/null
 }
 huh() # melange of type typeset alias info

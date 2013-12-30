@@ -1,6 +1,6 @@
 #!/bin/bash
-# "INSTALL bare" installs a bare repository on the base machine
-# "INSTALL" with no argument to source vw/profile in .bashrc
+# "INSTALL" to source profile in .bashrc
+# "INSTALL bare" creates a bare repository for sharing
 
 pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
 VW_DIR="$PWD"

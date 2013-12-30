@@ -10,15 +10,19 @@ gist()  # root folder, remote url, and current status
 }
 ci() # git checkin does commit pull and push in one swell foop
 {
-    local REPLY=""
-    test "$(git status -s -uno)" && {
-        git diff
-        REPLY="$*"
-        test "$REPLY" || read -p 'comment? '
-        test "$REPLY" && git commit -a -m "$REPLY"
-    }
+    local PUSH='' # flag to force push
+    test "$1" = "-f" && PUSH='y' && shift
+    local REPLY="$*"
+    if test "$(git status -s -uno)" ; then
+        git diff | cat
+        (($(wc -c <<< "$REPLY") > 3)) || read -p 'comment? '
+        (($(wc -c <<< "$REPLY") > 3)) && git commit -a -m "$REPLY"
+    fi
     git pull
-    test "$REPLY" && git push
+    if test "$REPLY" ; then
+        test "$PUSH" || read -p 'push? ' PUSH
+        grep -q ^y <<< "$PUSH" && git push
+    fi
 }
 co() # per rcs and old times just git checkout
 {
@@ -26,8 +30,20 @@ co() # per rcs and old times just git checkout
 }
 setconf() # set up a default .gitconfig
 {
-    local NAME=$(grep ^$(id -un): /etc/passwd | tr , : | cut -d: -f5)
-    local EMAIL=$(id -un)@$(hostname)
-    local TEMPLATE="$VW_DIR/tools/data/gitconfig"
-    sed -e "s/EMAIL/$EMAIL/" -e "s/NAME/$NAME/" "$TEMPLATE" > ~/.gitconfig 
+    local G="$HOME/.gitconfig"
+    local V="$VW_DIR/tools/data/gitconfig"
+    case $1 in
+    di) diff "$G" "$V" ;;
+    vi) vi -o "$G" "$V" ;;
+    *)  local EMAIL=$(id -un)@$(hostname)
+        local NAME=$(grep ^$(id -un): /etc/passwd | tr , : | cut -d: -f5)
+        NAME=${NAME:-$(finger eric | sed -ne 's/.*Name..//p')}
+        sed -e "s/EMAIL/$EMAIL/" -e "s/NAME/$NAME/" "$V" > "$G" ;;
+    esac
+}
+github_create_repository() # as per github create repository quick setup
+{
+    local GITHUB_USER=evanvliet
+    git remote add origin https://github.com/$GITHUB_USER/$(basename $PWD).git
+    git push -u origin master
 }

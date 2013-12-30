@@ -50,14 +50,13 @@ isp() # interact with base machine
         git push -u origin master
         ;;
     *)
-        echo 'usage: isp [get|sh|put|clone|git] file ...
+        sed '2,$s/^ */  /' <<< 'usage: isp [get|sh|put|clone|git] file ...
                 get - copy file from xfer folder
                 put - copy file to xfer folder
                 sh - run sh
                 git - create git repository from working directory
                 update - update git_root repo from origin, e.g., github
-                clone - clone from '$ISP_HOST':~/git_root/' |
-            sed -e '2,$s/^ */  /'
+                clone - clone from '$ISP_HOST':~/git_root/'
         ;;
     esac
 }

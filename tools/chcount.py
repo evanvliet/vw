@@ -12,7 +12,7 @@ Usual read of files from command line args or stdin if none.
 
 import sys
 import curses.ascii
-label = [curses.ascii.controlnames[i] for i in range(32)]
+label = [curses.ascii.controlnames[i] for i in range(33)]
 label.extend([curses.ascii.unctrl(i) for i in range(33, 128)])
 label.extend(['\\%03o' % i for i in range (129, 255)])
 

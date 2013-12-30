@@ -25,6 +25,11 @@ Description:
 
     A trailing list of file names restricts update or report to just
     those files. If no trailing arguments, it handles all files.
+
+    For nicer data output, pass in or export HISTFILE and COLUMNS.
+    Used to get history data about files when getting comments and
+    folding lines to fit your screen.  Example:
+    alias fm='HISTFILE=$HISTFILE COLUMNS=$COLUMNS ".../fm.py" "$@"'
 """
 
 import os
@@ -190,7 +195,8 @@ class FileComment:
             print ' '.join(cmd_output('ls', '-dl', self.name).split()[:8]) ,
             nlines = cmd_output('wc', '-l', self.name)[1:].split() or ['?']
             print '%s lines' % nlines[0]
-            print ' '.join(cmd_output('file', self.name).split(':')[1:]).strip()
+            print ' '.join(cmd_output(
+                'file', self.name).split(':')[1:]).strip()
             print cmd_output('env', '-i', 'od', '-cN64', '-An', self.name)
         elif comment == 'e':  # erase existing comment
             self.comment = ''
@@ -268,8 +274,8 @@ class FileComments(dict):
     def show_comments(self):
         """Renders comments and lists uncommented files."""
 
-        selcom = sorted(set(self.selected_ones()) & set(self.commented_ones()))
-        cf = '\n'.join(str(self[x]) for x in selcom)
+        cf = '\n'.join(str(self[x]) for x in sorted(
+            set(self.selected_ones()) & set(self.commented_ones())))
         ucf = self.uncommented_files_summary()
         if cf and ucf:
             cf += '\n\n'
@@ -313,7 +319,7 @@ if __name__ == '__main__':
         some = False  # only files without comments
     (Opts, args) = op.parse_args(sys.argv[1:], Opts)
 
-    fc = FileComments()  # one FileComment for each file in working directory
+    fc = FileComments()  # one FileComment for each file in directory
 
     if args:  # skip files not on command line
         for fn in set(fc) - set(args):
