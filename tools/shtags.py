@@ -1,14 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""
-Create tags and documentation for shell scripts.
-Usage:
-    shtags.py [-t | -m | -s ] file ....
-    options:
-        -t tagfile
-        -m markdown index
-        -s brief text
+""" shtags.py [-t | -m | -s ] file ....
+
+Create tags and documentation from shell scripts.
+
+Options:
+    -t produce tagfile format
+    -m generate markdown from block comments
+    -s plain text with just brief comments
+
+Note:
+    Expects format per regular expressions, e.g.:
+        func() # about func
+        export XX=xxx # about XX
+        alias xx=yy # about xx
 """
 
 import os
@@ -16,8 +22,9 @@ import re
 import sys
 
 
-# Patterns that match definitions and block quotes.
 
+""" Patterns that match definitions and block quotes.
+"""
 reExport = re.compile(r'^export ([A-Za-z]\w*)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
 reAlias = re.compile(r'^([ \t]*alias )([\.A-Za-z][\-\.\w]*)=(.*)')

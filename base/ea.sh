@@ -84,20 +84,7 @@ num() # phone numbers
         ;;
     esac
 }
-fm() # fm with history
+fm() # fm with history and sceen width
 {
-    # +
-    # A file management tool for maintaining comments about files. 
-    # Just lists files with comments; use `-a` or `-s` to update.
-    # When prompting for comments, *fm* recognizes one letter
-    # responses as commands to inspect the file, or delete it, or go
-    # back to the previous one.  The one letter `h` response gives
-    # usage.  A trailing list of file names restricts update or report
-    # to just those files.  Note passing of HISTFILE and COLUMNS so
-    # *fm* can pick up history data and format data for the current
-    # screen size.  Options:
-    #   + `-a` update comments for all files
-    #   + `-s` update comments for some files, those without comments
-    # -
     HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
 }

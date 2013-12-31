@@ -3,19 +3,18 @@ set autoindent
 set expandtab
 set history=300
 set nu
-colorscheme slate
 autocmd BufRead,BufNewFile *.dart set filetype=dart
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
-function Set_color_On()
-		syntax on
-		map <F1> :call Set_color_Off()<CR>
-endfunction
-function Set_color_Off()
-		syntax off
-		map <F1> :call Set_color_On()<CR>
+let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
+let s:colors = map(paths, 'fnamemodify(v:val, ":t:r")')
+let s:colorno = 0
+function Change_colorscheme()
+        let s:colorno = s:colorno % len(s:colors)
+        execute 'colorscheme '.s:colors[s:colorno]
+        let s:colorno = s:colorno + 1
 endfunction
 
 map ZZ :xa<CR>
@@ -24,7 +23,8 @@ map <F2> :e#<CR>
 map <F3> :e$s<CR> " edit scrap file
 " map <F4> :w!$s<CR> " make copy in scrap file
 " map <F4> :wn<CR> " write next for going through a set of files
-map <F4> :,/^$/s/^\( *\)  /\1# /<CR> " comment but respect indent
+" map <F4> :,/^$/s/^\( *\)  /\1# /<CR> " comment but respect indent
+map <F4> :call Change_colorscheme()<CR>
 map <F5> 072 bF r<CR>
 map <F6> :"mac reserved
 map <F7> :map<CR>
@@ -41,5 +41,3 @@ map <ESC>[29~ :"F16 available<CR>
 map <ESC>[31~ :"F17 available<CR>
 map <ESC>[32~ :"F18 available<CR>
 map <ESC>[33~ :map<CR>
-
-call Set_color_On()

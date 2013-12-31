@@ -72,15 +72,15 @@ def saved_comments():
     class CommentInfo(list):
         def __init__(self, fm_db):
             """Build from fm_db data."""
-            line = ''
-            nline = ''
+            line = '' # current line
+            buf = '' # accumulated comment
             for line in fm_db:
-                if line[0] == ' ':
-                    nline = '%s %s' % (nline, line.strip())
+                if line and line[0] == ' ': # comment continuation line
+                    buf = '%s %s' % (buf, line.strip())
                 else:
-                    self.append(nline)
-                    nline = line
-            self.append(nline)
+                    self.append(buf)
+                    buf = line
+            self.append(buf)
         def comment_for_name(self, fn, remove=False):
             """Return comment for filename.  If remove, purge line from
             data to prevent two files having same comment, e.g.,
@@ -226,10 +226,12 @@ class FileComments(dict):
     def __init__(self):
         """Load file names and saved comments."""
 
-        for fn in glob.glob('*'):  # build entries for current files
-            self[fn] = FileComment(fn)
+        # build entries for current files
+        for f in glob.glob('*'):
+            self[f] = FileComment(f)
 
-        saved = saved_comments()  # add saved comments
+        # add saved comments
+        saved = saved_comments()
         for fn in sorted(self, reverse=True):
             self[fn].comment = saved.comment_for_name(fn, remove=True)
 

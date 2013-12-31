@@ -30,18 +30,7 @@ Good for getting a quick idea of the file population of a folder
 without spamming your screen.  Prints `+nn` to show number of
 files that were not listed.
 * `findext`  find by extension.
-* `fm`  fm with history.
-A file management tool for maintaining comments about files.
-Just lists files with comments; use `-a` or `-s` to update.
-When prompting for comments, *fm* recognizes one letter
-responses as commands to inspect the file, or delete it, or go
-back to the previous one.  The one letter `h` response gives
-usage.  A trailing list of file names restricts update or report
-to just those files.  Note passing of HISTFILE and COLUMNS so
-*fm* can pick up history data and format data for the current
-screen size.  Options:
-  + `-a` update comments for all files
-  + `-s` update comments for some files, those without comments
+* `fm`  fm with history and sceen width.
 * `h`  history.
 * `llt`  ls latest.
 * `lsc`  printable chars.

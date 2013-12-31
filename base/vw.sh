@@ -68,8 +68,8 @@ vwsync() # commit new stuff and get latest
     git pull 
     if (($(wc -c <<< "$REPLY") > 3)) ; then
         git push
-        source ./profile
     fi
+    source ./profile
     popd > /dev/null
 }
 huh() # melange of type typeset alias info
