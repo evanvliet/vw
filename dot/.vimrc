@@ -19,6 +19,7 @@ endfunction
 
 map ZZ :xa<CR>
 map g 1G
+" map <F1> " F1 used for help
 map <F2> :e#<CR>
 map <F3> :e$s<CR> " edit scrap file
 " map <F4> :w!$s<CR> " make copy in scrap file
