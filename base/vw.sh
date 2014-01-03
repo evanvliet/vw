@@ -44,18 +44,22 @@ vwman() # recap info
         "$VW_DIR"/README.md \
         "$VW_DIR"/INDEX.md | $MANPAGER
 }
-vwsync() # commit new stuff and get latest
+_vw_dot() # link vw dot files to home directory
 {
-    # check dot files
     pushd "$VW_DIR/dot" > /dev/null
     cd
-    for i in $(ls -A "$OLDPWD")
+    for i in $(ls -A "$OLDPWD");
     do
-        test $i -ef "$OLDPWD/$i" && continue
-        cmp -s $i "$OLDPWD/$i" && ln -f "$OLDPWD/$i" # link identical files
-        cmp -s $i "$OLDPWD/$i" || ln -iv "$OLDPWD/$i" $i # ask for ok
+        if test ! $i -ef "$OLDPWD/$i"  ; then
+            cmp -s $i "$OLDPWD/$i" || mv -v $i $i.bak
+            ln -fv "$OLDPWD/$i" .
+        fi
     done
-    popd > /dev/null
+    popd > /dev/null;
+}
+vwsync() # commit new stuff and get latest
+{
+    _vw_dot
     # prompt for comment if committing changes
     pushd "$VW_DIR" > /dev/null
     local REPLY="$*"
@@ -69,6 +73,7 @@ vwsync() # commit new stuff and get latest
     if (($(wc -c <<< "$REPLY") > 3)) ; then
         git push
     fi
+    _vw_dot
     source ./profile
     popd > /dev/null
 }

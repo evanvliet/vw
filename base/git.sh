@@ -37,7 +37,7 @@ setconf() # set up a default .gitconfig
     case $1 in
     di) diff "$G" "$V" ;;
     vi) vi -o "$G" "$V" ;;
-    mk)  local EMAIL=$(id -un)@$(hostname)
+    mk) local EMAIL=$(id -un)@$(hostname)
         local NAME=$(grep ^$(id -un): /etc/passwd | tr , : | cut -d: -f5)
         NAME=${NAME:-$(finger $(id -un) | sed -ne 's/.*Name..//p')}
         sed -e "s/EMAIL/$EMAIL/" -e "s/NAME/$NAME/" "$V" > "$G" ;;

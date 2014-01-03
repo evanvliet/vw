@@ -14,7 +14,7 @@ import sys
 import curses.ascii
 label = [curses.ascii.controlnames[i] for i in range(33)]
 label.extend([curses.ascii.unctrl(i) for i in range(33, 128)])
-label.extend(['\\%03o' % i for i in range (128, 256)])
+label.extend(['#%02X' % i for i in range (128, 256)])
 
 
 def charcnt(f, char_counts):

@@ -40,6 +40,7 @@ files that were not listed.
 * `root`  be admin.
 * `t`  cat.
 * `textbelt`  text phone using textbelt.
+* `vimrc`  edit .vimrc.
 * `xv`  trace execution of bash script or function.
 
 ###### [base/env.sh](base/env.sh)

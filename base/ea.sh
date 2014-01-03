@@ -15,6 +15,7 @@ mo() { less -c $* ; } # less -c
 r() { fc -s $* ; } # redo
 root() { sudo bash ; } # be admin
 t() { cat $* ; } # cat
+vimrc() { vi ~/.vimrc ; } # edit .vimrc
 don () # do something a number of times
 {
     # +
@@ -61,7 +62,7 @@ ea() # echo all
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
     ls > $EATMP
-    test "$@" && ls -d "$@" > $EATMP
+    test "$*" && ls -d "$@" > $EATMP
     test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
@@ -86,5 +87,6 @@ num() # phone numbers
 }
 fm() # fm with history and sceen width
 {
+    history -a
     HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
 }

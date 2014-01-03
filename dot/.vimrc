@@ -3,6 +3,7 @@ set autoindent
 set expandtab
 set history=300
 set nu
+syntax enable
 autocmd BufRead,BufNewFile *.dart set filetype=dart
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
@@ -10,10 +11,12 @@ autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
 let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
 let s:colors = map(paths, 'fnamemodify(v:val, ":t:r")')
-let s:colorno = 0
+let s:colorno = 15
 function Change_colorscheme()
         let s:colorno = s:colorno % len(s:colors)
         execute 'colorscheme '.s:colors[s:colorno]
+        redraw
+        execute 'colorscheme'
         let s:colorno = s:colorno + 1
 endfunction
 
@@ -25,7 +28,7 @@ map <F3> :e$s<CR> " edit scrap file
 " map <F4> :w!$s<CR> " make copy in scrap file
 " map <F4> :wn<CR> " write next for going through a set of files
 " map <F4> :,/^$/s/^\( *\)  /\1# /<CR> " comment but respect indent
-map <F4> :call Change_colorscheme()<CR>
+map V :call Change_colorscheme()<CR>
 map <F5> 072 bF r<CR>
 map <F6> :"mac reserved
 map <F7> :map<CR>

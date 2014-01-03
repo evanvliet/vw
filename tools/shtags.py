@@ -173,4 +173,4 @@ if __name__ == '__main__':
         opt = sys.argv[1]
         make[opt](defs)
     except:
-        print __doc__
+        print 'usage: %s' % __doc__
