@@ -10,7 +10,7 @@ export PS4='+ ${BASH_SOURCE##*/} ${LINENO} ${FUNCNAME[0]} ' # debug info
 export MANPAGER='less -csr' # manpager opts
 export PYTHONSTARTUP=~/.pythonrc.py # python startup
 export VISUAL=vi # default editor
-test "$CDPATH" || CDPATH="$HOME" # default
+test "$CDPATH" || CDPATH=":$HOME" # default
 grep -q "$VW_DIR" <<< "$CDPATH" || CDPATH=$CDPATH:$VW_DIR
 set -o vi
 shopt -s histappend

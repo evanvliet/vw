@@ -52,7 +52,7 @@ _vw_dot() # link vw dot files to home directory
     do
         if test ! $i -ef "$OLDPWD/$i"  ; then
             cmp -s $i "$OLDPWD/$i" || mv -v $i $i.bak
-            ln -fv "$OLDPWD/$i" .
+            ln -f "$OLDPWD/$i" .
         fi
     done
     popd > /dev/null;
