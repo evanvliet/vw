@@ -5,6 +5,7 @@ set history=300
 set nu
 syntax enable
 autocmd BufRead,BufNewFile *.dart set filetype=dart
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType html setlocal shiftwidth=2 tabstop=2

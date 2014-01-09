@@ -2,7 +2,7 @@
 # +
 # Exported variables and an environmnet pretty printer.
 # -
-test $TERM=xterm -o $TERM=cygwin &&
+echo $TERM | grep -Eq 'xterm|cygwin' &&
 export PROMPT_COMMAND='echo -ne "\033]0;$USER@$HOSTNAME ${PWD#$HOME/}\007"'
 export PS1='\$ ' # prompt
 export PS4='${LINENO} ' # debug info
