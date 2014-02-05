@@ -4,6 +4,7 @@
 # -
 alias ..='cd ..; pwd'  # cd ..
 alias ...='cd ../..; pwd' # cd ../..
+alias cdvw='cd "$VW_DIR"; pwd' # cd vw dir
 # one liners
 chcount () { "$VW_DIR/tools/chcount.py" "$@" | pr -4t ; } # character count
 cpo () { cp "$@" "$OLDPWD" ; } # copy to $OLDPWD

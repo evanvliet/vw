@@ -18,6 +18,7 @@ at a datascope and dealing with file names on Eunice.
 Convenient shortcuts.
 * `..`  cd ..
 * `...`  cd ../..
+* `cdvw`  cd vw dir.
 * `chcount`  character count.
 * `cpo`  copy to $OLDPWD.
 * `don`  do something a number of times.
@@ -111,6 +112,8 @@ Options:
     a punctuation, and mixed case.  Also accepts integer options
     for a custom mix of letters, digts and punctation.  See
     [mk_passwd.py](tools/mk_passwd.py).
+  + `v xxx` verbosely print password for xxx on stdout (vs. the
+    default discrete copy to clipboard only.
 
 ###### [base/scrap.sh](base/scrap.sh)
 Sets up `s` as a scrap file.  For doing stuff like `ls > $s` and
@@ -143,7 +146,7 @@ Track, sync and edit configuration files.
 * `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.
-* `vwo`  vi os config.
+* `vwo`  vi os config $@.
 * `vwp`  vi vw profile.
 * `vwsync`  commit new stuff and get latest.
 

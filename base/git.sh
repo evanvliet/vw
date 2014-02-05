@@ -51,14 +51,16 @@ setconf() # set up a default .gitconfig
 }
 github_create_repository() # as per github create repository quick setup
 {
-    # presumes the basename of the current folder is the name of the repository
-    local GITHUB_DB=$VW_DIR/tools/data/github.id
-    local GITHUB_USER=$(cat "$GITHUB_DB" 2> /dev/null)
-    test -z "$GITHUB_USER"  && {
-        read -p 'github id? ' GITHUB_USER
-        echo $GITHUB_USER > "$GITHUB_DB"
-    }
-    test -z "$GITHUB_USER"  && return
-    git remote add origin https://github.com/$GITHUB_USER/$(basename $PWD).git
+    # PWD basename is the name of the repository
+    local rep=$(basename $PWD)
+	if test -z "$GITHUB_USER" ; then
+		echo GITHUB_USER=aaa_id_for_use_on_github >> "$VW_DIR/$(_vw_host)"
+		vwh +$
+	fi
+    test -z "$GITHUB_USER"  && echo no github user && return
+    test ! -d .git && echo no .git here to push to github  && return
+    read -p "push $rep to $GITHUB_USER? "
+    grep -q '^[yY]' <<< $REPLY || return
+    git remote add origin https://github.com/$GITHUB_USER/$rep.git
     git push -u origin master
 }

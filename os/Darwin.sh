@@ -2,6 +2,8 @@
 # +
 # For mac.  Added a ssh-copy-id goody.
 # -
+export LC_CTYPE=C # sed-re-error-illegal-byte-sequence-on-mac-os-x
+export LANG=C # sed-re-error-illegal-byte-sequence-on-mac-os-x
 browse() { open -a /Applications/Google\ Chrome.app "$@" ; } # web
 gdiff() { opendiff $* ; } # gui diff
 gdir() { open . ; } # gui dir

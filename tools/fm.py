@@ -260,7 +260,7 @@ class FileComments(dict):
                             summary = [':: +%d' % len(ucf)]
                         break
                     line = ':: %s' % fn  # start next line of file names
-        summary = summary or [line] if len(line) > 3 else []
+        if not summary and len(line) > 3: summary = [line]
         return '\n'.join(rv[:3] + summary)
 
     def commented_ones(self):

@@ -8,5 +8,6 @@ gdir() { cmd /c start . ; } # gui dir
 gedit() { cmd /c start notepad $1 ; } # gui editor
 wcopy() { cat - > /dev/clipboard ; } # copy to clipboard
 wpaste() { cat /dev/clipboard ; } # paste from clipboard
+vihosts() { vi $WINDIR/System32/drivers/etc/hosts ; } # vi hosts
 set -o vi
 shopt -s checkwinsize

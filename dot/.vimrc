@@ -9,6 +9,7 @@ autocmd FileType xml setlocal shiftwidth=2 tabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType js setlocal shiftwidth=2 tabstop=2
 
 let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
 let s:colors = map(paths, 'fnamemodify(v:val, ":t:r")')

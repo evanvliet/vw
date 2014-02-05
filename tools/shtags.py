@@ -139,7 +139,8 @@ def make_markdown(defs):
                     print '\n'.join(fn.description)
             print '* `%s` ' % t,
             comment = ti.comment or 'from %s' % ti.fn.fn
-            end_dot = ('' if comment[-1] == '.' else '.')
+            end_dot = '.'
+            if comment[-1] == '.': end_dot = ''
             print '%s%s' % (comment, end_dot)
             if ti.description:
                 print '\n'.join(ti.description)

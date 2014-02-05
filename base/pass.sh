@@ -40,6 +40,8 @@ getpass() # use passsword db
     #     a punctuation, and mixed case.  Also accepts integer options
     #     for a custom mix of letters, digts and punctation.  See
     #     [mk_passwd.py](tools/mk_passwd.py).
+    #   + `v xxx` verbosely print password for xxx on stdout (vs. the
+    #     default discrete copy to clipboard only.
     # -
     pushd "$VW_DIR/tools/data" > /dev/null
     local PAD=jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQzHtnpzntuNEO
@@ -74,26 +76,21 @@ getpass() # use passsword db
         ;;
     -p) # password generation
         shift
-        "$VW_DIR/tools/mk_passwd.py" $* | wcopy
-        wpaste
+        "$VW_DIR/tools/mk_passwd.py" $* | tr -d '\n' | wcopy
+        echo $(wpaste)
         ;;
     -*) # show help text
-        sed 's/^  */  /' <<< 'getpass [ word | option ]
-            Search for word in password list.  Options:
-            -a add args to passwords
-            -e edit password list
-            -i initialize
-            -m merge conflicts
-            -n encode with new key
-            -p opt make password opt = [small | right | large]'
+        echo 'getpass [ word | option ]'
+        sed -n -e '/^  *[^(]*) #/s/..#/ /p' $VW_DIR/base/pass.sh
         ;;
-    *) # default prints matching lines from db
+    *) # default suppresses last word so password is only on clipboard
         _gp_decode
+        test "$1" = "v" && shift && local verbose=1
         grep -i $1 passwords > pass.tmp
         # copy last word of last match to clipboard as password
         sed -n '$s/.*[; ]//p' pass.tmp | tr -d '\r\n' | wcopy
-        # and print all but last word for security
-        sed 's/.[^; ]*$//' pass.tmp | tr ';' '\n'
+        # suppress last word unless verbose for security
+        ( test -z $verbose && sed 's/.[^; ]*$//' || cat) < pass.tmp | tr ';' '\n'
         rm -f passwords
         ;;
     esac
@@ -116,8 +113,8 @@ _gp_merge() # (internal) merge password versions
 }
 _gp_key() # (internal) get key
 {
-    test -s getpass.key && openssl des3 -k $(hostid) -d \
-        < getpass.key | sed -e s/${PAD::10}.*//
+    test -s getpass.key || return
+    openssl des3 -k $(hostid) -d < getpass.key | sed -e s/${PAD::10}.*//
 }
 _gp_cache() # (internal) cache key
 {

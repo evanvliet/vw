@@ -21,17 +21,17 @@ vw() # edit the definition of a function, alias or export
 }
 vwh() # vi host config
 {
-    vi "$VW_DIR/$(_vw_host)"
+    vi "$VW_DIR/$(_vw_host)" $@
     source "$VW_DIR/profile"
 }
-vwo() # vi os config
+vwo() # vi os config $@
 {
     vi "$VW_DIR/$(_vw_osys)"
     source "$VW_DIR/profile"
 }
 vwp() # vi vw profile
 {
-    vi -o $HOME/.bashrc "$VW_DIR/profile"
+    vi -o $HOME/.bashrc "$VW_DIR/profile" $@
     source "$VW_DIR/profile"
 }
 vwman() # recap info
@@ -48,7 +48,7 @@ _vw_dot() # link vw dot files to home directory
 {
     pushd "$VW_DIR/dot" > /dev/null
     cd
-    for i in $(ls -A "$OLDPWD");
+    for i in $(ls -A "$OLDPWD")
     do
         if test ! $i -ef "$OLDPWD/$i"  ; then
             cmp -s $i "$OLDPWD/$i" || mv -v $i $i.bak
@@ -66,13 +66,12 @@ vwsync() # commit new stuff and get latest
     if test "$(git status -s -uno)" ; then
         git diff | cat
         (($(wc -c <<< "$REPLY") > 3)) || read -p 'comment? '
+        (($(wc -c <<< "$REPLY") > 3)) || echo short comment does not count
         (($(wc -c <<< "$REPLY") > 3)) && git commit -a -m "$REPLY"
     fi
     # sync up
     git pull 
-    if (($(wc -c <<< "$REPLY") > 3)) ; then
-        git push
-    fi
+    (($(wc -c <<< "$REPLY") > 3)) && git push
     _vw_dot
     source ./profile
     popd > /dev/null
