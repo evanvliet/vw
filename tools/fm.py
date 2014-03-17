@@ -312,13 +312,12 @@ class FileComments(dict):
 if __name__ == '__main__':
     '''Collect options and report or update accordingly.'''
 
-    op = optparse.OptionParser()  # process command line
-    oa = op.add_option
-    oa('-s', dest='some', help='review some', action='store_true')
-    oa('-a', dest='update', help='review all', action='store_true')
     class Opts:
         update = False  # update comments
         some = False  # only files without comments
+    op = optparse.OptionParser()  # process command line
+    op.add_option('-s', dest='some', help='review some', action='store_true')
+    op.add_option('-a', dest='update', help='review all', action='store_true')
     (Opts, args) = op.parse_args(sys.argv[1:], Opts)
 
     fc = FileComments()  # one FileComment for each file in directory

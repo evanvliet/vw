@@ -13,13 +13,13 @@ configuration files.  With no variable, produces index of known
 functions, aliases, exports.
 
 ###### Dependency
-Note that *tools/shtags.py* generates the tags and documentation.  To
+Note that [shtags](../master/tools/shtags.py) generates the tags and documentation.  To
 work right, match the regular expression therein.  *I.e.*:
 + `func() # about func`
 + `export XX=xxx # about XX`
 + `alias xx=yy # about xx`
 
-See the sample scripts.
+See the [sample scripts](../master/base).
 
 #### Features
 + per machine configuration

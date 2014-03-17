@@ -69,7 +69,7 @@ ea() # echo all
     cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
     sed '$d' $EATMP.1 > $EATMP.2
     echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
-    rm -f $EATMP*
+    rm -f $EATMP $EATMP.1 $EATMP.2
 }
 num() # phone numbers
 {
