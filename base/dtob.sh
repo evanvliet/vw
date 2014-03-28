@@ -3,8 +3,8 @@
 # Conversions, both numbers and file names. Dates from looking
 # at a datascope and dealing with file names on Eunice.
 # -
-_tu() { tr '[a-z]' '[A-Z]' <<< $1 ; }
-_tl() { tr '[A-Z]' '[a-z]' <<< $1 ; }
+_tu() { tr '[a-z]' '[A-Z]' ; }
+_tl() { tr '[A-Z]' '[a-z]' ; }
 dtoh() # decimal to hex
 {
     printf '%d = 0x%X\n' $1 $1
@@ -15,7 +15,7 @@ htod() # hex to decimal
 }
 htob() # hex to binary
 {
-    local hex=$(_tu $1)
+    local hex=$(_tu <<< $1)
     local bin=$(dc <<< "16 i 1$hex 2 o p")
     echo 0x$hex = $(sed -e 's/..../& /g' <<< ${bin#1})
 }
@@ -29,10 +29,10 @@ recase() # upper case file names or use -lower to lower case
 {
     local tmp=tmp$$ casing=upper
     test "$1" = -lower && shift && casing=lower
-    for i in ${@:-*}
+    for i in "${@:-*}"
     do
-        test $casing = upper && local I=$(_tu "$i")
-        test $casing = lower && local I=$(_tl "$i")
+        test $casing = upper && local I=$(_tu <<< "$i")
+        test $casing = lower && local I=$(_tl <<< "$i")
         test "$i" = "$I" && continue
         mv "$i" "$tmp"
         mv "$tmp" "$I"

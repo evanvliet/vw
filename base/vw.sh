@@ -21,17 +21,17 @@ vw() # edit the definition of a function, alias or export
 }
 vwh() # vi host config
 {
-    vi "$VW_DIR/$(_vw_host)" $@
+    vi "$VW_DIR/$(_vw_host)" "$@"
     source "$VW_DIR/profile"
 }
-vwo() # vi os config $@
+vwo() # vi os config
 {
-    vi "$VW_DIR/$(_vw_osys)"
+    vi "$VW_DIR/$(_vw_osys)" "$@"
     source "$VW_DIR/profile"
 }
 vwp() # vi vw profile
 {
-    vi -o $HOME/.bashrc "$VW_DIR/profile" $@
+    vi -o $HOME/.bashrc "$VW_DIR/profile" "$@"
     source "$VW_DIR/profile"
 }
 vwman() # recap info

@@ -146,7 +146,7 @@ Track, sync and edit configuration files.
 * `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.
-* `vwo`  vi os config $@.
+* `vwo`  vi os config.
 * `vwp`  vi vw profile.
 * `vwsync`  commit new stuff and get latest.
 
