@@ -38,7 +38,7 @@ xv () # trace execution of bash script or function
     don 5
     # set verbosity and trap restoration
     test -f $1 && bash -xv "$@" && return
-    trap 'set +xv' ERR EXIT INT RETURN
+    trap 'set +xv ; trap - ERR EXIT INT RETURN' ERR EXIT INT RETURN
     set -xv
     "$@"
 }
@@ -66,10 +66,11 @@ ea() # echo all
     test "$*" && ls -d "$@" > $EATMP
     test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
-    cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) && return
-    sed '$d' $EATMP.1 > $EATMP.2
-    echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
-    rm -f $EATMP $EATMP.1 $EATMP.2
+    cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) || {
+        sed '$d' $EATMP.1 > $EATMP.2
+        echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
+    }
+    rm -f $EATMP*
 }
 num() # phone numbers
 {

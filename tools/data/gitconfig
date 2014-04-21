@@ -23,3 +23,5 @@
 [user]
     name = NAME
     email = EMAIL
+[push]
+	default = simple

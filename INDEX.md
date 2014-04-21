@@ -69,10 +69,9 @@ running a shell, using git to create, clone repositiories.
 Subcommands:
   + `get` copy file from xfer folder
   + `put` copy file to xfer folder
-  + `sh` make ssh connection with isp
-  + `git` create git repository on isp git_root from local files
-  + `update` update git_root repo from origin, e.g., github
-  + `clone` clone project from git_root repo
+  + `shell` run ssh
+  + `clone` clone from '$ISP_HOST':~/git_root/'
+  + `create` create git repository from working directory
 
 ###### [base/pass.sh](base/pass.sh)
 Do `getpass google` to get your google password.  Prints matching

@@ -3,8 +3,8 @@
 # Conversions, both numbers and file names. Dates from looking
 # at a datascope and dealing with file names on Eunice.
 # -
-_tu() { tr '[a-z]' '[A-Z]' ; }
-_tl() { tr '[A-Z]' '[a-z]' ; }
+_tu() { tr [:lower:] [:upper:] ; }
+_tl() { tr [:upper:] [:lower:] ; }
 dtoh() # decimal to hex
 {
     printf '%d = 0x%X\n' $1 $1
