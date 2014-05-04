@@ -63,13 +63,14 @@ ea() # echo all
     local EATMP=/tmp/ea.$$ MAXCHAR=75
     test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
     ls > $EATMP
-    test "$*" && ls -d "$@" > $EATMP
+    test "$@" && ls -d "$@" > $EATMP
     test -s $EATMP || return
     head -c $MAXCHAR $EATMP > $EATMP.1
-    cmp -s $EATMP $EATMP.1 && echo $(cat $EATMP) || {
+    if ! cmp -s $EATMP $EATMP.1 ; then
         sed '$d' $EATMP.1 > $EATMP.2
-        echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l)
-    }
+        echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l) > $EATMP.1
+    fi
+    cat $EATMP.1
     rm -f $EATMP*
 }
 num() # phone numbers

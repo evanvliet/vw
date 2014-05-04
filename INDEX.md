@@ -56,6 +56,7 @@ Exported variables and an environmnet pretty printer.
 ###### [base/git.sh](base/git.sh)
 A few git shortcuts.
 * `ci`  git checkin does commit pull and push in one swell foop.
+* `clone`  for simplicity.
 * `co`  per rcs and old times just git checkout.
 * `gist`  root folder, remote url, and current status.
 * `github_create_repository`  as per github create repository quick setup.
@@ -142,6 +143,7 @@ Options:
 Track, sync and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
+* `vwdot`  link vw dot files to home directory.
 * `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.

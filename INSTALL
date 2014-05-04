@@ -27,4 +27,6 @@ else # add line to .bashrc to source vw profile
     cmp -s $B $B.tmp || mv -v $B $B.bak
     mv $B.tmp $B
     )
+    source ~/.bashrc
+    vwdot
 fi

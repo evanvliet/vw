@@ -14,7 +14,7 @@ ci() # git checkin does commit pull and push in one swell foop
 {
     local PUSH='' # flag to force push
     test "$1" = "-f" && PUSH='y' && shift
-    local REPLY="$*"
+    local REPLY="$@"
     if test "$(git status -s -uno)" ; then
         git diff | cat
         (($(wc -c <<< "$REPLY") > 3)) || read -p 'comment? '
@@ -28,7 +28,11 @@ ci() # git checkin does commit pull and push in one swell foop
 }
 co() # per rcs and old times just git checkout
 {
-    git checkout $*
+    git checkout "$@"
+}
+clone() # for simplicity
+{
+    git clone "$@"
 }
 setconf() # set up a default .gitconfig
 {
