@@ -48,7 +48,7 @@ isp() # interact with base machine
     *) # show help text
         echo 'isp [ get | put | shell | clone | create ] ...'
         sed -n -e 's/^  \([^\*\(]*\)) #\(.*\)/\1=\2/p' \
-            $VW_DIR/base/isp.sh | column -s= -t | tr '=' ' '
+            "$VW_DIR/base/isp.sh" | column -s= -t | tr '=' ' '
         ;;
     esac
 }

@@ -21,7 +21,7 @@ if not errorlevel 1 goto next_aa
 if exist %CYGWIN_PATH%\ps.exe PATH %PATH%;%CYGWIN_PATH%
 :next_aa
 
-PATH | %WINDIR%\System32\find.exe /i "%-dp0" > nul
+PATH | %WINDIR%\System32\find.exe /i "%~dp0" > nul
 if not errorlevel 1 goto next_ab
 PATH %PATH%;%~dp0
 :next_ab

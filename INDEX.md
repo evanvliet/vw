@@ -30,13 +30,37 @@ Actually echoes just as many file names as will fit on one line.
 Good for getting a quick idea of the file population of a folder
 without spamming your screen.  Prints `+nn` to show number of
 files that were not listed.
+ho $(cat $EATMP.2) +$(comm -23 $EATMP.[12] | wc -l) > $EATMP
+
+(cat $EATMP)
+
+MP*
+
+numbers
+
+="$VW_DIR/tools/data/num.db"
+
+# append new info
+v "$*" "$NUMS" > "$NUMS".tmp
+* >> "$NUMS".tmp
+UMS".tmp "$NUMS"
+
+UMS" # edit db
+
+i "$1" "$NUMS" # search db
+
+
+
+ history and sceen width
+
+
+HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
+
 * `findext`  find by extension.
-* `fm`  fm with history and sceen width.
 * `h`  history.
 * `llt`  ls latest.
 * `lsc`  printable chars.
 * `mo`  less -c.
-* `num`  phone numbers.
 * `r`  redo.
 * `root`  be admin.
 * `t`  cat.

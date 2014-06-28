@@ -38,9 +38,9 @@ xv () # trace execution of bash script or function
     don 5
     # set verbosity and trap restoration
     test -f $1 && bash -xv "$@" && return
-    trap 'set +xv ; trap - ERR EXIT INT RETURN' ERR EXIT INT RETURN
     set -xv
     "$@"
+    set +xv
 }
 textbelt() # text phone using textbelt
 {
@@ -60,17 +60,19 @@ ea() # echo all
     # without spamming your screen.  Prints `+nn` to show number of
     # files that were not listed.
     # -
-    local EATMP=/tmp/ea.$$ MAXCHAR=75
-    test "$COLUMNS" && let MAXCHAR=$COLUMNS-5
-    ls > $EATMP
-    test "$@" && ls -d "$@" > $EATMP
-    test -s $EATMP || return
-    head -c $MAXCHAR $EATMP > $EATMP.1
-    if ! cmp -s $EATMP $EATMP.1 ; then
-        sed '$d' $EATMP.1 > $EATMP.2
-        echo $(cat $EATMP.2) +$(comm -23 $EATMP $EATMP.2 | wc -l) > $EATMP.1
-    fi
-    cat $EATMP.1
+    local EATMP=/tmp/ea.$$ MAXCHAR=${COLUMNS:-80}
+    let MAXCHAR=$MAXCHAR-6
+    (test "$*" && ls -d "$@" || ls) > $EATMP.1
+    test -s $EATMP.1 && (
+        head -c $MAXCHAR $EATMP.1 > $EATMP
+        if ! cmp -s $EATMP $EATMP.1 ; then
+            # remove last (probably incomplete) file name
+            sed '$d' $EATMP > $EATMP.2
+            # + number of unlisted files
+            echo $(cat $EATMP.2) +$(comm -23 $EATMP.[12] | wc -l) > $EATMP
+        fi
+        echo $(cat $EATMP)
+        )
     rm -f $EATMP*
 }
 num() # phone numbers

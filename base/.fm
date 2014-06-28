@@ -3,7 +3,11 @@ dtob.sh   conversions dtob, dtoh, etc.
 ea.sh     convenient shortcuts
 env.sh    environment
 git.sh    git funcs
+isp.sh    interact with base machine hosting vw
 pass.sh   password support
+pso.sh    godaddy workarounds for pso
 scrap.sh  scrap file
 sd.sh     set directory via nicknames
 vw.sh     vw and huh
+vwbuild.sh utilities for maining vw code
+wordpress.sh wordpress helpers for migrating site
