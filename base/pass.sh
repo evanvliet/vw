@@ -76,7 +76,9 @@ getpass() # use passsword db
         ;;
     -p) # password generation
         shift
-        "$VW_DIR/tools/mk_passwd.py" ${*:help} | tee pass.tmp 
+        REPLY=${*}
+        REPLY=${REPLY:help}
+        python "$VW_DIR/tools/mk_passwd.py" $REPLY | tee pass.tmp 
         tr -d '\n' < pass.tmp | wcopy
         ;;
     -*) # show help text

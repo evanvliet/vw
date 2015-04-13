@@ -30,37 +30,13 @@ Actually echoes just as many file names as will fit on one line.
 Good for getting a quick idea of the file population of a folder
 without spamming your screen.  Prints `+nn` to show number of
 files that were not listed.
-ho $(cat $EATMP.2) +$(comm -23 $EATMP.[12] | wc -l) > $EATMP
-
-(cat $EATMP)
-
-MP*
-
-numbers
-
-="$VW_DIR/tools/data/num.db"
-
-# append new info
-v "$*" "$NUMS" > "$NUMS".tmp
-* >> "$NUMS".tmp
-UMS".tmp "$NUMS"
-
-UMS" # edit db
-
-i "$1" "$NUMS" # search db
-
-
-
- history and sceen width
-
-
-HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
-
 * `findext`  find by extension.
+* `fm`  fm with history and sceen width.
 * `h`  history.
 * `llt`  ls latest.
 * `lsc`  printable chars.
 * `mo`  less -c.
+* `num`  phone numbers.
 * `r`  redo.
 * `root`  be admin.
 * `t`  cat.
@@ -77,6 +53,10 @@ Exported variables and an environmnet pretty printer.
 * `VISUAL`  default editor.
 * `ep`  expand paths.
 
+###### [base/freshgrass.sh](base/freshgrass.sh)
+Use vagrant to run the freshgrass vm.
+* `freshgrass`  use remote host.
+
 ###### [base/git.sh](base/git.sh)
 A few git shortcuts.
 * `ci`  git checkin does commit pull and push in one swell foop.
@@ -85,6 +65,10 @@ A few git shortcuts.
 * `gist`  root folder, remote url, and current status.
 * `github_create_repository`  as per github create repository quick setup.
 * `setconf`  set up a default .gitconfig.
+
+###### [base/godaddy.sh](base/godaddy.sh)
+Workarounds for syncing without git on godaddy.
+* `godaddy`  use remote host.
 
 ###### [base/isp.sh](base/isp.sh)
 Use base machine, *.i.e.*, machine hosting your configuration.  Good
@@ -167,7 +151,7 @@ Options:
 Track, sync and edit configuration files.
 * `huh`  melange of type typeset alias info.
 * `vw`  edit the definition of a function, alias or export.
-* `vwdot`  link vw dot files to home directory.
+* `vwdot`  copy vw dot files to home directory.
 * `vwfiles`  print config files in order sourced.
 * `vwh`  vi host config.
 * `vwman`  recap info.

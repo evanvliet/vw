@@ -62,7 +62,8 @@ ea() # echo all
     # -
     local EATMP=/tmp/ea.$$ MAXCHAR=${COLUMNS:-80}
     let MAXCHAR=$MAXCHAR-6
-    (test "$*" && ls -d "$@" || ls) > $EATMP.1
+    test "$*" || \ls -b > $EATMP.1
+    test "$*" && \ls -bd "$@" > $EATMP.1 2> /dev/null
     test -s $EATMP.1 && (
         head -c $MAXCHAR $EATMP.1 > $EATMP
         if ! cmp -s $EATMP $EATMP.1 ; then
@@ -93,5 +94,5 @@ num() # phone numbers
 fm() # fm with history and sceen width
 {
     history -a
-    HISTFILE=$HISTFILE COLUMNS=$COLUMNS "$VW_DIR/tools/fm.py" "$@"
+    HISTFILE=$HISTFILE COLUMNS=$COLUMNS fm.py "$@"
 }

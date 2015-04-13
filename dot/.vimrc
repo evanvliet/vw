@@ -1,10 +1,12 @@
 set ts=4 sw=4
 set autoindent
+set modelines=2
 set expandtab
 set history=300
 set nu
 syntax enable
 autocmd BufRead,BufNewFile *.dart set filetype=dart
+autocmd FileType php setlocal shiftwidth=2 tabstop=2
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
@@ -15,15 +17,14 @@ let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
 let s:colors = map(paths, 'fnamemodify(v:val, ":t:r")')
 let s:colorno = 15
 function Change_colorscheme()
-        let s:colorno = s:colorno % len(s:colors)
-        execute 'colorscheme '.s:colors[s:colorno]
-        redraw
-        execute 'colorscheme'
-        let s:colorno = s:colorno + 1
+  let s:colorno = s:colorno % len(s:colors)
+  execute 'colorscheme '.s:colors[s:colorno]
+  redraw
+  execute 'colorscheme'
+  let s:colorno = s:colorno + 1
 endfunction
 
 map ZZ :xa<CR>
-map g 1G
 " map <F1> " F1 used for help
 map <F2> :e#<CR>
 map <F3> :e$s<CR> " edit scrap file

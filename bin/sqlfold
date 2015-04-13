@@ -1,0 +1,76 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+'''
+    NAME
+        sqlfold.py - fold long lines of dump from mysql
+
+    SYNOPSIS
+        sqlfold.py fold|unfold|test [ testinput ]
+
+        fold - inserts line breaks
+        unfold - removes line breaks
+        test - tests fold + unfold restores
+
+    DESCRIPTION
+        For managing databases with source control.  Breaks lines so
+        changes are localized. Works as a filter, reading stdin and
+        writing stdout.
+
+    EXAMPLE
+        sqlfold.py fold < xx.sql > xx_folded.sql
+        sqlfold.py unfold < xx_folded.sql > xx_reconstructed.sql
+        diff xx.sql xx_reconstructed.sql # matches
+'''
+MARKER='_' # characters at beginning of line to mark continuation
+BREAKS=[ # insert newlines after one of these
+    r'),',
+    r'}}',
+    r' VALUES ',
+    r'<span ',
+    r'. ',
+    r'</a>',
+    r';s:']
+
+def fold(stream):
+    for line in stream:
+        for pat in BREAKS:
+            sep = '%s\n%s' % (pat, MARKER)
+            line = sep.join(line.split(pat))
+        yield line
+
+def unfold(stream):
+    rv = None
+    for line in stream:
+        if line[:len(MARKER)] == MARKER:
+            rv[-1] = rv[-1][:-1]
+            line = line[len(MARKER):]
+            rv.append(line)
+        else:
+            if rv is not None: yield ''.join(rv)
+            rv = [line]
+    yield ''.join(rv)
+
+def sqlfold(source, target, op):
+    for line in op(source):
+        target.write(line)
+
+if __name__ == '__main__':
+    import sys
+
+    if len(sys.argv) > 2 and sys.argv[1] == 'test':
+        import filecmp
+        rv, tmpfile = 'fail', 'sqlfold_test.sql'
+        sqlfold(open(sys.argv[2]), open('xx', 'w'), fold)
+        sqlfold(open('xx', 'r'), open(tmpfile, 'w'), unfold)
+        if filecmp.cmp(sys.argv[2], tmpfile): rv = 'ok'
+        sys.stderr.write('TEST %s %s\n' % (sys.argv[0], rv))
+        sys.exit(1)
+        
+    try:
+        cmd = fold
+        if sys.argv[1] == 'unfold': cmd = unfold
+        sqlfold(sys.stdin, sys.stdout, cmd)
+    except Exception, e:
+        sys.stderr.write('%s\n' % __doc__)
+        sys.stderr.write('    ERROR\n        %s\n' % e)

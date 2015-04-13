@@ -1,0 +1,162 @@
+#!/bin/bash
+# +
+# pso - wordpress backup and restore
+# -
+PSO_VAGRANT=$(sed -ne '/^pso_vagrant */s///p' ~/.sdrc) # install folder
+PSO_BACKUP=~/backup # backup directory
+hbn() # hanoi backup 6 levels - return suffix for sequence number
+{
+    local H=F level2=1 seqno=${1:-1}
+    for suffix in A B C D E; do
+        (( level2 == (seqno % (level2*2)) )) && H=$suffix
+        (( level2 *= 2 ))
+    done
+    echo $H
+}
+progress() # character mode progress bar
+{ 
+    local ticks=(\| - - - - + - - - -)
+    touch .progress
+    test "$1" = stop && shift && rm .progress
+    let i=1 
+    local nap=${1:-1}
+    if test -f .progress; then
+        sleep $nap
+        echo -n " "
+    fi  
+    ( while test -f .progress; do
+        echo -n "${ticks[$i%10]} "
+        sleep $nap
+        let i=i+1
+    done & ) 2> /dev/null
+}
+getval() # get val from config.php
+{
+   sed -n /$1/s/...$//p wp-config.php | sed s/.*\'//
+}
+pso_check() # check for and get vals from config.php
+{ 
+    if ! test -f wp-config.php; then
+        echo "not a wordpress installation"
+        false
+        return
+    fi
+    DB_PASSWORD=$(getval DB_PASSWORD)
+    DB_USER=$(getval DB_USER)
+    DB_NAME=$(getval DB_NAME)
+    DB_HOST=$(getval DB_HOST)
+    DB_SITEURL=${DB_SITEURL:-$(echo "
+           SELECT option_value
+           FROM wp_options
+           WHERE option_name = 'siteurl' \G" |
+       mysql -u $DB_USER -h $DB_HOST --password="$DB_PASSWORD" $DB_NAME |
+       sed -n '$s/.* http:..//p')}
+}
+
+mkdir -p $PSO_BACKUP
+case "$1" in 
+backup) # write backup of current files and database
+    pso_check || exit
+    bkup=pso.gz
+    test "$2" && bkup=$(basename $2)
+    printf '%s < %s ' $(date +%m.%d-%H:%M) ${DB_SITEURL%%.*}
+    progress
+    pso write
+    tar --exclude-vcs --exclude Audio -czf $PSO_BACKUP/$bkup .
+    progress stop
+    echo $( cd $PSO_BACKUP  ; du -sh $bkup )
+    ;;
+list) # list backups newest first
+    ls -h1tlgo $PSO_BACKUP | sed -e "1s:$: in $PSO_BACKUP:" -e "1s:$HOME:~:"
+    ;;
+restore) # rebuild site from backup
+    pso_check || exit
+    bkup=${2:-pso.gz}
+    test -f $PSO_BACKUP/$bkup || echo no backup named $bkup
+    test -f $PSO_BACKUP/$bkup || exit
+    printf '> %s ' ${DB_SITEURL%%.*}
+    progress 1.33
+    mv wp-config.php xx$$
+    rm -rf wp*
+    tar xf $PSO_BACKUP/$bkup
+    mv xx$$ wp-config.php
+    pso read
+    progress stop
+    echo $( cd $PSO_BACKUP  ; du -sh $bkup )
+    ;;
+mysql) # use mysql
+    pso_check || exit
+    shift
+    mysql -s -h $DB_HOST -u $DB_USER --password="$DB_PASSWORD" $DB_NAME $@
+    ;;
+dbchk) # check db connection
+    cmd='SELECT SUBSTRING(post_content,1,55) FROM wp_posts LIMIT 1;'
+    echo $cmd | pso mysql && echo db connection works
+    ;;
+time) # time check
+    (time curl http://www.prometheussymphony.org -o /dev/null) \
+        2>&1 >/dev/null | sed -ne s/real...//p
+    ;;
+unfold) # refresh pso.sql from checked in pso.fold
+    set -x
+    sqlfold unfold < pso.fold > pso.sql
+    set +x
+    ;;
+fold) # refresh pso.fold for checkin
+    set -x
+    pso write
+    sqlfold fold < pso.sql > pso.fold
+    set +x
+    ;;
+read) # read database data from pso.sql
+    pso_check || exit
+    if test -s pso.fold ; then
+        sqlfold unfold < pso.fold | sed -e "
+            s/DB_NAME/$DB_NAME/g
+            s/DB_SITEURL/$DB_SITEURL/g
+            " | mysql -u $DB_USER -h $DB_HOST \
+            --password="$DB_PASSWORD" $DB_NAME
+    fi
+    ;;
+write)  # write pso.sql from database data
+    pso_check || exit
+    mysqldump -u $DB_USER -h $DB_HOST \
+            --password="$DB_PASSWORD" $DB_NAME | \
+        sed -e "
+            s/$DB_NAME/DB_NAME/g
+            s/$DB_SITEURL/DB_SITEURL/g
+            " | sqlfold fold > pso.fold
+    ;;
+hanoi)  # hanoi backup see http://sarab.sourceforge.net/faq.php
+    # uses week number to seed hanoi setup - name changes weekly
+    # typical crontab entry for weekly backups:
+    # 1 1 * * 1 . ~/vw/profile ; sd www ; pso hanoi &>> hanoi.log
+    pso backup pso.$(hbn $(($(date +%s)/24/60/60/7)))
+    # debug run once every minute
+    # * * * * * . ~/vw/profile ; sd www ; pso hanoi &>> hanoi.log
+    # pso backup debug.$(hbn $(($(date +%s)/60)))
+    ;;
+vagrant)  # invoke via vagrant
+    cd $PSO_VAGRANT
+    vagrant up
+    ssh pso.vagrant
+    vagrant halt
+    ;;
+local)  # run locally
+    cd $PSO_VAGRANT
+    if ! grep -q pso.vagrant ~/.ssh/config ; then
+        test -f Vagrantfile || echo no vagrant
+        test -f Vagrantfile || exit
+        vagrant ssh-config | sed 1s/default/pso.vagrant/ >> ~/.ssh/config
+        read -p "check ssh config: "
+        vi ~/.ssh/config
+    fi
+    ssh pso.vagrant || open $VW_DIR/tools/data/pso.terminal
+    ;;
+load)  # load functions when sourcing
+    ;;
+*)
+    echo 'usage: pso <cmd> where cmd is:'
+    ( sed -ne '/^[a-z]*)/s/) *#//p' $0 | sed -e 's/ /	/' -e 's/^/    /' ) 2> /dev/null
+    ;;
+esac

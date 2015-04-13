@@ -44,17 +44,20 @@ vwman() # recap info
         "$VW_DIR"/README.md \
         "$VW_DIR"/INDEX.md | $MANPAGER
 }
-vwdot() # link vw dot files to home directory
+vwdot() # copy vw dot files to home directory
 {
-    pushd "$VW_DIR/dot" > /dev/null
+    (
     cd
-    for i in $(ls -A "$OLDPWD")
+    for hf in $(ls -A "$VW_DIR/dot")
     do
-        test $i -ef "$OLDPWD/$i" && continue
-        (cmp -s $i "$OLDPWD/$i" || mv -v $i $i.bak) 2> /dev/null 
-        ln -fv "$OLDPWD/$i" .
+        vwf="$VW_DIR/dot/$hf"
+        if test $hf -nt "$vwf" ; then
+            cp -v $hf "$vwf"
+        elif ! cmp -s $hf "$vwf" ; then
+            cp -v "$vwf" $hf
+        fi
     done
-    popd > /dev/null;
+    )
 }
 vwsync() # commit new stuff and get latest
 {

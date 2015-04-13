@@ -28,8 +28,8 @@ import sys
 reExport = re.compile(r'^export ([A-Za-z]\w*)=.*# (.*)')
 reFunction = re.compile(r'^([A-Za-z][\-\.\w]*)( *\()\).*# (.*)')
 reAlias = re.compile(r'^([ \t]*alias )([\.A-Za-z][\-\.\w]*)=(.*)')
-reBlockStart = re.compile(r"^ *# \+")
-reBlockEnd = re.compile(r"^ *# \-")
+reBlockStart = re.compile(r"^ *# \+$")
+reBlockEnd = re.compile(r"^ *# \-$")
 
 
 class TagInfo:  # hold info for a tag to create tags file

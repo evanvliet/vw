@@ -2,11 +2,9 @@
 # "INSTALL" to source profile in .bashrc
 # "INSTALL bare" creates a bare repository for sharing
 
-pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
-VW_DIR="$PWD"
+VW_DIR="$(cd $(dirname "${BASH_SOURCE[0]})"); pwd)"
 
-if test "$1" = "bare" 
-then # create bare repository
+if test "$1" = "bare" ; then # create bare repository
     (
     cd
     mkdir -p git_root

@@ -5,3 +5,4 @@ mk_passwd.py generates random passwords
 pytidy    python source formatter
 replace_edit.sh for google edit process
 shtags.py create tags for functions in shell scripts
+sqlfold.py fold sql dump for source control

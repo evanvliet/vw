@@ -16,7 +16,7 @@ ci() # git checkin does commit pull and push in one swell foop
     test "$1" = "-f" && PUSH='y' && shift
     local REPLY="$@"
     if test "$(git status -s -uno)" ; then
-        git diff | cat
+        git diff | head -20
         (($(wc -c <<< "$REPLY") > 3)) || read -p 'comment? '
         (($(wc -c <<< "$REPLY") > 3)) && git commit -a -m "$REPLY"
     fi

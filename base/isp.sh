@@ -27,7 +27,7 @@ isp() # interact with base machine
         isp shell mkdir -p xfer
         scp $* $ISP_HOST:xfer
         ;;
-    shell) # run ssh
+    ssh|shell) # run ssh
         ssh $ISP_HOST $*
         ;;
     clone) # clone from collection of repositories in git_root
