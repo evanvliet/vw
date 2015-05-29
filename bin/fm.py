@@ -28,15 +28,19 @@ Description:
     Used to get history data about files when getting comments and
     folding lines to fit your screen.  Example:
     alias fm='HISTFILE=$HISTFILE COLUMNS=$COLUMNS ".../fm.py" "$@"'
+
+    NB. order of imports hand tuned to avoid stackdumps. Search
+    cygwin Python-core-dump-depending-on-module-import-order
+    for background.
 """
 
-import os
+import subprocess
 import sys
-import glob
 import optparse
+import os
+import glob
 import readline
 import textwrap
-import subprocess
 
 USAGE = """
 Enter comment or a one letter command:
@@ -200,7 +204,9 @@ class FileComment:
                 "file '%s'" % self.name).split(':')[1:]).strip()
             print cmd_output("od  -cN64 -An '%s'" % self.name)
             line_width = FileComment.cols - 5
-            print cmd_output("cat -t '%s' | cut -c1-%d | head -6" % (self.name, line_width))
+            tc = "cat -t '%s' | cut -c1-%d | head -6" % (self.name, line_width)
+            if os.path.isdir(self.name): tc = "ls -l %s | head -6" % self.name
+            print cmd_output(tc)
         elif comment == 'e':  # erase existing comment
             self.comment = ''
             rv = 1  # next
