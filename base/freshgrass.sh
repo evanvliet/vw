@@ -18,7 +18,7 @@ freshgrass() # use remote host
         local start=$(date +%s)
         if ! ssh freshgrass.vagrant ; then
             (($(date +%s)-start > 2)) && return
-            local gt="$VW_DIR/tools/data/freshgrass.terminal" 
+            local gt="$VW_DIR/tools/data/Freshgrass.terminal" 
             if test -f $gt ; then
                 open "$gt" 
             else

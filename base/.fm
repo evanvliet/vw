@@ -1,7 +1,9 @@
+abc       !file abc
 dev.sh    development functions
 dtob.sh   conversions dtob, dtoh, etc.
 ea.sh     convenient shortcuts
 env.sh    environment
+freshgrass.sh run the freshgrass vm
 git.sh    git funcs
 isp.sh    interact with base machine hosting vw
 pass.sh   password support

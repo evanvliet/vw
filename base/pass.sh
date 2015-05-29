@@ -46,6 +46,14 @@ getpass() # use passsword db
     pushd "$VW_DIR/tools/data" > /dev/null
     local PAD=jnVedcOrYc5NRPMeqt9sPH6wThh1drwbvCiuKQzHtnpzntuNEO
     case ${1:--h} in
+    -h2p) # hint to pass: getpass -h2p pass
+        echo "$2" | openssl enc -a -des -k $PAD
+        # openssl enc -a -des -k $PAD <<< "$2" 
+        ;;
+    -p2h) # pass to hint: getpass -p2h hint
+        echo "$2" | openssl enc -a -d -des -k $PAD
+        # openssl enc -a -d -des -k $PAD <<< "$2" 
+        ;;
     -a) # append to db
         shift
         _gp_decode

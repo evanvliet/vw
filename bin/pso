@@ -4,14 +4,14 @@
 # -
 PSO_VAGRANT=$(sed -ne '/^pso_vagrant */s///p' ~/.sdrc) # install folder
 PSO_BACKUP=~/backup # backup directory
-hbn() # hanoi backup 6 levels - return suffix for sequence number
+hbn() # hanoi backup default 6 levels - return idx for sequence number
 {
-    local H=F level2=1 seqno=${1:-1}
-    for suffix in A B C D E; do
-        (( level2 == (seqno % (level2*2)) )) && H=$suffix
-        (( level2 *= 2 ))
+    local seq=${1:-1} max=${2:-6} sfx=$max lv2=1 idx=1
+    while (( idx < max )); do
+        (( lv2 == (seq % (lv2*2)) )) && sfx=$idx
+        (( lv2 *= 2 )) && (( idx += 1 ))
     done
-    echo $H
+    (( sfx += 64 )) && printf "\x$(printf %x $sfx)" # 1->A, 2->B, ...
 }
 progress() # character mode progress bar
 { 
@@ -62,7 +62,7 @@ backup) # write backup of current files and database
     printf '%s < %s ' $(date +%m.%d-%H:%M) ${DB_SITEURL%%.*}
     progress
     pso write
-    tar --exclude-vcs --exclude Audio -czf $PSO_BACKUP/$bkup .
+    tar -czf $PSO_BACKUP/$bkup index.php php.ini pso.fold xmlrpc.php wp-*
     progress stop
     echo $( cd $PSO_BACKUP  ; du -sh $bkup )
     ;;
